@@ -1,0 +1,80 @@
+<div class="search-page">
+  <div class="search-container">
+    <!-- Header -->
+    <div class="search-header">
+      <h1 class="brand-title">Lumora</h1>
+      <p class="brand-subtitle">AI-powered search and reasoning engine</p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar-container">
+      <app-search-bar 
+        [placeholder]="'Ask anything or @mention a Space'"
+        [showModelSelector]="true"
+        [showAdvancedOptions]="false"
+        [autoFocus]="true"
+        (search)="onSearch($event)"
+        (modelChange)="onModelChange($event)">
+      </app-search-bar>
+    </div>
+
+    <!-- Trending Topics -->
+    <div class="trending-section">
+      <h3 class="trending-title">Trending</h3>
+      <div class="trending-list">
+        <button class="trending-item" (click)="onTrendingClick('ChatGPT conversations Google search exposed')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+          ChatGPT conversations Google search exposed
+        </button>
+        
+        <button class="trending-item" (click)="onTrendingClick('Lightning mystery solved after 273 years')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+          Lightning mystery solved after 273 years
+        </button>
+        
+        <button class="trending-item" (click)="onTrendingClick('Andy Jassy AI jobs pivot after backlash')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+          Andy Jassy AI jobs pivot after backlash
+        </button>
+        
+        <button class="trending-item" (click)="onTrendingClick('Meta jury verdict menstrual data Flo')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+          Meta jury verdict menstrual data Flo
+        </button>
+        
+        <button class="trending-item" (click)="onTrendingClick('India halts Russian oil imports Trump tariffs')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+          India halts Russian oil imports Trump tariffs
+        </button>
+        
+        <button class="trending-item" (click)="onTrendingClick('Google saves goo.gl links from shutdown')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+          Google saves goo.gl links from shutdown
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Results -->
+  <div class="results-container" *ngIf="searchResults.length > 0">
+    <app-search-results 
+      [results]="searchResults"
+      [isLoading]="isLoading"
+      (resultClick)="onResultClick($event)"
+      (referenceClick)="onReferenceClick($event)"
+      (followUpClick)="onFollowUpClick($event)">
+    </app-search-results>
+  </div>
+</div>

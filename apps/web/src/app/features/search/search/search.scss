@@ -1,0 +1,150 @@
+.search-page {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.search-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+/* Header */
+.search-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  .brand-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.025em;
+  }
+  
+  .brand-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+/* Search Bar Container */
+.search-bar-container {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Trending Section */
+.trending-section {
+  width: 100%;
+  max-width: 600px;
+  
+  .trending-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0 0 1rem 0;
+    text-align: center;
+  }
+  
+  .trending-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .trending-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    
+    svg {
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    
+    &:hover {
+      background: var(--background-light);
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+      
+      svg {
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+/* Results Container */
+.results-container {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-page {
+    padding: 1rem;
+  }
+  
+  .search-container {
+    gap: 2rem;
+  }
+  
+  .search-header {
+    .brand-title {
+      font-size: 2.5rem;
+    }
+    
+    .brand-subtitle {
+      font-size: 1rem;
+    }
+  }
+  
+  .trending-section {
+    .trending-item {
+      font-size: 0.8125rem;
+      padding: 0.75rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .search-header {
+    .brand-title {
+      font-size: 2rem;
+    }
+    
+    .brand-subtitle {
+      font-size: 0.875rem;
+    }
+  }
+  
+  .trending-section {
+    .trending-item {
+      font-size: 0.75rem;
+      padding: 0.625rem;
+    }
+  }
+}
+

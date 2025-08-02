@@ -1,0 +1,132 @@
+.search-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #ffffff;
+  border: 2px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  
+  &:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.1);
+  }
+}
+
+/* Left Icons */
+.search-icons-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-right: 0.75rem;
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: var(--text-secondary);
+    }
+  }
+}
+
+/* Search Input */
+.search-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  
+  .search-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: transparent;
+    padding: 0;
+    
+    &::placeholder {
+      color: var(--text-muted);
+    }
+  }
+}
+
+/* Right Icons */
+.search-icons-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: 0.75rem;
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: var(--text-secondary);
+    }
+    
+    &.active {
+      color: var(--primary-color);
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-bar-wrapper {
+    padding: 0.625rem 0.875rem;
+  }
+  
+  .search-icons-left,
+  .search-icons-right {
+    gap: 0.5rem;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  .search-input-wrapper {
+    .search-input {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .search-bar-wrapper {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .search-icons-left,
+  .search-icons-right {
+    gap: 0.375rem;
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  
+  .search-input-wrapper {
+    .search-input {
+      font-size: 0.8125rem;
+    }
+  }
+}
