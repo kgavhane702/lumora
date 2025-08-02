@@ -1,0 +1,97 @@
+Folder PATH listing for volume New Volume
+Volume serial number is B4C8-57FB
+D:.
+|   .env
+|   .env.example
+|   .env.local
+|   .gitignore
+|   README.md
+|   structure.txt
+|   tsconfig.base.json
+|   
++---apps
+|   +---api
+|   |   |   .env
+|   |   |   .env.example
+|   |   |   .gitignore
+|   |   |   .prettierrc
+|   |   |   eslint.config.mjs
+|   |   |   nest-cli.json
+|   |   |   package-lock.json
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   tsconfig.build.json
+|   |   |   tsconfig.json
+|   |   |   
+|   |   +---src
+|   |   |       app.controller.spec.ts
+|   |   |       app.controller.ts
+|   |   |       app.module.ts
+|   |   |       app.service.ts
+|   |   |       main.ts
+|   |   |       
+|   |   \---test
+|   |           app.e2e-spec.ts
+|   |           jest-e2e.json
+|   |           
+|   \---web
+|       |   .editorconfig
+|       |   .env
+|       |   .env.example
+|       |   .gitignore
+|       |   angular.json
+|       |   ngsw-config.json
+|       |   package-lock.json
+|       |   package.json
+|       |   README.md
+|       |   tsconfig.app.json
+|       |   tsconfig.json
+|       |   tsconfig.spec.json
+|       |   
+|       +---.vscode
+|       |       extensions.json
+|       |       launch.json
+|       |       tasks.json
+|       |       
+|       +---public
+|       |   |   favicon.ico
+|       |   |   manifest.webmanifest
+|       |   |   
+|       |   \---icons
+|       |           icon-128x128.png
+|       |           icon-144x144.png
+|       |           icon-152x152.png
+|       |           icon-192x192.png
+|       |           icon-384x384.png
+|       |           icon-512x512.png
+|       |           icon-72x72.png
+|       |           icon-96x96.png
+|       |           
+|       \---src
+|           |   index.html
+|           |   main.ts
+|           |   styles.scss
+|           |   
+|           \---app
+|                   app.config.ts
+|                   app.html
+|                   app.routes.ts
+|                   app.scss
+|                   app.spec.ts
+|                   app.ts
+|                   
++---config
++---firestore
++---libs
+|   +---ai-core
+|   |   +---interfaces
+|   |   +---orchestrators
+|   |   +---registry
+|   |   \---strategies
+|   +---auth
+|   +---prompt-engine
+|   |   \---templates
+|   +---rag-engine
+|   \---shared-utils
+|       \---interfaces
+\---scripts
