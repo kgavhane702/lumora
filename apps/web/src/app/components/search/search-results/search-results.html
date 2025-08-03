@@ -1,15 +1,46 @@
 <div class="search-results-container">
   <!-- Loading State -->
-  <div class="loading-container" *ngIf="isLoading">
-    <div class="loading-spinner">
-      <div class="spinner"></div>
+  <div class="loading-container" *ngIf="isLoading && results.length === 0">
+    <div class="loading-animation">
+      <div class="pulse-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
     </div>
     <p class="loading-text">Searching for answers...</p>
+    <p class="loading-subtext">This may take a few seconds</p>
+  </div>
+
+  <!-- Skeleton Loading for Results -->
+  <div class="skeleton-container" *ngIf="isLoading && results.length === 0">
+    <div class="skeleton-item" *ngFor="let item of [1, 2, 3]">
+      <div class="skeleton-header">
+        <div class="skeleton-model"></div>
+        <div class="skeleton-actions">
+          <div class="skeleton-action"></div>
+          <div class="skeleton-action"></div>
+        </div>
+      </div>
+      <div class="skeleton-content">
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+      <div class="skeleton-references">
+        <div class="skeleton-reference" *ngFor="let ref of [1, 2]">
+          <div class="skeleton-ref-title"></div>
+          <div class="skeleton-ref-url"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Results -->
   <div class="results-list" *ngIf="!isLoading && results.length > 0">
-    <div class="result-item" *ngFor="let result of results; trackBy: trackByResult">
+    <div 
+      class="result-item" 
+      *ngFor="let result of results; trackBy: trackByResult; let i = index">
       <!-- Answer Section -->
       <div class="answer-section">
         <div class="answer-header">
@@ -36,7 +67,9 @@
       <div class="references-section" *ngIf="result.references && result.references.length > 0">
         <h4 class="references-title">Sources</h4>
         <div class="references-list">
-          <div class="reference-item" *ngFor="let reference of result.references; trackBy: trackByReference">
+          <div 
+            class="reference-item" 
+            *ngFor="let reference of result.references; trackBy: trackByReference">
             <div class="reference-content">
               <div class="reference-title">{{ reference.title }}</div>
               <div class="reference-url">{{ reference.url }}</div>

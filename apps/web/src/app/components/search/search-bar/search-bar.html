@@ -1,8 +1,8 @@
 <div class="search-bar-container">
-  <div class="search-bar">
+  <div class="search-bar" [class.searching]="isSearching">
     <!-- Search Input -->
     <div class="search-input-container">
-      <div class="search-icon">
+      <div class="search-icon" [class.active]="searchQuery">
         <app-icon name="search" [size]="20" color="#6b7280"></app-icon>
       </div>
       
@@ -15,6 +15,8 @@
         (input)="onInputChange()"
         (keyup.enter)="onSearch()"
         (keyup.escape)="clearSearch()"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
         [maxlength]="maxLength"
         [disabled]="isSearching"
         autocomplete="off">
@@ -26,6 +28,15 @@
         type="button">
         <app-icon name="close" [size]="16" color="#9ca3af"></app-icon>
       </button>
+
+      <!-- Loading Indicator -->
+      <div class="loading-indicator" *ngIf="isSearching">
+        <div class="loading-dots">
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Search/Stop Button -->
@@ -45,17 +56,23 @@
 
   <!-- Quick Actions -->
   <div class="quick-actions" *ngIf="!searchQuery && !isSearching">
-    <button class="quick-action" (click)="onQuickAction('What is the latest news about AI?')">
+    <button 
+      class="quick-action" 
+      (click)="onQuickAction('What is the latest news about AI?')">
       <app-icon name="trending-up" [size]="16" color="#6b7280"></app-icon>
       Latest AI news
     </button>
     
-    <button class="quick-action" (click)="onQuickAction('How to learn TypeScript?')">
+    <button 
+      class="quick-action" 
+      (click)="onQuickAction('How to learn TypeScript?')">
       <app-icon name="folder" [size]="16" color="#6b7280"></app-icon>
       Learn TypeScript
     </button>
     
-    <button class="quick-action" (click)="onQuickAction('What is the weather today?')">
+    <button 
+      class="quick-action" 
+      (click)="onQuickAction('What is the weather today?')">
       <app-icon name="explore" [size]="16" color="#6b7280"></app-icon>
       Weather today
     </button>

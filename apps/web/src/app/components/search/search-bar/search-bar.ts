@@ -33,6 +33,7 @@ export class SearchBar implements OnInit {
   searchMode: string = 'both';
   focus: string = 'concise';
   includeReferences: boolean = true;
+  isFocused: boolean = false;
 
   ngOnInit() {
     if (this.autoFocus && this.searchInput) {
@@ -58,6 +59,14 @@ export class SearchBar implements OnInit {
 
   onInputChange() {
     // Handle input changes if needed
+  }
+
+  onFocus() {
+    this.isFocused = true;
+  }
+
+  onBlur() {
+    this.isFocused = false;
   }
 
   clearSearch() {

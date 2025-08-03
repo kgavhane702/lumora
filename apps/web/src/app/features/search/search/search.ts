@@ -90,9 +90,13 @@ export class Search implements OnInit, AfterViewInit {
         this.searchTimeout = null;
       }
       
-      // Mark current session as stopped
+      // Mark current session as stopped and complete it
       if (this.currentSession) {
         this.currentSession.isLoading = false;
+        // If no results yet, add some results when stopped
+        if (this.currentSession.results.length === 0) {
+          this.currentSession.results = this.mockDataService.getMockSearchResults();
+        }
       }
     }
   }
