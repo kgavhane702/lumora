@@ -1,48 +1,107 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, QueryList, ViewChildren, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../../components/search/search-bar/search-bar';
 import { SearchResults } from '../../../components/search/search-results/search-results';
-import { SearchQuery } from '../../../shared/interfaces/search-query';
 import { SearchResult, Reference } from '../../../shared/interfaces/search-result';
-import { AIModel } from '../../../shared/interfaces/ai-model';
 import { MockDataService } from '../../../core/services/mock-data.service';
+import { Icon } from '../../../shared/components/icon/icon';
+
+interface SearchSession {
+  id: string;
+  query: string;
+  timestamp: Date;
+  results: SearchResult[];
+  isLoading: boolean;
+}
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, SearchBar, SearchResults],
+  imports: [CommonModule, SearchBar, SearchResults, Icon],
   templateUrl: './search.html',
   styleUrls: ['./search.scss']
 })
-export class Search implements OnInit {
-  searchResults: SearchResult[] = [];
-  isLoading: boolean = false;
-  availableModels: AIModel[] = [];
-  selectedModel: AIModel | null = null;
+export class Search implements OnInit, AfterViewInit {
+  searchSessions: SearchSession[] = [];
+  currentSession: SearchSession | null = null;
+  isSearching: boolean = false; // Track search state
+  private searchTimeout: any = null; // For stopping search
+
+  @ViewChildren('currentSessionElem', { read: ElementRef }) sessionElems!: QueryList<ElementRef>;
 
   constructor(private mockDataService: MockDataService) {}
 
   ngOnInit() {
-    this.availableModels = this.mockDataService.getMockModels();
-    this.selectedModel = this.availableModels[0];
+    // Initialize component
+  }
+
+  ngAfterViewInit() {
+    this.sessionElems.changes.subscribe(() => {
+      this.scrollToCurrentSession();
+    });
+  }
+
+  private scrollToCurrentSession() {
+    if (this.sessionElems && this.sessionElems.length > 0) {
+      const lastElem = this.sessionElems.last;
+      if (lastElem && lastElem.nativeElement) {
+        lastElem.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   }
 
   onSearch(query: string) {
-    this.isLoading = true;
+    if (!query.trim() || this.isSearching) return; // Prevent multiple requests
     
-    // Simulate API call
-    setTimeout(() => {
-      this.searchResults = this.mockDataService.getMockSearchResults();
-      this.isLoading = false;
+    // Set searching state
+    this.isSearching = true;
+    
+    // Create new search session
+    const newSession: SearchSession = {
+      id: Date.now().toString(),
+      query: query.trim(),
+      timestamp: new Date(),
+      results: [],
+      isLoading: true
+    };
+    
+    // Add to sessions list
+    this.searchSessions.push(newSession);
+    this.currentSession = newSession;
+    
+    // Simulate API call with timeout for stopping
+    this.searchTimeout = setTimeout(() => {
+      if (this.isSearching) { // Only complete if still searching
+        newSession.results = this.mockDataService.getMockSearchResults();
+        newSession.isLoading = false;
+        this.isSearching = false;
+      }
     }, 2000);
+    setTimeout(() => this.scrollToCurrentSession(), 0); // Ensure scroll after DOM update
   }
 
-  onModelChange(model: AIModel) {
-    this.selectedModel = model;
+  onStopSearch() {
+    if (this.isSearching) {
+      this.isSearching = false;
+      
+      // Clear the timeout
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = null;
+      }
+      
+      // Mark current session as stopped
+      if (this.currentSession) {
+        this.currentSession.isLoading = false;
+      }
+    }
+  }
+
+  onQuickAction(query: string) {
+    this.onSearch(query);
   }
 
   onTrendingClick(topic: string) {
-    // Trigger search with trending topic
     this.onSearch(topic);
   }
 
@@ -57,5 +116,21 @@ export class Search implements OnInit {
 
   onFollowUpClick(question: string) {
     this.onSearch(question);
+  }
+
+  formatTimestamp(date: Date): string {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  get hasActiveSessions(): boolean {
+    return this.searchSessions.length > 0;
+  }
+
+  get isFirstSearch(): boolean {
+    return this.searchSessions.length === 0;
+  }
+
+  trackBySession(index: number, session: SearchSession): string {
+    return session.id;
   }
 }

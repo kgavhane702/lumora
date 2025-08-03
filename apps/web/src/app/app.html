@@ -1,79 +1,126 @@
 <div class="app-container">
+  <!-- Mobile Menu Toggle -->
+  <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+    <app-icon name="menu" [size]="24" color="currentColor"></app-icon>
+  </button>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" (click)="closeMobileMenu()" [class.active]="isMobileMenuOpen"></div>
+
   <!-- Left Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.mobile-open]="isMobileMenuOpen">
     <div class="sidebar-header">
       <div class="logo">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="#00b4d8"/>
-        </svg>
+        <div class="logo-icon">
+          <app-icon name="star" [size]="24" color="#3b82f6"></app-icon>
+        </div>
         <span class="logo-text">Lumora</span>
       </div>
+      <!-- Mobile Close Button -->
+      <button class="mobile-close-btn" (click)="closeMobileMenu()">
+        <app-icon name="close" [size]="20" color="#6b7280"></app-icon>
+      </button>
     </div>
     
-    <nav class="sidebar-nav">
+    <!-- New Chat Button - Fixed at top -->
+    <div class="new-chat-section">
       <button class="nav-button new-chat">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        New Chat
+        <app-icon name="add" [size]="20" color="white"></app-icon>
+        <span>New Chat</span>
       </button>
+    </div>
+    
+    <!-- Scrollable Navigation -->
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <h3 class="nav-section-title">Main</h3>
+        <a href="/" class="nav-item active">
+          <app-icon name="search" [size]="20" color="currentColor"></app-icon>
+          <span>Search</span>
+        </a>
+        <a href="/chat" class="nav-item">
+          <app-icon name="chat" [size]="20" color="currentColor"></app-icon>
+          <span>Chat</span>
+        </a>
+        <a href="/discover" class="nav-item">
+          <app-icon name="explore" [size]="20" color="currentColor"></app-icon>
+          <span>Discover</span>
+        </a>
+      </div>
       
       <div class="nav-section">
-        <a href="/" class="nav-item active">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-          Home
-        </a>
-        
-        <a href="/discover" class="nav-item">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="m9 12 2 2 4-4"></path>
-          </svg>
-          Discover
-        </a>
-        
+        <h3 class="nav-section-title">Tools</h3>
         <a href="/spaces" class="nav-item">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-          </svg>
-          Spaces
+          <app-icon name="apps" [size]="20" color="currentColor"></app-icon>
+          <span>Spaces</span>
         </a>
-        
-        <a href="/account" class="nav-item">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          Account
+        <a href="/files" class="nav-item">
+          <app-icon name="folder" [size]="20" color="currentColor"></app-icon>
+          <span>Files</span>
         </a>
+        <a href="/settings" class="nav-item">
+          <app-icon name="settings" [size]="20" color="currentColor"></app-icon>
+          <span>Settings</span>
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <h3 class="nav-section-title">Recent Chats</h3>
+        <div class="chat-list">
+          <button class="chat-item">
+            <div class="chat-icon">
+              <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
+            </div>
+            <div class="chat-info">
+              <div class="chat-title">How to implement authentication...</div>
+              <div class="chat-time">2 hours ago</div>
+            </div>
+          </button>
+          
+          <button class="chat-item">
+            <div class="chat-icon">
+              <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
+            </div>
+            <div class="chat-info">
+              <div class="chat-title">Best practices for Angular...</div>
+              <div class="chat-time">1 day ago</div>
+            </div>
+          </button>
+          
+          <button class="chat-item">
+            <div class="chat-icon">
+              <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
+            </div>
+            <div class="chat-info">
+              <div class="chat-title">Understanding TypeScript...</div>
+              <div class="chat-time">3 days ago</div>
+            </div>
+          </button>
+        </div>
       </div>
     </nav>
     
     <div class="sidebar-footer">
       <button class="nav-button upgrade">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="m18 15-6-6-6 6"/>
-        </svg>
-        Upgrade
+        <app-icon name="star" [size]="20" color="white"></app-icon>
+        <span>Upgrade to Pro</span>
       </button>
       
-      <button class="nav-button install">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="m18 15-6-6-6 6"/>
-        </svg>
-        Install
-        <span class="notification-dot"></span>
-      </button>
+      <div class="user-section">
+        <button class="user-button">
+          <div class="user-avatar">
+            <app-icon name="person" [size]="20" color="white"></app-icon>
+          </div>
+          <div class="user-info">
+            <div class="user-name">John Doe</div>
+            <div class="user-email">john@example.com</div>
+          </div>
+          <app-icon name="more-vert" [size]="16" color="#6b7280"></app-icon>
+        </button>
+      </div>
     </div>
   </aside>
-
+  
   <!-- Main Content -->
   <main class="main-content">
     <router-outlet></router-outlet>

@@ -1,80 +1,202 @@
-<div class="search-page">
-  <div class="search-container">
-    <!-- Header -->
-    <div class="search-header">
-      <h1 class="brand-title">Lumora</h1>
-      <p class="brand-subtitle">AI-powered search and reasoning engine</p>
-    </div>
+<div class="search-page" [class.has-sessions]="hasActiveSessions">
+  <!-- Initial Search Layout (First Search) -->
+  <div class="initial-search-layout" *ngIf="isFirstSearch">
+    <div class="search-container">
+      <!-- Header -->
+      <div class="search-header">
+        <h1 class="brand-title">Lumora</h1>
+        <p class="brand-subtitle">AI-powered search and reasoning engine</p>
+      </div>
 
-    <!-- Search Bar -->
-    <div class="search-bar-container">
-      <app-search-bar 
-        [placeholder]="'Ask anything or @mention a Space'"
-        [showModelSelector]="true"
-        [showAdvancedOptions]="false"
-        [autoFocus]="true"
-        (search)="onSearch($event)"
-        (modelChange)="onModelChange($event)">
-      </app-search-bar>
-    </div>
+      <!-- Search Bar -->
+      <div class="search-bar-container">
+        <app-search-bar 
+          [placeholder]="'Ask anything...'"
+          [autoFocus]="true"
+          [isSearching]="isSearching"
+          (search)="onSearch($event)"
+          (stopSearch)="onStopSearch()">
+        </app-search-bar>
+      </div>
 
-    <!-- Trending Topics -->
-    <div class="trending-section">
-      <h3 class="trending-title">Trending</h3>
-      <div class="trending-list">
-        <button class="trending-item" (click)="onTrendingClick('ChatGPT conversations Google search exposed')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m18 15-6-6-6 6"/>
-          </svg>
-          ChatGPT conversations Google search exposed
-        </button>
-        
-        <button class="trending-item" (click)="onTrendingClick('Lightning mystery solved after 273 years')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m18 15-6-6-6 6"/>
-          </svg>
-          Lightning mystery solved after 273 years
-        </button>
-        
-        <button class="trending-item" (click)="onTrendingClick('Andy Jassy AI jobs pivot after backlash')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m18 15-6-6-6 6"/>
-          </svg>
-          Andy Jassy AI jobs pivot after backlash
-        </button>
-        
-        <button class="trending-item" (click)="onTrendingClick('Meta jury verdict menstrual data Flo')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m18 15-6-6-6 6"/>
-          </svg>
-          Meta jury verdict menstrual data Flo
-        </button>
-        
-        <button class="trending-item" (click)="onTrendingClick('India halts Russian oil imports Trump tariffs')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m18 15-6-6-6 6"/>
-          </svg>
-          India halts Russian oil imports Trump tariffs
-        </button>
-        
-        <button class="trending-item" (click)="onTrendingClick('Google saves goo.gl links from shutdown')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m18 15-6-6-6 6"/>
-          </svg>
-          Google saves goo.gl links from shutdown
-        </button>
+      <!-- Quick Actions -->
+      <div class="quick-actions-section">
+        <h3 class="section-title">Quick Actions</h3>
+        <div class="quick-actions-grid">
+          <button class="quick-action-card" (click)="onQuickAction('What is the latest news about AI?')">
+            <div class="action-icon">
+              <app-icon name="trending-up" [size]="24" color="white"></app-icon>
+            </div>
+            <div class="action-content">
+              <h4>Latest AI News</h4>
+              <p>Stay updated with the latest developments</p>
+            </div>
+          </button>
+          
+          <button class="quick-action-card" (click)="onQuickAction('How to learn TypeScript?')">
+            <div class="action-icon">
+              <app-icon name="folder" [size]="24" color="white"></app-icon>
+            </div>
+            <div class="action-content">
+              <h4>Learn TypeScript</h4>
+              <p>Master TypeScript programming</p>
+            </div>
+          </button>
+          
+          <button class="quick-action-card" (click)="onQuickAction('What is the weather today?')">
+            <div class="action-icon">
+              <app-icon name="explore" [size]="24" color="white"></app-icon>
+            </div>
+            <div class="action-content">
+              <h4>Weather Today</h4>
+              <p>Check current weather conditions</p>
+            </div>
+          </button>
+          
+          <button class="quick-action-card" (click)="onQuickAction('Best restaurants near me')">
+            <div class="action-icon">
+              <app-icon name="home" [size]="24" color="white"></app-icon>
+            </div>
+            <div class="action-content">
+              <h4>Find Restaurants</h4>
+              <p>Discover great places to eat</p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Trending Topics -->
+      <div class="trending-section">
+        <h3 class="section-title">Trending Topics</h3>
+        <div class="trending-list">
+          <button class="trending-item" (click)="onTrendingClick('ChatGPT conversations Google search exposed')">
+            <div class="trending-icon">
+              <app-icon name="trending-up" [size]="16" color="white"></app-icon>
+            </div>
+            <div class="trending-content">
+              <span class="trending-text">ChatGPT conversations Google search exposed</span>
+              <span class="trending-category">Technology</span>
+            </div>
+          </button>
+          
+          <button class="trending-item" (click)="onTrendingClick('Lightning mystery solved after 273 years')">
+            <div class="trending-icon">
+              <app-icon name="trending-up" [size]="16" color="white"></app-icon>
+            </div>
+            <div class="trending-content">
+              <span class="trending-text">Lightning mystery solved after 273 years</span>
+              <span class="trending-category">Science</span>
+            </div>
+          </button>
+          
+          <button class="trending-item" (click)="onTrendingClick('Andy Jassy AI jobs pivot after backlash')">
+            <div class="trending-icon">
+              <app-icon name="trending-up" [size]="16" color="white"></app-icon>
+            </div>
+            <div class="trending-content">
+              <span class="trending-text">Andy Jassy AI jobs pivot after backlash</span>
+              <span class="trending-category">Business</span>
+            </div>
+          </button>
+          
+          <button class="trending-item" (click)="onTrendingClick('Meta jury verdict menstrual data Flo')">
+            <div class="trending-icon">
+              <app-icon name="trending-up" [size]="16" color="white"></app-icon>
+            </div>
+            <div class="trending-content">
+              <span class="trending-text">Meta jury verdict menstrual data Flo</span>
+              <span class="trending-category">Technology</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="features-section">
+        <h3 class="section-title">Features</h3>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <app-icon name="search" [size]="24" color="white"></app-icon>
+            </div>
+            <h4>Smart Search</h4>
+            <p>Get accurate answers with AI-powered search</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">
+              <app-icon name="chat" [size]="24" color="white"></app-icon>
+            </div>
+            <h4>Conversational</h4>
+            <p>Ask follow-up questions naturally</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">
+              <app-icon name="verified" [size]="24" color="white"></app-icon>
+            </div>
+            <h4>Verified Sources</h4>
+            <p>All answers come with reliable references</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">
+              <app-icon name="speed" [size]="24" color="white"></app-icon>
+            </div>
+            <h4>Lightning Fast</h4>
+            <p>Get instant answers in seconds</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Search Results -->
-  <div class="results-container" *ngIf="searchResults.length > 0">
-    <app-search-results 
-      [results]="searchResults"
-      [isLoading]="isLoading"
-      (resultClick)="onResultClick($event)"
-      (referenceClick)="onReferenceClick($event)"
-      (followUpClick)="onFollowUpClick($event)">
-    </app-search-results>
+  <!-- Chat Layout (Subsequent Searches) -->
+  <div class="chat-layout" *ngIf="hasActiveSessions">
+    <!-- Scrollable Results Area -->
+    <div class="results-scroll-area">
+      <div class="sessions-container">
+        <div
+          class="session-item"
+          *ngFor="let session of searchSessions; let i = index; trackBy: trackBySession"
+          #currentSessionElem=""
+          [attr.data-last]="i === searchSessions.length - 1 ? true : null">
+          <div class="session-header">
+            <div class="query-section">
+              <div class="query-text">{{ session.query }}</div>
+              <div class="query-actions">
+                <button class="action-btn" title="Edit query">
+                  <app-icon name="edit" [size]="16" color="#6b7280"></app-icon>
+                </button>
+                <button class="action-btn" title="Copy query">
+                  <app-icon name="content-copy" [size]="16" color="#6b7280"></app-icon>
+                </button>
+              </div>
+            </div>
+            <div class="session-timestamp">{{ formatTimestamp(session.timestamp) }}</div>
+          </div>
+          <div class="session-results">
+            <app-search-results 
+              [results]="session.results"
+              [isLoading]="session.isLoading"
+              (resultClick)="onResultClick($event)"
+              (referenceClick)="onReferenceClick($event)"
+              (followUpClick)="onFollowUpClick($event)">
+            </app-search-results>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fixed Search Bar at Bottom -->
+    <div class="fixed-search-container">
+      <app-search-bar 
+        [placeholder]="'Ask a follow-up question...'"
+        [autoFocus]="false"
+        [isSearching]="isSearching"
+        (search)="onSearch($event)"
+        (stopSearch)="onStopSearch()">
+      </app-search-bar>
+    </div>
   </div>
 </div>

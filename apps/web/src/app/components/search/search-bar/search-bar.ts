@@ -1,39 +1,37 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AIModel } from '../../../shared/interfaces/ai-model';
-import { SearchQuery } from '../../../shared/interfaces/search-query';
-import { APP_CONSTANTS } from '../../../shared/constants/app-constants';
+import { FormsModule } from '@angular/forms';
+import { Icon } from '../../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Icon],
   templateUrl: './search-bar.html',
   styleUrls: ['./search-bar.scss']
 })
 export class SearchBar implements OnInit {
   @Input() placeholder: string = 'Ask anything...';
-  @Input() showModelSelector: boolean = true;
-  @Input() showAdvancedOptions: boolean = true;
+  @Input() showModelSelector: boolean = false;
+  @Input() showAdvancedOptions: boolean = false;
   @Input() autoFocus: boolean = false;
-  @Input() maxLength: number = APP_CONSTANTS.UI.MAX_SEARCH_LENGTH;
-  @Input() availableModels: AIModel[] = [];
-  @Input() selectedModel: AIModel | null = null;
+  @Input() maxLength: number = 1000;
+  @Input() availableModels: any[] = [];
+  @Input() selectedModel: any = null;
+  @Input() isSearching: boolean = false; // External search state
   
   @Output() search = new EventEmitter<string>();
-  @Output() modelChange = new EventEmitter<AIModel>();
+  @Output() stopSearch = new EventEmitter<void>(); // New event for stopping search
+  @Output() modelChange = new EventEmitter<any>();
   @Output() filterChange = new EventEmitter<any>();
   
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-
+  
   searchQuery: string = '';
   showModelDropdown: boolean = false;
   advancedOptionsVisible: boolean = false;
-  
-  // Advanced options
-  searchMode: 'web' | 'documents' | 'both' = 'both';
-  focus: 'concise' | 'detailed' | 'creative' = 'concise';
+  searchMode: string = 'both';
+  focus: string = 'concise';
   includeReferences: boolean = true;
 
   ngOnInit() {
@@ -45,9 +43,17 @@ export class SearchBar implements OnInit {
   }
 
   onSearch() {
-    if (this.searchQuery.trim()) {
-      this.search.emit(this.searchQuery.trim());
+    if (this.isSearching) return; // Prevent multiple rapid searches
+    
+    const query = this.searchQuery.trim();
+    if (query) {
+      this.search.emit(query);
+      this.clearSearch(); // Clear the search input after submitting
     }
+  }
+
+  onStopSearch() {
+    this.stopSearch.emit();
   }
 
   onInputChange() {
@@ -61,11 +67,16 @@ export class SearchBar implements OnInit {
     }
   }
 
+  onQuickAction(query: string) {
+    this.searchQuery = query;
+    this.onSearch();
+  }
+
   toggleModelDropdown() {
     this.showModelDropdown = !this.showModelDropdown;
   }
 
-  selectModel(model: AIModel) {
+  selectModel(model: any) {
     this.selectedModel = model;
     this.showModelDropdown = false;
     this.modelChange.emit(model);
@@ -83,8 +94,8 @@ export class SearchBar implements OnInit {
     });
   }
 
-  // Close dropdowns when clicking outside
   onDocumentClick(event: Event) {
+    // Close dropdowns when clicking outside
     const target = event.target as HTMLElement;
     if (!target.closest('.model-selector')) {
       this.showModelDropdown = false;

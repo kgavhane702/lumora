@@ -1,6 +1,6 @@
 <div class="search-results-container">
   <!-- Loading State -->
-  <div class="loading-state" *ngIf="isLoading">
+  <div class="loading-container" *ngIf="isLoading">
     <div class="loading-spinner">
       <div class="spinner"></div>
     </div>
@@ -10,66 +10,55 @@
   <!-- Results -->
   <div class="results-list" *ngIf="!isLoading && results.length > 0">
     <div class="result-item" *ngFor="let result of results; trackBy: trackByResult">
-      
-      <!-- Main Answer -->
+      <!-- Answer Section -->
       <div class="answer-section">
         <div class="answer-header">
-          <div class="confidence-indicator" [class]="getConfidenceClass(result.confidence)">
-            <span class="confidence-text">{{ (result.confidence * 100).toFixed(0) }}%</span>
-          </div>
           <div class="model-info">
             <span class="model-name">{{ result.modelUsed }}</span>
-            <span class="search-time">{{ result.searchTime }}s</span>
+            <span class="confidence" *ngIf="result.confidence">
+              {{ result.confidence }}% confident
+            </span>
+          </div>
+          <div class="answer-actions">
+            <button class="action-btn" (click)="onCopyAnswer(result)">
+              <app-icon name="content-copy" [size]="16" color="#6b7280"></app-icon>
+            </button>
+            <button class="action-btn" (click)="onShareAnswer(result)">
+              <app-icon name="share" [size]="16" color="#6b7280"></app-icon>
+            </button>
           </div>
         </div>
         
-        <div class="answer-content" [innerHTML]="formatAnswer(result.answer)"></div>
-        
-        <!-- Token Usage -->
-        <div class="token-usage" *ngIf="result.tokenUsage">
-          <span class="usage-text">
-            Tokens: {{ result.tokenUsage.total }} ({{ result.tokenUsage.prompt }}/{{ result.tokenUsage.completion }})
-          </span>
-        </div>
+        <div class="answer-content" [innerHTML]="result.answer"></div>
       </div>
 
-      <!-- References -->
+      <!-- References Section -->
       <div class="references-section" *ngIf="result.references && result.references.length > 0">
         <h4 class="references-title">Sources</h4>
         <div class="references-list">
-          <div class="reference-item" 
-               *ngFor="let reference of result.references; trackBy: trackByReference"
-               (click)="onReferenceClick(reference)">
-            <div class="reference-header">
-              <div class="reference-domain">{{ reference.domain }}</div>
-              <div class="reference-relevance">
-                <span class="relevance-score">{{ (reference.relevance * 100).toFixed(0) }}%</span>
-              </div>
+          <div class="reference-item" *ngFor="let reference of result.references; trackBy: trackByReference">
+            <div class="reference-content">
+              <div class="reference-title">{{ reference.title }}</div>
+              <div class="reference-url">{{ reference.url }}</div>
+              <div class="reference-snippet" *ngIf="reference.snippet">{{ reference.snippet }}</div>
             </div>
-            <div class="reference-title">{{ reference.title }}</div>
-            <div class="reference-snippet">{{ reference.snippet }}</div>
-            <div class="reference-url">{{ reference.url }}</div>
+            <button class="reference-action" (click)="onReferenceClick(reference)">
+              <app-icon name="open-in-new" [size]="16" color="#6b7280"></app-icon>
+            </button>
           </div>
         </div>
       </div>
 
       <!-- Follow-up Questions -->
       <div class="follow-up-section" *ngIf="result.followUpQuestions && result.followUpQuestions.length > 0">
-        <h4 class="follow-up-title">Related Questions</h4>
+        <h4 class="follow-up-title">Related questions</h4>
         <div class="follow-up-list">
-          <button class="follow-up-question" 
-                  *ngFor="let question of result.followUpQuestions"
-                  (click)="onFollowUpClick(question)">
+          <button 
+            class="follow-up-question" 
+            *ngFor="let question of result.followUpQuestions"
+            (click)="onFollowUpClick(question)">
             {{ question }}
           </button>
-        </div>
-      </div>
-
-      <!-- Related Topics -->
-      <div class="topics-section" *ngIf="result.relatedTopics && result.relatedTopics.length > 0">
-        <h4 class="topics-title">Related Topics</h4>
-        <div class="topics-list">
-          <span class="topic-tag" *ngFor="let topic of result.relatedTopics">{{ topic }}</span>
         </div>
       </div>
     </div>
@@ -78,11 +67,9 @@
   <!-- No Results -->
   <div class="no-results" *ngIf="!isLoading && results.length === 0">
     <div class="no-results-icon">
-      <svg width="48" height="48" viewBox="0 0 24 24">
-        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-      </svg>
+      <app-icon name="search" [size]="48" color="#9ca3af"></app-icon>
     </div>
     <h3 class="no-results-title">No results found</h3>
-    <p class="no-results-text">Try adjusting your search terms or filters</p>
+    <p class="no-results-text">Try adjusting your search terms or ask a different question.</p>
   </div>
 </div>
