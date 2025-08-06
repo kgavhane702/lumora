@@ -6,9 +6,8 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  max-height: 264px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  height: 220px; /* Exact height for 5 items (44px each) */
+  overflow: hidden; /* No scrolling needed for 5 items */
   border-top: none;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -25,7 +24,7 @@
   font-size: 14px;
   color: #374151;
   width: 100%;
-  min-height: 44px;
+  height: 44px; /* Fixed height for each item */
   box-sizing: border-box;
   
   &:last-child {
@@ -75,22 +74,4 @@
     width: 16px;
     height: 16px;
   }
-}
-
-/* Custom scrollbar for webkit browsers */
-.search-suggestions::-webkit-scrollbar {
-  width: 4px;
-}
-
-.search-suggestions::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.search-suggestions::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.3);
-  border-radius: 2px;
-}
-
-.search-suggestions::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.5);
 } 
