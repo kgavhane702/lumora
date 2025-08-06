@@ -1,0 +1,54 @@
+<div class="file-attachment-container">
+  <!-- Compact File List - Only show when files are attached -->
+  <div class="attached-files" *ngIf="attachedFiles.length > 0">
+    <div class="file-list">
+      <div class="file-item" 
+           *ngFor="let file of attachedFiles; trackBy: trackByFile"
+           [class.uploading]="file.uploadStatus === 'uploading'"
+           [class.completed]="file.uploadStatus === 'completed'"
+           [class.error]="file.uploadStatus === 'error'">
+        
+        <!-- File Icon -->
+        <div class="file-icon">
+          <app-icon [name]="getFileIcon(file.type)" 
+                   [size]="14" 
+                   [color]="getFileColor(file.type)">
+          </app-icon>
+        </div>
+        
+        <!-- File Name and Size -->
+        <div class="file-info">
+          <div class="file-name-size">
+            <span class="file-name">{{ file.name }}</span>
+            <span class="file-size">({{ formatFileSize(file.size) }})</span>
+          </div>
+          
+          <!-- Upload Progress Bar Below - Only show when uploading -->
+          <div class="upload-progress" *ngIf="showUploadProgress && file.uploadProgress !== undefined && file.uploadStatus === 'uploading'">
+            <div class="progress-bar">
+              <div class="progress-fill" 
+                   [style.width.%]="file.uploadProgress">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Remove Button -->
+        <button class="remove-btn" 
+                (click)="onRemoveFile(file)"
+                [disabled]="file.uploadStatus === 'uploading'"
+                title="Remove file">
+          <app-icon name="close" [size]="12" color="#6b7280"></app-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden File Input -->
+  <input #fileInput 
+         type="file" 
+         [accept]="acceptedTypes"
+         multiple
+         (change)="onFileSelected($event)"
+         style="display: none;">
+</div>

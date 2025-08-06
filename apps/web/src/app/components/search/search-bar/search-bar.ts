@@ -1,14 +1,15 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Icon } from '../../../shared/components/icon/icon';
 import { SearchInputComponent } from '../search-input/search-input';
 import { SearchSuggestionsComponent } from '../search-suggestions/search-suggestions';
+import { FileAttachmentComponent, AttachedFile } from '../../../shared/components/file-attachment/file-attachment';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [CommonModule, FormsModule, Icon, SearchInputComponent, SearchSuggestionsComponent],
+  imports: [CommonModule, FormsModule, Icon, SearchInputComponent, SearchSuggestionsComponent, FileAttachmentComponent],
   templateUrl: './search-bar.html',
   styleUrls: ['./search-bar.scss']
 })
@@ -27,7 +28,7 @@ export class SearchBar implements OnInit {
   @Output() stopSearch = new EventEmitter<void>();
   @Output() modelChange = new EventEmitter<any>();
   @Output() filterChange = new EventEmitter<any>();
-  @Output() fileUpload = new EventEmitter<File>();
+  @Output() fileUpload = new EventEmitter<File[]>();
   
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   
@@ -42,6 +43,8 @@ export class SearchBar implements OnInit {
   suggestions: string[] = [];
   selectedSuggestionIndex: number = -1;
   acceptedFileTypes: string = '.pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png';
+  attachedFiles: AttachedFile[] = [];
+  showDragOverlay: boolean = false;
 
   ngOnInit() {
     // Initialize component
@@ -129,12 +132,71 @@ export class SearchBar implements OnInit {
   }
 
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.fileUpload.emit(file);
-      // Reset the input
-      event.target.value = '';
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const fileArray: File[] = [];
+      for (let i = 0; i < files.length; i++) {
+        fileArray.push(files[i]);
+      }
+      this.handleFileUpload(fileArray);
     }
+    // Reset the input
+    event.target.value = '';
+  }
+
+  handleFileUpload(files: File[]) {
+    console.log('Files uploaded:', files);
+    
+    // Filter out duplicate files
+    const newFiles = files.filter(newFile => {
+      return !this.attachedFiles.some(existingFile => 
+        existingFile.name === newFile.name && 
+        existingFile.size === newFile.size
+      );
+    });
+    
+    if (newFiles.length === 0) {
+      console.log('All files are duplicates');
+      return;
+    }
+    
+    // Check if adding these files would exceed the limit
+    const totalFiles = this.attachedFiles.length + newFiles.length;
+    if (totalFiles > 5) {
+      console.log('Too many files, max is 5');
+      return;
+    }
+    
+    // Convert files to AttachedFile format
+    const newAttachedFiles: AttachedFile[] = newFiles.map(file => ({
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      file: file,
+      uploadStatus: 'pending',
+      uploadProgress: 0
+    }));
+
+    this.attachedFiles = [...this.attachedFiles, ...newAttachedFiles];
+    this.fileUpload.emit(newFiles);
+    
+    // Trigger progress simulation for new files immediately
+    this.simulateUploadProgress(newAttachedFiles);
+  }
+
+  onFileUpload(files: File[]) {
+    this.handleFileUpload(files);
+  }
+
+  onFileRemove(file: AttachedFile) {
+    console.log('Removing file:', file.name);
+    this.attachedFiles = this.attachedFiles.filter(f => f.id !== file.id);
+  }
+
+  onFileError(error: { file: File; error: string }) {
+    console.error('File error:', error);
+    // You can show a toast notification here
   }
 
   generateSuggestions() {
@@ -216,5 +278,28 @@ export class SearchBar implements OnInit {
       event.preventDefault();
       this.onSearch(this.searchQuery);
     }
+  }
+
+  private simulateUploadProgress(files: AttachedFile[]) {
+    files.forEach(file => {
+      if (file.uploadStatus === 'pending') {
+        file.uploadStatus = 'uploading';
+        file.uploadProgress = 0;
+        
+        // Simulate progress animation
+        const interval = setInterval(() => {
+          if (file.uploadProgress !== undefined && file.uploadProgress < 100) {
+            file.uploadProgress += Math.random() * 15 + 5; // Random increment between 5-20%
+            if (file.uploadProgress >= 100) {
+              file.uploadProgress = 100;
+              file.uploadStatus = 'completed';
+              clearInterval(interval);
+            }
+          } else {
+            clearInterval(interval);
+          }
+        }, 200); // Update every 200ms
+      }
+    });
   }
 }

@@ -1,6 +1,8 @@
 <div class="search-bar-container">
   <!-- Search Bar Container -->
-  <div class="search-bar" [class.searching]="isSearching" [class.focused]="isFocused">
+  <div class="search-bar" 
+       [class.searching]="isSearching" 
+       [class.focused]="isFocused">
     <!-- Search Input Component -->
     <app-search-input
       [placeholder]="placeholder"
@@ -37,12 +39,6 @@
           type="button"
           title="Upload file">
           <app-icon name="attach-file" [size]="18" color="#6b7280"></app-icon>
-          <input 
-            #fileInput
-            type="file" 
-            [accept]="acceptedFileTypes"
-            (change)="onFileSelected($event)"
-            style="display: none;">
         </button>
         
         <button 
@@ -71,7 +67,20 @@
       </div>
     </div>
 
-    <!-- Search Suggestions Component -->
+    <!-- File Attachment Component - Only show when files are attached -->
+    <app-file-attachment
+      *ngIf="attachedFiles.length > 0"
+      [attachedFiles]="attachedFiles"
+      [maxFiles]="5"
+      [maxFileSize]="10 * 1024 * 1024"
+      [acceptedTypes]="acceptedFileTypes"
+      [showUploadProgress]="true"
+      (fileUpload)="onFileUpload($event)"
+      (fileRemove)="onFileRemove($event)"
+      (fileError)="onFileError($event)">
+    </app-file-attachment>
+
+    <!-- Search Suggestions Component - After file attachments -->
     <app-search-suggestions
       [suggestions]="suggestions"
       [selectedIndex]="selectedSuggestionIndex"
@@ -81,4 +90,12 @@
       (suggestionHover)="onSuggestionHover($event)">
     </app-search-suggestions>
   </div>
+
+  <!-- Hidden File Input -->
+  <input #fileInput 
+         type="file" 
+         [accept]="acceptedFileTypes"
+         multiple
+         (change)="onFileSelected($event)"
+         style="display: none;">
 </div>

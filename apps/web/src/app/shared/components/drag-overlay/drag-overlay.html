@@ -1,0 +1,11 @@
+<div class="drag-overlay" *ngIf="isVisible">
+  <div class="overlay-content">
+    <div class="overlay-icon">
+      <app-icon name="attach-file" [size]="48" color="#3b82f6"></app-icon>
+    </div>
+    <div class="overlay-text">
+      <h3 class="overlay-title">{{ message }}</h3>
+      <p class="overlay-subtitle">{{ subtitle }}</p>
+    </div>
+  </div>
+</div>

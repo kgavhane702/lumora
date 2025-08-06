@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, QueryList, ViewChildren, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, QueryList, ViewChildren, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../../components/search/search-bar/search-bar';
 import { SearchResults } from '../../../components/search/search-results/search-results';
@@ -26,19 +26,115 @@ export class Search implements OnInit, AfterViewInit {
   currentSession: SearchSession | null = null;
   isSearching: boolean = false; // Track search state
   private searchTimeout: any = null; // For stopping search
+  showDragOverlay: boolean = false; // Track drag overlay state
 
   @ViewChildren('currentSessionElem', { read: ElementRef }) sessionElems!: QueryList<ElementRef>;
+  @ViewChild('searchBar') searchBar!: SearchBar;
+  @ViewChild('searchBarChat') searchBarChat!: SearchBar;
 
   constructor(private mockDataService: MockDataService) {}
 
   ngOnInit() {
     // Initialize component
+    this.setupGlobalDragListeners();
+  }
+
+  private setupGlobalDragListeners() {
+    // Add global drag event listeners to handle window boundaries
+    document.addEventListener('dragenter', (event) => {
+      event.preventDefault();
+      this.showDragOverlay = true;
+    });
+
+    document.addEventListener('dragleave', (event) => {
+      event.preventDefault();
+      // Only hide if we're leaving the document completely
+      if (event.clientX <= 0 || event.clientY <= 0 || 
+          event.clientX >= window.innerWidth || event.clientY >= window.innerHeight) {
+        this.showDragOverlay = false;
+      }
+    });
+
+    document.addEventListener('drop', (event) => {
+      event.preventDefault();
+      this.showDragOverlay = false;
+    });
+
+    document.addEventListener('dragend', (event) => {
+      event.preventDefault();
+      this.showDragOverlay = false;
+    });
   }
 
   ngAfterViewInit() {
     this.sessionElems.changes.subscribe(() => {
       this.scrollToCurrentSession();
     });
+  }
+
+  // Global drag & drop handlers for the entire search page
+  @HostListener('dragenter', ['$event'])
+  onDragEnter(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Show drag overlay
+    this.showDragOverlay = true;
+  }
+
+  @HostListener('dragover', ['$event'])
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Keep overlay visible while dragging over
+    this.showDragOverlay = true;
+  }
+
+  @HostListener('dragleave', ['$event'])
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Check if we're leaving the page completely
+    if (event.clientX <= 0 || event.clientY <= 0 || 
+        event.clientX >= window.innerWidth || event.clientY >= window.innerHeight) {
+      this.showDragOverlay = false;
+    }
+  }
+
+  @HostListener('drop', ['$event'])
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Hide drag overlay
+    this.showDragOverlay = false;
+    
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const fileArray: File[] = [];
+      for (let i = 0; i < files.length; i++) {
+        fileArray.push(files[i]);
+      }
+      // Pass files to the appropriate search bar component
+      if (this.hasActiveSessions && this.searchBarChat) {
+        // If we have active sessions, use the chat search bar
+        this.searchBarChat.handleFileUpload(fileArray);
+      } else if (this.searchBar) {
+        // Otherwise use the initial search bar
+        this.searchBar.handleFileUpload(fileArray);
+      }
+    }
+  }
+
+  @HostListener('dragend', ['$event'])
+  onDragEnd(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Hide overlay when drag ends
+    this.showDragOverlay = false;
   }
 
   private scrollToCurrentSession() {
@@ -128,11 +224,15 @@ export class Search implements OnInit, AfterViewInit {
     this.onSearch(followUpQuery);
   }
 
-  onFileUpload(file: File) {
-    console.log('File uploaded:', file.name);
-    // Handle file upload - could trigger document analysis
-    // For now, just simulate a search with the file
-    this.onSearch(`Analyze this document: ${file.name}`);
+  onFileUpload(files: File[]) {
+    console.log('Files uploaded:', files.map(f => f.name));
+    // Handle file upload - just log for now, don't auto-search
+    // The files will be visible in the search bar attachment area
+    console.log(`Attached ${files.length} file(s) to the search bar`);
+    
+    // Pass files to the search bar component
+    // We need to find the search bar component and pass the files
+    // For now, we'll emit an event that the parent can handle
   }
 
   formatTimestamp(date: Date): string {
