@@ -8,14 +8,16 @@
         <p class="brand-subtitle">AI-powered search and reasoning engine</p>
       </div>
 
-      <!-- Search Bar -->
+      <!-- Initial Search Bar -->
       <div class="search-bar-container">
-        <app-search-bar 
+        <app-search-bar
           [placeholder]="'Ask anything...'"
           [autoFocus]="true"
           [isSearching]="isSearching"
+          [showAutoSuggestions]="true"
           (search)="onSearch($event)"
-          (stopSearch)="onStopSearch()">
+          (stopSearch)="onStopSearch()"
+          (fileUpload)="onFileUpload($event)">
         </app-search-bar>
       </div>
 
@@ -60,52 +62,6 @@
             <div class="action-content">
               <h4>Find Restaurants</h4>
               <p>Discover great places to eat</p>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      <!-- Trending Topics -->
-      <div class="trending-section">
-        <h3 class="section-title">Trending Topics</h3>
-        <div class="trending-list">
-          <button class="trending-item" (click)="onTrendingClick('ChatGPT conversations Google search exposed')">
-            <div class="trending-icon">
-              <app-icon name="trending-up" [size]="16" color="white"></app-icon>
-            </div>
-            <div class="trending-content">
-              <span class="trending-text">ChatGPT conversations Google search exposed</span>
-              <span class="trending-category">Technology</span>
-            </div>
-          </button>
-          
-          <button class="trending-item" (click)="onTrendingClick('Lightning mystery solved after 273 years')">
-            <div class="trending-icon">
-              <app-icon name="trending-up" [size]="16" color="white"></app-icon>
-            </div>
-            <div class="trending-content">
-              <span class="trending-text">Lightning mystery solved after 273 years</span>
-              <span class="trending-category">Science</span>
-            </div>
-          </button>
-          
-          <button class="trending-item" (click)="onTrendingClick('Andy Jassy AI jobs pivot after backlash')">
-            <div class="trending-icon">
-              <app-icon name="trending-up" [size]="16" color="white"></app-icon>
-            </div>
-            <div class="trending-content">
-              <span class="trending-text">Andy Jassy AI jobs pivot after backlash</span>
-              <span class="trending-category">Business</span>
-            </div>
-          </button>
-          
-          <button class="trending-item" (click)="onTrendingClick('Meta jury verdict menstrual data Flo')">
-            <div class="trending-icon">
-              <app-icon name="trending-up" [size]="16" color="white"></app-icon>
-            </div>
-            <div class="trending-content">
-              <span class="trending-text">Meta jury verdict menstrual data Flo</span>
-              <span class="trending-category">Technology</span>
             </div>
           </button>
         </div>
@@ -181,7 +137,8 @@
               [isLoading]="session.isLoading"
               (resultClick)="onResultClick($event)"
               (referenceClick)="onReferenceClick($event)"
-              (followUpClick)="onFollowUpClick($event)">
+              (followUpClick)="onFollowUpClick($event)"
+              (continueSearch)="onContinueSearch($event)">
             </app-search-results>
           </div>
         </div>
@@ -194,6 +151,7 @@
         [placeholder]="'Ask a follow-up question...'"
         [autoFocus]="false"
         [isSearching]="isSearching"
+        [showAutoSuggestions]="false"
         (search)="onSearch($event)"
         (stopSearch)="onStopSearch()">
       </app-search-bar>

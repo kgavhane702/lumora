@@ -122,6 +122,19 @@ export class Search implements OnInit, AfterViewInit {
     this.onSearch(question);
   }
 
+  onContinueSearch(result: SearchResult) {
+    // Continue searching with the same query but different focus
+    const followUpQuery = `Continue searching about: ${result.query}`;
+    this.onSearch(followUpQuery);
+  }
+
+  onFileUpload(file: File) {
+    console.log('File uploaded:', file.name);
+    // Handle file upload - could trigger document analysis
+    // For now, just simulate a search with the file
+    this.onSearch(`Analyze this document: ${file.name}`);
+  }
+
   formatTimestamp(date: Date): string {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }

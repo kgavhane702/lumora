@@ -36,46 +36,78 @@
     </div>
   </div>
 
-  <!-- Results -->
-  <div class="results-list" *ngIf="!isLoading && results.length > 0">
+  <!-- AI Answer Results -->
+  <div class="ai-results-list" *ngIf="!isLoading && results.length > 0">
     <div 
-      class="result-item" 
+      class="ai-result-item" 
       *ngFor="let result of results; trackBy: trackByResult; let i = index">
-      <!-- Answer Section -->
-      <div class="answer-section">
-        <div class="answer-header">
-          <div class="model-info">
+      
+      <!-- AI Answer Header -->
+      <div class="ai-answer-header">
+        <div class="ai-model-info">
+          <div class="model-badge">
+            <app-icon name="verified" [size]="14" color="#10b981"></app-icon>
             <span class="model-name">{{ result.modelUsed }}</span>
-            <span class="confidence" *ngIf="result.confidence">
-              {{ result.confidence }}% confident
-            </span>
           </div>
-          <div class="answer-actions">
-            <button class="action-btn" (click)="onCopyAnswer(result)">
-              <app-icon name="content-copy" [size]="16" color="#6b7280"></app-icon>
-            </button>
-            <button class="action-btn" (click)="onShareAnswer(result)">
-              <app-icon name="share" [size]="16" color="#6b7280"></app-icon>
-            </button>
+          <div class="confidence-indicator" *ngIf="result.confidence">
+            <div class="confidence-bar">
+              <div class="confidence-fill" [style.width.%]="result.confidence"></div>
+            </div>
+            <span class="confidence-text">{{ result.confidence }}% confident</span>
           </div>
         </div>
         
-        <div class="answer-content" [innerHTML]="result.answer"></div>
+        <div class="ai-answer-actions">
+          <button class="action-btn" (click)="onCopyAnswer(result)" title="Copy answer">
+            <app-icon name="content-copy" [size]="16" color="#6b7280"></app-icon>
+          </button>
+          <button class="action-btn" (click)="onShareAnswer(result)" title="Share answer">
+            <app-icon name="share" [size]="16" color="#6b7280"></app-icon>
+          </button>
+          <button class="action-btn" (click)="onContinueSearch(result)" title="Continue searching">
+            <app-icon name="search" [size]="16" color="#6b7280"></app-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- AI Answer Content -->
+      <div class="ai-answer-content">
+        <div class="answer-text" [innerHTML]="formatAnswer(result.answer)"></div>
+        
+        <!-- Sources Summary -->
+        <div class="sources-summary" *ngIf="result.references && result.references.length > 0">
+          <div class="sources-badge">
+            <app-icon name="link" [size]="14" color="#6b7280"></app-icon>
+            <span>Based on {{ result.references.length }} source{{ result.references.length > 1 ? 's' : '' }}</span>
+          </div>
+        </div>
       </div>
 
       <!-- References Section -->
       <div class="references-section" *ngIf="result.references && result.references.length > 0">
-        <h4 class="references-title">Sources</h4>
+        <div class="references-header">
+          <h4 class="references-title">
+            <app-icon name="link" [size]="16" color="#6b7280"></app-icon>
+            Sources
+          </h4>
+          <span class="references-count">{{ result.references.length }} source{{ result.references.length > 1 ? 's' : '' }}</span>
+        </div>
+        
         <div class="references-list">
           <div 
             class="reference-item" 
-            *ngFor="let reference of result.references; trackBy: trackByReference">
+            *ngFor="let reference of result.references; trackBy: trackByReference; let i = index">
+            <div class="reference-number">{{ i + 1 }}</div>
             <div class="reference-content">
               <div class="reference-title">{{ reference.title }}</div>
               <div class="reference-url">{{ reference.url }}</div>
               <div class="reference-snippet" *ngIf="reference.snippet">{{ reference.snippet }}</div>
+              <div class="reference-meta" *ngIf="reference.publishedDate">
+                <span class="reference-date">{{ reference.publishedDate | date:'MMM d, y' }}</span>
+                <span class="reference-domain" *ngIf="reference.domain">{{ reference.domain }}</span>
+              </div>
             </div>
-            <button class="reference-action" (click)="onReferenceClick(reference)">
+            <button class="reference-action" (click)="onReferenceClick(reference)" title="Open source">
               <app-icon name="open-in-new" [size]="16" color="#6b7280"></app-icon>
             </button>
           </div>
@@ -84,14 +116,32 @@
 
       <!-- Follow-up Questions -->
       <div class="follow-up-section" *ngIf="result.followUpQuestions && result.followUpQuestions.length > 0">
-        <h4 class="follow-up-title">Related questions</h4>
+        <div class="follow-up-header">
+          <h4 class="follow-up-title">
+            <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
+            Related questions
+          </h4>
+        </div>
         <div class="follow-up-list">
           <button 
             class="follow-up-question" 
             *ngFor="let question of result.followUpQuestions"
             (click)="onFollowUpClick(question)">
-            {{ question }}
+            <app-icon name="arrow-right" [size]="14" color="#6b7280"></app-icon>
+            <span>{{ question }}</span>
           </button>
+        </div>
+      </div>
+
+      <!-- Search Metadata -->
+      <div class="search-metadata" *ngIf="result.searchTime">
+        <div class="metadata-item">
+          <app-icon name="clock" [size]="12" color="#9ca3af"></app-icon>
+          <span>{{ result.searchTime }}s</span>
+        </div>
+        <div class="metadata-item" *ngIf="result.tokenUsage">
+          <app-icon name="memory" [size]="12" color="#9ca3af"></app-icon>
+          <span>{{ result.tokenUsage.total }} tokens</span>
         </div>
       </div>
     </div>

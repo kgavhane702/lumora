@@ -1,80 +1,101 @@
 <div class="search-bar-container">
-  <div class="search-bar" [class.searching]="isSearching">
-    <!-- Search Input -->
-    <div class="search-input-container">
-      <div class="search-icon" [class.active]="searchQuery">
-        <app-icon name="search" [size]="20" color="#6b7280"></app-icon>
-      </div>
-      
-      <input 
+  <!-- Search Bar Container -->
+  <div class="search-bar" [class.searching]="isSearching" [class.focused]="isFocused">
+    <!-- Search Input with Icons -->
+    <div class="search-input-container" (click)="focusSearch()">
+      <!-- Input Field - Full Width -->
+      <textarea 
         #searchInput
-        type="text" 
         class="search-input"
         [placeholder]="placeholder"
         [(ngModel)]="searchQuery"
         (input)="onInputChange()"
-        (keyup.enter)="onSearch()"
+        (keydown.enter)="onEnterKey($event)"
         (keyup.escape)="clearSearch()"
         (focus)="onFocus()"
         (blur)="onBlur()"
+        (keydown)="onKeyDown($event)"
         [maxlength]="maxLength"
         [disabled]="isSearching"
-        autocomplete="off">
-      
-      <button 
-        *ngIf="searchQuery && !isSearching"
-        class="clear-button"
-        (click)="clearSearch()"
-        type="button">
-        <app-icon name="close" [size]="16" color="#9ca3af"></app-icon>
-      </button>
+        autocomplete="off"
+        rows="1"
+        resize="none">
+      </textarea>
+    </div>
 
-      <!-- Loading Indicator -->
-      <div class="loading-indicator" *ngIf="isSearching">
-        <div class="loading-dots">
-          <div class="loading-dot"></div>
-          <div class="loading-dot"></div>
-          <div class="loading-dot"></div>
+    <!-- Action Bar Below - All Other Icons -->
+    <div class="action-bar">
+      <!-- Navigation Icons -->
+      <div class="nav-icons">
+        <div class="search-icon" [class.active]="searchQuery">
+          <app-icon name="search" [size]="18" color="#6b7280"></app-icon>
         </div>
+        <div class="grid-icon">
+          <app-icon name="apps" [size]="18" color="#6b7280"></app-icon>
+        </div>
+        <div class="help-icon">
+          <app-icon name="help" [size]="18" color="#6b7280"></app-icon>
+        </div>
+      </div>
+
+      <!-- Action Icons -->
+      <div class="action-icons">
+        <button 
+          class="file-upload-btn"
+          (click)="openFileUpload()"
+          type="button"
+          title="Upload file">
+          <app-icon name="attach-file" [size]="18" color="#6b7280"></app-icon>
+          <input 
+            #fileInput
+            type="file" 
+            [accept]="acceptedFileTypes"
+            (change)="onFileSelected($event)"
+            style="display: none;">
+        </button>
+        
+        <button 
+          class="voice-btn"
+          (click)="startVoiceInput()"
+          [class.recording]="isRecording"
+          type="button"
+          title="Voice input">
+          <app-icon name="mic" [size]="18" color="#6b7280"></app-icon>
+        </button>
+        
+        <!-- Search/Submit Button -->
+        <button 
+          class="search-button"
+          [class.searching]="isSearching"
+          (click)="isSearching ? onStopSearch() : onSearch()"
+          [disabled]="!searchQuery.trim() && !isSearching"
+          type="button"
+          title="Search">
+          <app-icon 
+            [name]="isSearching ? 'stop-circle' : 'send'" 
+            [size]="22" 
+            [color]="isSearching ? '#dc2626' : '#3b82f6'">
+          </app-icon>
+        </button>
       </div>
     </div>
 
-    <!-- Search/Stop Button -->
-    <button 
-      class="search-button"
-      [class.searching]="isSearching"
-      (click)="isSearching ? onStopSearch() : onSearch()"
-      [disabled]="!searchQuery.trim() && !isSearching"
-      type="button">
-      <app-icon 
-        [name]="isSearching ? 'stop' : 'send'" 
-        [size]="18" 
-        [color]="isSearching ? '#ef4444' : 'white'">
-      </app-icon>
-    </button>
+    <!-- Search Suggestions - Inside search bar -->
+    <div class="search-suggestions" *ngIf="showSuggestions && suggestions.length > 0">
+      <div 
+        class="suggestion-item" 
+        *ngFor="let suggestion of suggestions; trackBy: trackBySuggestion"
+        (click)="selectSuggestion(suggestion)"
+        [class.selected]="selectedSuggestionIndex === suggestions.indexOf(suggestion)">
+        <app-icon 
+          [name]="searchQuery.trim() ? 'search' : 'trending-up'" 
+          [size]="16" 
+          [color]="searchQuery.trim() ? '#6b7280' : '#10b981'">
+        </app-icon>
+        <span class="suggestion-text">{{ suggestion }}</span>
+        <div class="suggestion-go">
+          <app-icon name="arrow-right" [size]="16" color="#3b82f6"></app-icon>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- Quick Actions -->
-  <div class="quick-actions" *ngIf="!searchQuery && !isSearching">
-    <button 
-      class="quick-action" 
-      (click)="onQuickAction('What is the latest news about AI?')">
-      <app-icon name="trending-up" [size]="16" color="#6b7280"></app-icon>
-      Latest AI news
-    </button>
-    
-    <button 
-      class="quick-action" 
-      (click)="onQuickAction('How to learn TypeScript?')">
-      <app-icon name="folder" [size]="16" color="#6b7280"></app-icon>
-      Learn TypeScript
-    </button>
-    
-    <button 
-      class="quick-action" 
-      (click)="onQuickAction('What is the weather today?')">
-      <app-icon name="explore" [size]="16" color="#6b7280"></app-icon>
-      Weather today
-    </button>
-  </div>
-</div>

@@ -82,7 +82,20 @@ export class MockDataService {
     return [
       {
         id: '1',
-        answer: 'The latest iPhone 15 Pro features a 6.1-inch Super Retina XDR display with ProMotion technology, A17 Pro chip, and a 48MP main camera. It was released in September 2023 and starts at $999.',
+        answer: `The **iPhone 15 Pro** is Apple's latest flagship smartphone, released in September 2023. Here's what makes it special:
+
+**Key Features:**
+• **A17 Pro chip** - The world's first 3nm processor with 6-core GPU
+• **48MP main camera** - Revolutionary low-light performance and detail capture
+• **Titanium design** - 20% lighter than stainless steel, more durable
+• **Action button** - Customizable for quick access to your favorite features
+• **USB-C port** - Universal compatibility and faster data transfer
+• **ProMotion display** - Up to 120Hz refresh rate for ultra-smooth interactions
+
+**Pricing & Availability:**
+The iPhone 15 Pro starts at **$999** and comes in four beautiful colors: Natural Titanium, Blue Titanium, White Titanium, and Black Titanium.
+
+*This represents Apple's most comprehensive iPhone upgrade in recent years, combining cutting-edge technology with premium design.*`,
         references: [
           {
             id: 'ref1',
@@ -103,18 +116,29 @@ export class MockDataService {
             source: 'web',
             domain: 'techcrunch.com',
             publishedDate: new Date('2023-09-15')
+          },
+          {
+            id: 'ref3',
+            title: 'A17 Pro Chip Analysis - AnandTech',
+            url: 'https://www.anandtech.com/show/iphone-15-pro-a17-pro-analysis',
+            snippet: 'The A17 Pro chip brings significant performance improvements...',
+            relevance: 0.92,
+            source: 'web',
+            domain: 'anandtech.com',
+            publishedDate: new Date('2023-09-20')
           }
         ],
-        modelUsed: 'gpt-4o',
-        confidence: 0.92,
+        modelUsed: 'GPT-4o',
+        confidence: 94,
         searchTime: 2.3,
         tokenUsage: { prompt: 150, completion: 89, total: 239 },
         followUpQuestions: [
           'What are the differences between iPhone 15 Pro and iPhone 15 Pro Max?',
           'How does the A17 Pro chip compare to previous generations?',
-          'What are the new camera features in iPhone 15 Pro?'
+          'What are the new camera features in iPhone 15 Pro?',
+          'Is the titanium design worth the upgrade?'
         ],
-        relatedTopics: ['iPhone 15', 'A17 Pro chip', 'ProMotion', '48MP camera'],
+        relatedTopics: ['iPhone 15', 'A17 Pro chip', 'ProMotion', '48MP camera', 'Titanium design'],
         timestamp: new Date(),
         query: 'iPhone 15 Pro specifications and features'
       }
