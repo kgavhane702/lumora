@@ -87,14 +87,14 @@
         *ngFor="let suggestion of suggestions; trackBy: trackBySuggestion"
         (click)="selectSuggestion(suggestion)"
         [class.selected]="selectedSuggestionIndex === suggestions.indexOf(suggestion)">
-        <app-icon 
-          [name]="searchQuery.trim() ? 'search' : 'trending-up'" 
-          [size]="16" 
-          [color]="searchQuery.trim() ? '#6b7280' : '#10b981'">
-        </app-icon>
+                 <app-icon 
+           [name]="searchQuery.trim() ? 'search' : 'trending-up'" 
+           [size]="16" 
+           [color]="searchQuery.trim() ? '#6b7280' : '#3b82f6'">
+         </app-icon>
         <span class="suggestion-text">{{ suggestion }}</span>
         <div class="suggestion-go">
-          <app-icon name="arrow-right" [size]="16" color="#3b82f6"></app-icon>
+          <app-icon name="arrow-up-left" [size]="16" color="#3b82f6"></app-icon>
         </div>
       </div>
     </div>

@@ -420,13 +420,7 @@
   padding: 10px;
   background: rgba(0, 0, 0, 0.02);
   border-radius: 8px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   animation: slideInLeft 0.5s ease-out;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.04);
-    transform: translateX(4px);
-  }
 }
 
 @keyframes slideInLeft {
@@ -718,9 +712,12 @@
   color: #1f2937;
   margin-bottom: 20px;
   font-weight: 400;
+  padding-left: 16px;
   
   p {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
+    text-align: justify;
+    text-justify: inter-word;
     
     &:last-child {
       margin-bottom: 0;
@@ -747,13 +744,14 @@
   
   ul {
     margin: 20px 0;
-    padding-left: 24px;
+    padding-left: 28px;
     
     li {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       line-height: 1.7;
       color: #374151;
       position: relative;
+      padding-left: 8px;
       
       &::before {
         content: '•';
@@ -761,7 +759,7 @@
         font-weight: bold;
         font-size: 18px;
         position: absolute;
-        left: -20px;
+        left: -24px;
         top: -2px;
       }
       
@@ -793,14 +791,14 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(59, 130, 246, 0.15);
   color: #3b82f6;
   padding: 8px 16px;
   border-radius: 24px;
   font-size: 13px;
   font-weight: 600;
   width: fit-content;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   
   app-icon {
     color: #3b82f6;
@@ -858,14 +856,6 @@
   background: rgba(249, 250, 251, 0.9);
   border: 1px solid rgba(229, 231, 235, 0.8);
   border-radius: 12px;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: rgba(249, 250, 251, 1);
-    transform: translateX(4px);
-    border-color: rgba(59, 130, 246, 0.3);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
 }
 
 .reference-number {
@@ -902,6 +892,7 @@
   margin-bottom: 6px;
   word-break: break-all;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .reference-snippet {
@@ -932,15 +923,7 @@
   padding: 8px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
   flex-shrink: 0;
-  
-  &:hover {
-    background: rgba(59, 130, 246, 0.1);
-    border-color: rgba(59, 130, 246, 0.3);
-    color: #3b82f6;
-    transform: scale(1.05);
-  }
 }
 
 /* Follow-up Questions */
@@ -983,18 +966,10 @@
   border-radius: 12px;
   padding: 16px 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
   text-align: left;
   font-size: 14px;
   color: #3b82f6;
   font-weight: 600;
-  
-  &:hover {
-    background: rgba(59, 130, 246, 0.1);
-    border-color: rgba(59, 130, 246, 0.4);
-    transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-  }
   
   app-icon {
     color: #3b82f6;
