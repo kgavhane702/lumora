@@ -1,27 +1,17 @@
 <div class="search-bar-container">
   <!-- Search Bar Container -->
   <div class="search-bar" [class.searching]="isSearching" [class.focused]="isFocused">
-    <!-- Search Input with Icons -->
-    <div class="search-input-container" (click)="focusSearch()">
-      <!-- Input Field - Full Width -->
-      <textarea 
-        #searchInput
-        class="search-input"
-        [placeholder]="placeholder"
-        [(ngModel)]="searchQuery"
-        (input)="onInputChange()"
-        (keydown.enter)="onEnterKey($event)"
-        (keyup.escape)="clearSearch()"
-        (focus)="onFocus()"
-        (blur)="onBlur()"
-        (keydown)="onKeyDown($event)"
-        [maxlength]="maxLength"
-        [disabled]="isSearching"
-        autocomplete="off"
-        rows="1"
-        resize="none">
-      </textarea>
-    </div>
+    <!-- Search Input Component -->
+    <app-search-input
+      [placeholder]="placeholder"
+      [maxLength]="maxLength"
+      [autoFocus]="autoFocus"
+      [disabled]="isSearching"
+      (inputChange)="onInputChange($event)"
+      (search)="onSearch($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()">
+    </app-search-input>
 
     <!-- Action Bar Below - All Other Icons -->
     <div class="action-bar">
@@ -67,7 +57,7 @@
         <button 
           class="search-button"
           [class.searching]="isSearching"
-          (click)="isSearching ? onStopSearch() : onSearch()"
+          (click)="isSearching ? onStopSearch() : onSearch(searchQuery)"
           [disabled]="!searchQuery.trim() && !isSearching"
           type="button"
           title="Search">
@@ -80,22 +70,14 @@
       </div>
     </div>
 
-    <!-- Search Suggestions - Inside search bar -->
-    <div class="search-suggestions" *ngIf="showSuggestions && suggestions.length > 0">
-      <div 
-        class="suggestion-item" 
-        *ngFor="let suggestion of suggestions; trackBy: trackBySuggestion"
-        (click)="selectSuggestion(suggestion)"
-        [class.selected]="selectedSuggestionIndex === suggestions.indexOf(suggestion)">
-                 <app-icon 
-           [name]="searchQuery.trim() ? 'search' : 'trending-up'" 
-           [size]="16" 
-           [color]="searchQuery.trim() ? '#6b7280' : '#3b82f6'">
-         </app-icon>
-        <span class="suggestion-text">{{ suggestion }}</span>
-        <div class="suggestion-go">
-          <app-icon name="arrow-up-left" [size]="16" color="#3b82f6"></app-icon>
-        </div>
-      </div>
-    </div>
+    <!-- Search Suggestions Component -->
+    <app-search-suggestions
+      [suggestions]="suggestions"
+      [selectedIndex]="selectedSuggestionIndex"
+      [showSuggestions]="showSuggestions"
+      [searchQuery]="searchQuery"
+      (suggestionSelect)="selectSuggestion($event)"
+      (suggestionHover)="onSuggestionHover($event)">
+    </app-search-suggestions>
   </div>
+</div>

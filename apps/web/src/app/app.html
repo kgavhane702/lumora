@@ -8,118 +8,14 @@
   <div class="mobile-menu-overlay" (click)="closeMobileMenu()" [class.active]="isMobileMenuOpen"></div>
 
   <!-- Left Sidebar -->
-  <aside class="sidebar" [class.mobile-open]="isMobileMenuOpen">
-    <div class="sidebar-header">
-      <div class="logo">
-        <div class="logo-icon">
-          <app-icon name="star" [size]="24" color="#3b82f6"></app-icon>
-        </div>
-        <span class="logo-text">Lumora</span>
-      </div>
-      <!-- Mobile Close Button -->
-      <button class="mobile-close-btn" (click)="closeMobileMenu()">
-        <app-icon name="close" [size]="20" color="#6b7280"></app-icon>
-      </button>
-    </div>
-    
-    <!-- New Chat Button - Fixed at top -->
-    <div class="new-chat-section">
-      <button class="nav-button new-chat">
-        <app-icon name="add" [size]="20" color="white"></app-icon>
-        <span>New Chat</span>
-      </button>
-    </div>
-    
-    <!-- Scrollable Navigation -->
-    <nav class="sidebar-nav">
-      <div class="nav-section">
-        <h3 class="nav-section-title">Main</h3>
-        <a href="/" class="nav-item active">
-          <app-icon name="search" [size]="20" color="currentColor"></app-icon>
-          <span>Search</span>
-        </a>
-        <a href="/chat" class="nav-item">
-          <app-icon name="chat" [size]="20" color="currentColor"></app-icon>
-          <span>Chat</span>
-        </a>
-        <a href="/discover" class="nav-item">
-          <app-icon name="explore" [size]="20" color="currentColor"></app-icon>
-          <span>Discover</span>
-        </a>
-      </div>
-      
-      <div class="nav-section">
-        <h3 class="nav-section-title">Tools</h3>
-        <a href="/spaces" class="nav-item">
-          <app-icon name="apps" [size]="20" color="currentColor"></app-icon>
-          <span>Spaces</span>
-        </a>
-        <a href="/files" class="nav-item">
-          <app-icon name="folder" [size]="20" color="currentColor"></app-icon>
-          <span>Files</span>
-        </a>
-        <a href="/settings" class="nav-item">
-          <app-icon name="settings" [size]="20" color="currentColor"></app-icon>
-          <span>Settings</span>
-        </a>
-      </div>
-      
-      <div class="nav-section">
-        <h3 class="nav-section-title">Recent Chats</h3>
-        <div class="chat-list">
-          <button class="chat-item">
-            <div class="chat-icon">
-              <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
-            </div>
-            <div class="chat-info">
-              <div class="chat-title">How to implement authentication...</div>
-              <div class="chat-time">2 hours ago</div>
-            </div>
-          </button>
-          
-          <button class="chat-item">
-            <div class="chat-icon">
-              <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
-            </div>
-            <div class="chat-info">
-              <div class="chat-title">Best practices for Angular...</div>
-              <div class="chat-time">1 day ago</div>
-            </div>
-          </button>
-          
-          <button class="chat-item">
-            <div class="chat-icon">
-              <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
-            </div>
-            <div class="chat-info">
-              <div class="chat-title">Understanding TypeScript...</div>
-              <div class="chat-time">3 days ago</div>
-            </div>
-          </button>
-        </div>
-      </div>
-    </nav>
-    
-    <div class="sidebar-footer">
-      <button class="nav-button upgrade">
-        <app-icon name="star" [size]="20" color="white"></app-icon>
-        <span>Upgrade to Pro</span>
-      </button>
-      
-      <div class="user-section">
-        <button class="user-button">
-          <div class="user-avatar">
-            <app-icon name="person" [size]="20" color="white"></app-icon>
-          </div>
-          <div class="user-info">
-            <div class="user-name">John Doe</div>
-            <div class="user-email">john@example.com</div>
-          </div>
-          <app-icon name="more-vert" [size]="16" color="#6b7280"></app-icon>
-        </button>
-      </div>
-    </div>
-  </aside>
+  <app-sidebar 
+    [isMobileOpen]="isMobileMenuOpen"
+    [user]="user"
+    [chatSessions]="chatSessions"
+    (newChat)="onNewChat()"
+    (chatSelect)="onChatSelect($event)"
+    (mobileClose)="closeMobileMenu()">
+  </app-sidebar>
   
   <!-- Main Content -->
   <main class="main-content">

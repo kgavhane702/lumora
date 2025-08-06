@@ -1,1 +1,96 @@
-<p>sidebar works!</p>
+<aside class="sidebar" [class.mobile-open]="isMobileOpen">
+  <!-- Mobile Close Button -->
+  <button class="mobile-close-btn" (click)="onMobileClose()" *ngIf="isMobileOpen">
+    <app-icon name="close" [size]="20" color="#6b7280"></app-icon>
+  </button>
+
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <div class="logo">
+      <div class="logo-icon">
+        <app-icon name="apps" [size]="20" color="white"></app-icon>
+      </div>
+      <span class="logo-text">Lumora</span>
+    </div>
+  </div>
+
+  <!-- New Chat Section -->
+  <div class="new-chat-section">
+    <button class="nav-button new-chat" (click)="onNewChat()">
+      <app-icon name="add" [size]="20" color="white"></app-icon>
+      <span>New Chat</span>
+    </button>
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar-nav">
+    <!-- Main Navigation -->
+    <div class="nav-section">
+      <div class="nav-section-title">Main</div>
+      <a routerLink="/search" routerLinkActive="active" class="nav-item">
+        <app-icon name="search" [size]="20" color="#6b7280"></app-icon>
+        <span>Search</span>
+      </a>
+      <a routerLink="/chat" routerLinkActive="active" class="nav-item">
+        <app-icon name="chat" [size]="20" color="#6b7280"></app-icon>
+        <span>Chat</span>
+      </a>
+      <a routerLink="/home" routerLinkActive="active" class="nav-item">
+        <app-icon name="home" [size]="20" color="#6b7280"></app-icon>
+        <span>Home</span>
+      </a>
+    </div>
+
+    <!-- Chat Sessions -->
+    <div class="nav-section" *ngIf="chatSessions.length > 0">
+      <div class="nav-section-title">Recent Chats</div>
+      <div 
+        class="chat-item" 
+        *ngFor="let chat of chatSessions; trackBy: trackByChat"
+        [class.active]="chat.isActive"
+        (click)="onChatSelect(chat.id)">
+        <div class="chat-icon">
+          <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
+        </div>
+        <div class="chat-content">
+          <div class="chat-title">{{ chat.title }}</div>
+          <div class="chat-time">{{ formatTimestamp(chat.timestamp) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tools Section -->
+    <div class="nav-section">
+      <div class="nav-section-title">Tools</div>
+      <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+        <app-icon name="settings" [size]="20" color="#6b7280"></app-icon>
+        <span>Settings</span>
+      </a>
+      <a routerLink="/help" routerLinkActive="active" class="nav-item">
+        <app-icon name="help" [size]="20" color="#6b7280"></app-icon>
+        <span>Help</span>
+      </a>
+    </div>
+
+    <!-- Upgrade Section -->
+    <div class="nav-section">
+      <button class="nav-button upgrade">
+        <app-icon name="star" [size]="20" color="white"></app-icon>
+        <span>Upgrade to Pro</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- User Section -->
+  <div class="user-section">
+    <div class="user-info">
+      <div class="user-avatar">
+        <app-icon name="person" [size]="20" color="#6b7280"></app-icon>
+      </div>
+      <div class="user-details">
+        <div class="user-name">{{ user.name }}</div>
+        <div class="user-email">{{ user.email }}</div>
+      </div>
+    </div>
+  </div>
+</aside>

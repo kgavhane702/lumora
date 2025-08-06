@@ -1,0 +1,16 @@
+<div class="search-input-container">
+  <textarea
+    #searchInput
+    [(ngModel)]="searchQuery"
+    (input)="onInputChange()"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    (keydown)="onKeyDown($event)"
+    [placeholder]="placeholder"
+    [maxlength]="maxLength"
+    [disabled]="disabled"
+    class="search-input"
+    rows="1"
+    resize="none">
+  </textarea>
+</div> 

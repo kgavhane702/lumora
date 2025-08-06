@@ -2,11 +2,13 @@ import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit }
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Icon } from '../../../shared/components/icon/icon';
+import { SearchInputComponent } from '../search-input/search-input';
+import { SearchSuggestionsComponent } from '../search-suggestions/search-suggestions';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [CommonModule, FormsModule, Icon],
+  imports: [CommonModule, FormsModule, Icon, SearchInputComponent, SearchSuggestionsComponent],
   templateUrl: './search-bar.html',
   styleUrls: ['./search-bar.scss']
 })
@@ -18,16 +20,15 @@ export class SearchBar implements OnInit {
   @Input() maxLength: number = 1000;
   @Input() availableModels: any[] = [];
   @Input() selectedModel: any = null;
-  @Input() isSearching: boolean = false; // External search state
-  @Input() showAutoSuggestions: boolean = true; // Control auto-suggestions
+  @Input() isSearching: boolean = false;
+  @Input() showAutoSuggestions: boolean = true;
   
   @Output() search = new EventEmitter<string>();
-  @Output() stopSearch = new EventEmitter<void>(); // New event for stopping search
+  @Output() stopSearch = new EventEmitter<void>();
   @Output() modelChange = new EventEmitter<any>();
   @Output() filterChange = new EventEmitter<any>();
   @Output() fileUpload = new EventEmitter<File>();
   
-  @ViewChild('searchInput') searchInput!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   
   searchQuery: string = '';
@@ -43,20 +44,16 @@ export class SearchBar implements OnInit {
   acceptedFileTypes: string = '.pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png';
 
   ngOnInit() {
-    if (this.autoFocus && this.searchInput) {
-      setTimeout(() => {
-        this.searchInput.nativeElement.focus();
-      }, 100);
-    }
+    // Initialize component
   }
 
-  onSearch() {
-    if (this.isSearching) return; // Prevent multiple rapid searches
+  onSearch(query: string) {
+    if (this.isSearching) return;
     
-    const query = this.searchQuery.trim();
-    if (query) {
+    if (query.trim()) {
       this.search.emit(query);
-      this.clearSearch(); // Clear the search input after submitting
+      this.searchQuery = '';
+      this.showSuggestions = false;
     }
   }
 
@@ -64,63 +61,39 @@ export class SearchBar implements OnInit {
     this.stopSearch.emit();
   }
 
-  onInputChange() {
-    console.log('Input changed:', this.searchQuery); // Debug
+  onInputChange(query: string) {
+    this.searchQuery = query;
     this.generateSuggestions();
-    this.autoResize();
-  }
-
-  autoResize() {
-    if (this.searchInput) {
-      const textarea = this.searchInput.nativeElement;
-      // Reset height to auto to get the correct scrollHeight
-      textarea.style.height = 'auto';
-      // Set the height to scrollHeight, but cap it at max height
-      const newHeight = Math.min(textarea.scrollHeight, 120); // 120px = 5 lines
-      textarea.style.height = newHeight + 'px';
-    }
   }
 
   onFocus() {
     this.isFocused = true;
-    console.log('Search input focused, showAutoSuggestions:', this.showAutoSuggestions); // Debug
     if (this.showAutoSuggestions) {
       this.showSuggestions = true;
-      // Generate suggestions when focused (trending if empty, search-related if has text)
       this.generateSuggestions();
     }
   }
 
   onBlur() {
     this.isFocused = false;
-    // Delay hiding suggestions to allow clicking on them
     setTimeout(() => {
       this.showSuggestions = false;
     }, 200);
   }
 
   onKeyDown(event: KeyboardEvent) {
-    if (this.suggestions.length > 0) {
-      switch (event.key) {
-        case 'ArrowDown':
-          event.preventDefault();
-          this.selectedSuggestionIndex = Math.min(this.selectedSuggestionIndex + 1, this.suggestions.length - 1);
-          break;
-        case 'ArrowUp':
-          event.preventDefault();
-          this.selectedSuggestionIndex = Math.max(this.selectedSuggestionIndex - 1, -1);
-          break;
-        case 'Enter':
-          if (this.selectedSuggestionIndex >= 0) {
-            event.preventDefault();
-            this.selectSuggestion(this.suggestions[this.selectedSuggestionIndex]);
-          }
-          break;
-        case 'Escape':
-          this.showSuggestions = false;
-          this.selectedSuggestionIndex = -1;
-          break;
-      }
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.onSearch(this.searchQuery);
+    } else if (event.key === 'Escape') {
+      this.showSuggestions = false;
+      this.selectedSuggestionIndex = -1;
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.selectedSuggestionIndex = Math.min(this.selectedSuggestionIndex + 1, this.suggestions.length - 1);
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.selectedSuggestionIndex = Math.max(this.selectedSuggestionIndex - 1, -1);
     }
   }
 
@@ -128,27 +101,25 @@ export class SearchBar implements OnInit {
     this.searchQuery = '';
     this.showSuggestions = false;
     this.selectedSuggestionIndex = -1;
-    if (this.searchInput) {
-      this.searchInput.nativeElement.focus();
-    }
   }
 
   onQuickAction(query: string) {
     this.searchQuery = query;
-    this.onSearch();
+    this.onSearch(query);
   }
 
   startVoiceInput() {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    if (!this.isRecording) {
       this.isRecording = true;
-      // Voice recognition implementation would go here
-      // For now, just simulate
+      // TODO: Implement voice input functionality
+      console.log('Starting voice input...');
+      
+      // Simulate voice input for demo
       setTimeout(() => {
         this.isRecording = false;
-        this.searchQuery = 'Voice input simulation';
+        this.searchQuery = 'Voice input demo query';
+        this.onSearch(this.searchQuery);
       }, 2000);
-    } else {
-      console.log('Speech recognition not supported');
     }
   }
 
@@ -160,61 +131,44 @@ export class SearchBar implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.fileUpload.emit(file);
-      // Reset file input
+      // Reset the input
       event.target.value = '';
     }
   }
 
   generateSuggestions() {
-    if (!this.showAutoSuggestions) {
-      this.suggestions = [];
-      return;
-    }
-
-    const query = this.searchQuery.trim();
+    const query = this.searchQuery.trim().toLowerCase();
     
     if (!query) {
-      // Show trending topics when search is empty
+      // Show trending suggestions when no query
       this.suggestions = [
-        'ChatGPT conversations Google search exposed',
-        'Lightning mystery solved after 273 years',
-        'Andy Jassy AI jobs pivot after backlash',
-        'Meta jury verdict menstrual data Flo',
-        'Latest iPhone 15 Pro reviews',
-        'Best AI tools for developers'
+        'How to implement authentication in Angular?',
+        'Best practices for TypeScript development',
+        'Understanding dependency injection',
+        'Angular performance optimization tips',
+        'Modern CSS techniques for responsive design'
       ];
-      this.showSuggestions = true;
-      return;
+    } else {
+      // Show search-related suggestions
+      this.suggestions = [
+        `${query} in Angular`,
+        `${query} best practices`,
+        `${query} tutorial`,
+        `${query} examples`,
+        `${query} documentation`
+      ];
     }
-
-    // Generate search-related suggestions when there's text
-    const baseSuggestions = [
-      `${query} latest news`,
-      `${query} tutorial`,
-      `${query} examples`,
-      `${query} best practices`,
-      `${query} comparison`,
-      `${query} guide`
-    ];
-
-    // Filter suggestions that contain the query and limit to 6
-    this.suggestions = baseSuggestions
-      .filter(suggestion => 
-        suggestion.toLowerCase().includes(query.toLowerCase())
-      )
-      .slice(0, 6); // Limit to 6 suggestions
-
-    // Show suggestions if we have any
-    this.showSuggestions = this.suggestions.length > 0;
     
-    console.log('Suggestions generated:', this.suggestions); // Debug
+    this.selectedSuggestionIndex = -1;
   }
 
   selectSuggestion(suggestion: string) {
     this.searchQuery = suggestion;
-    this.showSuggestions = false;
-    this.selectedSuggestionIndex = -1;
-    this.onSearch();
+    this.onSearch(suggestion);
+  }
+
+  onSuggestionHover(index: number) {
+    this.selectedSuggestionIndex = index;
   }
 
   trackBySuggestion(index: number, suggestion: string): string {
@@ -227,8 +181,8 @@ export class SearchBar implements OnInit {
 
   selectModel(model: any) {
     this.selectedModel = model;
-    this.showModelDropdown = false;
     this.modelChange.emit(model);
+    this.showModelDropdown = false;
   }
 
   toggleAdvancedOptions() {
@@ -243,27 +197,21 @@ export class SearchBar implements OnInit {
   }
 
   onDocumentClick(event: Event) {
-    // Close dropdowns when clicking outside
     const target = event.target as HTMLElement;
-    if (!target.closest('.model-selector')) {
-      this.showModelDropdown = false;
+    if (!target.closest('.search-bar') && !target.closest('.search-suggestions')) {
+      this.showSuggestions = false;
+      this.selectedSuggestionIndex = -1;
     }
   }
 
   focusSearch() {
-    if (this.searchInput && !this.isSearching) {
-      this.searchInput.nativeElement.focus();
-    }
+    // This will be handled by SearchInputComponent
   }
 
   onEnterKey(event: any) {
-    if (event.shiftKey) {
-      // Shift+Enter: Add new line (default behavior)
-      return;
-    } else {
-      // Enter: Submit search
+    if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      this.onSearch();
+      this.onSearch(this.searchQuery);
     }
   }
 }
