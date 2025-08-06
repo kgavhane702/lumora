@@ -44,7 +44,6 @@ export class SearchBar implements OnInit {
   selectedSuggestionIndex: number = -1;
   acceptedFileTypes: string = '.pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png';
   attachedFiles: AttachedFile[] = [];
-  showDragOverlay: boolean = false;
 
   ngOnInit() {
     // Initialize component
@@ -183,6 +182,12 @@ export class SearchBar implements OnInit {
     
     // Trigger progress simulation for new files immediately
     this.simulateUploadProgress(newAttachedFiles);
+  }
+
+  // Public method to handle file uploads from external sources (like page-level drag and drop)
+  public handleExternalFileUpload(files: File[]) {
+    console.log('External file upload received:', files);
+    this.handleFileUpload(files);
   }
 
   onFileUpload(files: File[]) {

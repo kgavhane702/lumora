@@ -27,6 +27,7 @@ export class Search implements OnInit, AfterViewInit {
   isSearching: boolean = false; // Track search state
   private searchTimeout: any = null; // For stopping search
   showDragOverlay: boolean = false; // Track drag overlay state
+  private dragCounter: number = 0; // Track drag enter/leave events
 
   @ViewChildren('currentSessionElem', { read: ElementRef }) sessionElems!: QueryList<ElementRef>;
   @ViewChild('searchBar') searchBar!: SearchBar;
@@ -43,26 +44,39 @@ export class Search implements OnInit, AfterViewInit {
     // Add global drag event listeners to handle window boundaries
     document.addEventListener('dragenter', (event) => {
       event.preventDefault();
+      event.stopPropagation();
+      this.dragCounter++;
       this.showDragOverlay = true;
     });
 
     document.addEventListener('dragleave', (event) => {
       event.preventDefault();
-      // Only hide if we're leaving the document completely
-      if (event.clientX <= 0 || event.clientY <= 0 || 
-          event.clientX >= window.innerWidth || event.clientY >= window.innerHeight) {
+      event.stopPropagation();
+      this.dragCounter--;
+      if (this.dragCounter <= 0) {
         this.showDragOverlay = false;
+        this.dragCounter = 0;
       }
     });
 
     document.addEventListener('drop', (event) => {
       event.preventDefault();
+      event.stopPropagation();
       this.showDragOverlay = false;
+      this.dragCounter = 0;
     });
 
     document.addEventListener('dragend', (event) => {
       event.preventDefault();
+      event.stopPropagation();
       this.showDragOverlay = false;
+      this.dragCounter = 0;
+    });
+
+    // Prevent default drag behavior on the entire document
+    document.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
     });
   }
 
@@ -78,7 +92,7 @@ export class Search implements OnInit, AfterViewInit {
     event.preventDefault();
     event.stopPropagation();
     
-    // Show drag overlay
+    this.dragCounter++;
     this.showDragOverlay = true;
   }
 
@@ -96,10 +110,10 @@ export class Search implements OnInit, AfterViewInit {
     event.preventDefault();
     event.stopPropagation();
     
-    // Check if we're leaving the page completely
-    if (event.clientX <= 0 || event.clientY <= 0 || 
-        event.clientX >= window.innerWidth || event.clientY >= window.innerHeight) {
+    this.dragCounter--;
+    if (this.dragCounter <= 0) {
       this.showDragOverlay = false;
+      this.dragCounter = 0;
     }
   }
 
@@ -110,6 +124,7 @@ export class Search implements OnInit, AfterViewInit {
     
     // Hide drag overlay
     this.showDragOverlay = false;
+    this.dragCounter = 0;
     
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
@@ -117,15 +132,18 @@ export class Search implements OnInit, AfterViewInit {
       for (let i = 0; i < files.length; i++) {
         fileArray.push(files[i]);
       }
+      
       // Pass files to the appropriate search bar component
       if (this.hasActiveSessions && this.searchBarChat) {
         // If we have active sessions, use the chat search bar
-        this.searchBarChat.handleFileUpload(fileArray);
+        this.searchBarChat.handleExternalFileUpload(fileArray);
       } else if (this.searchBar) {
         // Otherwise use the initial search bar
-        this.searchBar.handleFileUpload(fileArray);
+        this.searchBar.handleExternalFileUpload(fileArray);
       }
     }
+    
+    return false; // Prevent default browser behavior
   }
 
   @HostListener('dragend', ['$event'])
@@ -135,6 +153,75 @@ export class Search implements OnInit, AfterViewInit {
     
     // Hide overlay when drag ends
     this.showDragOverlay = false;
+    this.dragCounter = 0;
+  }
+
+  @HostListener('keydown.escape', ['$event'])
+  onEscapeKey(event: Event) {
+    // Hide overlay when Escape is pressed
+    this.showDragOverlay = false;
+    this.dragCounter = 0;
+  }
+
+  // Additional handlers for the chat layout specifically
+  @HostListener('window:dragenter', ['$event'])
+  onWindowDragEnter(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    this.dragCounter++;
+    this.showDragOverlay = true;
+  }
+
+  @HostListener('window:dragleave', ['$event'])
+  onWindowDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    this.dragCounter--;
+    if (this.dragCounter <= 0) {
+      this.showDragOverlay = false;
+      this.dragCounter = 0;
+    }
+  }
+
+  @HostListener('window:drop', ['$event'])
+  onWindowDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Hide drag overlay
+    this.showDragOverlay = false;
+    this.dragCounter = 0;
+    
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const fileArray: File[] = [];
+      for (let i = 0; i < files.length; i++) {
+        fileArray.push(files[i]);
+      }
+      
+      // Pass files to the appropriate search bar component
+      if (this.hasActiveSessions && this.searchBarChat) {
+        // If we have active sessions, use the chat search bar
+        this.searchBarChat.handleExternalFileUpload(fileArray);
+      } else if (this.searchBar) {
+        // Otherwise use the initial search bar
+        this.searchBar.handleExternalFileUpload(fileArray);
+      }
+    }
+    
+    return false; // Prevent default browser behavior
+  }
+
+  @HostListener('window:dragend', ['$event'])
+  onWindowDragEnd(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Hide overlay when drag ends
+    this.showDragOverlay = false;
+    this.dragCounter = 0;
   }
 
   private scrollToCurrentSession() {
