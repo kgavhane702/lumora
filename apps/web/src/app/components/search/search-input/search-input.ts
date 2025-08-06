@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './search-input.html',
   styleUrls: ['./search-input.scss']
 })
-export class SearchInputComponent implements OnInit {
+export class SearchInputComponent implements OnInit, OnChanges {
   @Input() placeholder: string = 'Ask anything...';
   @Input() maxLength: number = 1000;
   @Input() autoFocus: boolean = false;
   @Input() disabled: boolean = false;
+  @Input() searchQuery: string = '';
   
   @Output() inputChange = new EventEmitter<string>();
   @Output() search = new EventEmitter<string>();
@@ -22,7 +23,6 @@ export class SearchInputComponent implements OnInit {
   
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLTextAreaElement>;
   
-  searchQuery: string = '';
   isFocused: boolean = false;
 
   ngOnInit() {
@@ -33,7 +33,16 @@ export class SearchInputComponent implements OnInit {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['searchQuery'] && this.searchInput) {
+      // Update the textarea value when searchQuery changes from parent
+      this.searchInput.nativeElement.value = this.searchQuery;
+      this.autoResize();
+    }
+  }
+
   onInputChange() {
+    console.log('SearchInputComponent onInputChange called with:', this.searchQuery);
     this.inputChange.emit(this.searchQuery);
     this.autoResize();
   }

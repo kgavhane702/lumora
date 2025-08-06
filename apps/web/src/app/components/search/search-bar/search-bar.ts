@@ -62,6 +62,7 @@ export class SearchBar implements OnInit {
   }
 
   onInputChange(query: string) {
+    console.log('SearchBar onInputChange called with:', query);
     this.searchQuery = query;
     this.generateSuggestions();
   }
@@ -138,6 +139,7 @@ export class SearchBar implements OnInit {
 
   generateSuggestions() {
     const query = this.searchQuery.trim().toLowerCase();
+    console.log('Generating suggestions for query:', query);
     
     if (!query) {
       // Show trending suggestions when no query
@@ -159,6 +161,7 @@ export class SearchBar implements OnInit {
       ];
     }
     
+    console.log('Generated suggestions:', this.suggestions);
     this.selectedSuggestionIndex = -1;
   }
 

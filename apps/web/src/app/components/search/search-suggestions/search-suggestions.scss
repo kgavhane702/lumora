@@ -6,8 +6,9 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  height: 264px;
-  overflow: hidden;
+  max-height: 264px;
+  overflow-y: auto;
+  overflow-x: hidden;
   border-top: none;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -24,6 +25,8 @@
   font-size: 14px;
   color: #374151;
   width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
   
   &:last-child {
     border-bottom: none;
@@ -38,6 +41,15 @@
       opacity: 1;
       transform: translateX(0);
     }
+  }
+  
+  .suggestion-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
   }
   
   .suggestion-text {
@@ -60,5 +72,25 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    width: 16px;
+    height: 16px;
   }
+}
+
+/* Custom scrollbar for webkit browsers */
+.search-suggestions::-webkit-scrollbar {
+  width: 4px;
+}
+
+.search-suggestions::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 2px;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
 } 
