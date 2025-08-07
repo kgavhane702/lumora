@@ -4,7 +4,8 @@ import { SearchBar } from '../../../components/search/search-bar/search-bar';
 import { SearchResults } from '../../../components/search/search-results/search-results';
 import { SearchResult, Reference } from '../../../shared/interfaces/search-result';
 import { MockDataService } from '../../../core/services/mock-data.service';
-import { Icon } from '../../../shared/components/icon/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 interface SearchSession {
   id: string;
@@ -17,7 +18,7 @@ interface SearchSession {
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, SearchBar, SearchResults, Icon],
+  imports: [CommonModule, SearchBar, SearchResults, MatIconModule, MatButtonModule],
   templateUrl: './search.html',
   styleUrls: ['./search.scss']
 })

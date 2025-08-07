@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Icon } from './shared/components/icon/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { SidebarComponent } from './components/layout/sidebar/sidebar';
 
 interface ChatSession {
@@ -19,7 +20,7 @@ interface User {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, Icon, SidebarComponent],
+  imports: [RouterOutlet, MatIconModule, MatButtonModule, SidebarComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })

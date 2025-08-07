@@ -27,7 +27,7 @@
         <div class="quick-actions-grid">
           <button class="quick-action-card" (click)="onQuickAction('What is the latest news about AI?')">
             <div class="action-icon">
-              <app-icon name="trending-up" [size]="24" color="white"></app-icon>
+              <mat-icon>trending_up</mat-icon>
             </div>
             <div class="action-content">
               <h4>Latest AI News</h4>
@@ -37,7 +37,7 @@
           
           <button class="quick-action-card" (click)="onQuickAction('How to learn TypeScript?')">
             <div class="action-icon">
-              <app-icon name="folder" [size]="24" color="white"></app-icon>
+              <mat-icon>folder</mat-icon>
             </div>
             <div class="action-content">
               <h4>Learn TypeScript</h4>
@@ -47,7 +47,7 @@
           
           <button class="quick-action-card" (click)="onQuickAction('What is the weather today?')">
             <div class="action-icon">
-              <app-icon name="explore" [size]="24" color="white"></app-icon>
+              <mat-icon>explore</mat-icon>
             </div>
             <div class="action-content">
               <h4>Weather Today</h4>
@@ -57,7 +57,7 @@
           
           <button class="quick-action-card" (click)="onQuickAction('Best restaurants near me')">
             <div class="action-icon">
-              <app-icon name="home" [size]="24" color="white"></app-icon>
+              <mat-icon>home</mat-icon>
             </div>
             <div class="action-content">
               <h4>Find Restaurants</h4>
@@ -73,7 +73,7 @@
         <div class="features-grid">
           <div class="feature-card">
             <div class="feature-icon">
-              <app-icon name="search" [size]="24" color="white"></app-icon>
+              <mat-icon>search</mat-icon>
             </div>
             <h4>Smart Search</h4>
             <p>Get accurate answers with AI-powered search</p>
@@ -81,7 +81,7 @@
           
           <div class="feature-card">
             <div class="feature-icon">
-              <app-icon name="chat" [size]="24" color="white"></app-icon>
+              <mat-icon>chat</mat-icon>
             </div>
             <h4>Conversational</h4>
             <p>Ask follow-up questions naturally</p>
@@ -89,7 +89,7 @@
           
           <div class="feature-card">
             <div class="feature-icon">
-              <app-icon name="verified" [size]="24" color="white"></app-icon>
+              <mat-icon>verified</mat-icon>
             </div>
             <h4>Verified Sources</h4>
             <p>All answers come with reliable references</p>
@@ -97,7 +97,7 @@
           
           <div class="feature-card">
             <div class="feature-icon">
-              <app-icon name="speed" [size]="24" color="white"></app-icon>
+              <mat-icon>speed</mat-icon>
             </div>
             <h4>Lightning Fast</h4>
             <p>Get instant answers in seconds</p>
@@ -125,10 +125,10 @@
                 <div class="query-text">{{ session.query }}</div>
                 <div class="query-actions">
                   <button class="action-btn" title="Edit query">
-                    <app-icon name="edit" [size]="16" color="#6b7280"></app-icon>
+                    <mat-icon>edit</mat-icon>
                   </button>
                   <button class="action-btn" title="Copy query">
-                    <app-icon name="content-copy" [size]="16" color="#6b7280"></app-icon>
+                    <mat-icon>content_copy</mat-icon>
                   </button>
                 </div>
               </div>
@@ -168,7 +168,7 @@
 <div class="drag-overlay" *ngIf="showDragOverlay" (click)="showDragOverlay = false">
   <div class="overlay-content" (click)="$event.stopPropagation()">
     <div class="overlay-icon">
-      <app-icon name="attach-file" [size]="48" color="#3b82f6"></app-icon>
+      <mat-icon>attach_file</mat-icon>
     </div>
     <div class="overlay-text">
       <h3 class="overlay-title">Drop your files here</h3>

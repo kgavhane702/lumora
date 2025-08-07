@@ -1,11 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Icon } from '../../../shared/components/icon/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-search-suggestions',
   standalone: true,
-  imports: [CommonModule, Icon],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './search-suggestions.html',
   styleUrls: ['./search-suggestions.scss']
 })
@@ -31,10 +31,6 @@ export class SearchSuggestionsComponent {
   }
 
   getIconName(): string {
-    return this.searchQuery.trim() ? 'search' : 'trending-up';
-  }
-
-  getIconColor(): string {
-    return this.searchQuery.trim() ? '#6b7280' : '#3b82f6';
+    return this.searchQuery.trim() ? 'search' : 'trending_up';
   }
 } 

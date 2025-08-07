@@ -1,14 +1,11 @@
-<div class="app-container" [class.mobile-menu-open]="isMobileMenuOpen">
-  <!-- Mobile Menu Toggle -->
-  <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
-    <app-icon name="menu" [size]="24" color="currentColor"></app-icon>
+<div class="app-container">
+  <!-- Mobile Menu Button -->
+  <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+    <mat-icon>menu</mat-icon>
   </button>
 
-  <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu-overlay" (click)="closeMobileMenu()" [class.active]="isMobileMenuOpen"></div>
-
-  <!-- Left Sidebar -->
-  <app-sidebar 
+  <!-- Sidebar -->
+  <app-sidebar
     [isMobileOpen]="isMobileMenuOpen"
     [user]="user"
     [chatSessions]="chatSessions"
@@ -16,7 +13,7 @@
     (chatSelect)="onChatSelect($event)"
     (mobileClose)="closeMobileMenu()">
   </app-sidebar>
-  
+
   <!-- Main Content -->
   <main class="main-content">
     <router-outlet></router-outlet>

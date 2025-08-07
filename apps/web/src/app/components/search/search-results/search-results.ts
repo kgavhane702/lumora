@@ -1,12 +1,14 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchResult, Reference } from '../../../shared/interfaces/search-result';
-import { Icon } from '../../../shared/components/icon/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CommonModule, Icon],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './search-results.html',
   styleUrls: ['./search-results.scss']
 })

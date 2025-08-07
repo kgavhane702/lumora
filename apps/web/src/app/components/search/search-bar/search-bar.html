@@ -21,48 +21,49 @@
       <!-- Navigation Icons -->
       <div class="nav-icons">
         <div class="search-icon" [class.active]="searchQuery">
-          <app-icon name="search" [size]="18" color="#6b7280"></app-icon>
+          <mat-icon>search</mat-icon>
         </div>
         <div class="grid-icon">
-          <app-icon name="apps" [size]="18" color="#6b7280"></app-icon>
+          <mat-icon>apps</mat-icon>
         </div>
         <div class="help-icon">
-          <app-icon name="help" [size]="18" color="#6b7280"></app-icon>
+          <mat-icon>help</mat-icon>
         </div>
       </div>
 
       <!-- Action Icons -->
       <div class="action-icons">
         <button 
+          mat-icon-button
           class="file-upload-btn"
           (click)="openFileUpload()"
           type="button"
-          title="Upload file">
-          <app-icon name="attach-file" [size]="18" color="#6b7280"></app-icon>
+          matTooltip="Upload file">
+          <mat-icon>attach_file</mat-icon>
         </button>
         
         <button 
+          mat-icon-button
           class="voice-btn"
           (click)="startVoiceInput()"
           [class.recording]="isRecording"
           type="button"
-          title="Voice input">
-          <app-icon name="mic" [size]="18" color="#6b7280"></app-icon>
+          matTooltip="Voice input">
+          <mat-icon>mic</mat-icon>
         </button>
         
         <!-- Search/Submit Button -->
         <button 
+          mat-icon-button
           class="search-button"
           [class.searching]="isSearching"
           (click)="isSearching ? onStopSearch() : onSearch(searchQuery)"
           [disabled]="!searchQuery.trim() && !isSearching"
           type="button"
-          title="Search">
-          <app-icon 
-            [name]="isSearching ? 'stop-circle' : 'send'" 
-            [size]="22" 
-            [color]="isSearching ? '#dc2626' : '#3b82f6'">
-          </app-icon>
+          matTooltip="Search">
+          <mat-icon [color]="isSearching ? 'warn' : 'primary'">
+            {{ isSearching ? 'stop_circle' : 'send' }}
+          </mat-icon>
         </button>
       </div>
     </div>

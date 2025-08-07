@@ -1,7 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Icon } from '../../../shared/components/icon/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 interface ChatSession {
   id: string;
@@ -19,7 +20,7 @@ interface User {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, Icon],
+  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule],
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.scss']
 })

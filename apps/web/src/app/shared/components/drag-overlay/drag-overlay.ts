@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Icon } from '../icon/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-drag-overlay',
   standalone: true,
-  imports: [CommonModule, Icon],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './drag-overlay.html',
   styleUrls: ['./drag-overlay.scss']
 })

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Icon } from '../icon/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 export interface AttachedFile {
   id: string;
@@ -15,7 +16,7 @@ export interface AttachedFile {
 @Component({
   selector: 'app-file-attachment',
   standalone: true,
-  imports: [CommonModule, Icon],
+  imports: [CommonModule, MatIconModule, MatButtonModule],
   templateUrl: './file-attachment.html',
   styleUrls: ['./file-attachment.scss']
 })
@@ -89,17 +90,10 @@ export class FileAttachmentComponent implements OnInit {
   }
 
   getFileIcon(fileType: string): string {
-    if (fileType.includes('pdf')) return 'folder';
+    if (fileType.includes('pdf')) return 'picture_as_pdf';
     if (fileType.includes('image')) return 'image';
-    if (fileType.includes('text')) return 'document';
-    return 'attach-file';
-  }
-
-  getFileColor(fileType: string): string {
-    if (fileType.includes('pdf')) return '#dc2626';
-    if (fileType.includes('image')) return '#059669';
-    if (fileType.includes('text')) return '#3b82f6';
-    return '#6b7280';
+    if (fileType.includes('text')) return 'description';
+    return 'attach_file';
   }
 
   trackByFile(index: number, file: AttachedFile): string {

@@ -1,7 +1,12 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Icon } from '../../../shared/components/icon/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SearchInputComponent } from '../search-input/search-input';
 import { SearchSuggestionsComponent } from '../search-suggestions/search-suggestions';
 import { FileAttachmentComponent, AttachedFile } from '../../../shared/components/file-attachment/file-attachment';
@@ -9,7 +14,19 @@ import { FileAttachmentComponent, AttachedFile } from '../../../shared/component
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [CommonModule, FormsModule, Icon, SearchInputComponent, SearchSuggestionsComponent, FileAttachmentComponent],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    MatIconModule, 
+    MatButtonModule, 
+    MatFormFieldModule, 
+    MatInputModule,
+    MatMenuModule,
+    MatTooltipModule,
+    SearchInputComponent, 
+    SearchSuggestionsComponent, 
+    FileAttachmentComponent
+  ],
   templateUrl: './search-bar.html',
   styleUrls: ['./search-bar.scss']
 })
@@ -112,17 +129,34 @@ export class SearchBar implements OnInit {
   }
 
   startVoiceInput() {
-    if (!this.isRecording) {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       this.isRecording = true;
-      // TODO: Implement voice input functionality
-      console.log('Starting voice input...');
       
-      // Simulate voice input for demo
-      setTimeout(() => {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+      
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        this.searchQuery = transcript;
+        this.onSearch(transcript);
+      };
+      
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
         this.isRecording = false;
-        this.searchQuery = 'Voice input demo query';
-        this.onSearch(this.searchQuery);
-      }, 2000);
+      };
+      
+      recognition.onend = () => {
+        this.isRecording = false;
+      };
+      
+      recognition.start();
+    } else {
+      console.warn('Speech recognition not supported');
     }
   }
 
@@ -131,85 +165,68 @@ export class SearchBar implements OnInit {
   }
 
   onFileSelected(event: any) {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      const fileArray: File[] = [];
-      for (let i = 0; i < files.length; i++) {
-        fileArray.push(files[i]);
-      }
-      this.handleFileUpload(fileArray);
-    }
-    // Reset the input
-    event.target.value = '';
+    const files = Array.from(event.target.files) as File[];
+    this.handleFileUpload(files);
   }
 
   handleFileUpload(files: File[]) {
-    console.log('Files uploaded:', files);
-    
-    // Filter out duplicate files
-    const newFiles = files.filter(newFile => {
-      return !this.attachedFiles.some(existingFile => 
-        existingFile.name === newFile.name && 
-        existingFile.size === newFile.size
-      );
-    });
-    
-    if (newFiles.length === 0) {
-      console.log('All files are duplicates');
-      return;
-    }
-    
-    // Check if adding these files would exceed the limit
-    const totalFiles = this.attachedFiles.length + newFiles.length;
-    if (totalFiles > 5) {
-      console.log('Too many files, max is 5');
-      return;
-    }
-    
-    // Convert files to AttachedFile format
-    const newAttachedFiles: AttachedFile[] = newFiles.map(file => ({
-      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      file: file,
-      uploadStatus: 'pending',
-      uploadProgress: 0
-    }));
+    const validFiles: File[] = [];
+    const errors: string[] = [];
 
-    this.attachedFiles = [...this.attachedFiles, ...newAttachedFiles];
-    this.fileUpload.emit(newFiles);
-    
-    // Trigger progress simulation for new files immediately
-    this.simulateUploadProgress(newAttachedFiles);
+    files.forEach(file => {
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+      const maxSize = 10 * 1024 * 1024; // 10MB
+
+      if (!this.acceptedFileTypes.includes(fileExtension)) {
+        errors.push(`${file.name} - Invalid file type`);
+      } else if (file.size > maxSize) {
+        errors.push(`${file.name} - File too large (max 10MB)`);
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    if (errors.length > 0) {
+      console.error('File upload errors:', errors);
+      // TODO: Show error messages to user
+    }
+
+    if (validFiles.length > 0) {
+      this.onFileUpload(validFiles);
+    }
   }
 
-  // Public method to handle file uploads from external sources (like page-level drag and drop)
   public handleExternalFileUpload(files: File[]) {
-    console.log('External file upload received:', files);
     this.handleFileUpload(files);
   }
 
   onFileUpload(files: File[]) {
-    this.handleFileUpload(files);
+    const newAttachedFiles: AttachedFile[] = files.map(file => ({
+      id: Math.random().toString(36).substr(2, 9),
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      file: file,
+      uploadProgress: 0,
+      uploadStatus: 'pending'
+    }));
+
+    this.attachedFiles = [...this.attachedFiles, ...newAttachedFiles];
+    this.simulateUploadProgress(newAttachedFiles);
+    this.fileUpload.emit(files);
   }
 
   onFileRemove(file: AttachedFile) {
-    console.log('Removing file:', file.name);
     this.attachedFiles = this.attachedFiles.filter(f => f.id !== file.id);
   }
 
   onFileError(error: { file: File; error: string }) {
-    console.error('File error:', error);
-    // You can show a toast notification here
+    console.error('File upload error:', error);
+    // TODO: Show error message to user
   }
 
   generateSuggestions() {
-    const query = this.searchQuery.trim().toLowerCase();
-    console.log('Generating suggestions for query:', query);
-    
-    if (!query) {
-      // Show trending suggestions when no query
+    if (!this.searchQuery.trim()) {
       this.suggestions = [
         'How to implement authentication in Angular?',
         'Best practices for TypeScript development',
@@ -218,18 +235,18 @@ export class SearchBar implements OnInit {
         'Modern CSS techniques for responsive design'
       ];
     } else {
-      // Show search-related suggestions
+      // Generate suggestions based on current input
+      const query = this.searchQuery.toLowerCase();
       this.suggestions = [
-        `${query} in Angular`,
-        `${query} best practices`,
-        `${query} tutorial`,
-        `${query} examples`,
-        `${query} documentation`
-      ];
+        'How to implement authentication in Angular?',
+        'Best practices for TypeScript development',
+        'Understanding dependency injection',
+        'Angular performance optimization tips',
+        'Modern CSS techniques for responsive design'
+      ].filter(suggestion => 
+        suggestion.toLowerCase().includes(query)
+      );
     }
-    
-    console.log('Generated suggestions:', this.suggestions);
-    this.selectedSuggestionIndex = -1;
   }
 
   selectSuggestion(suggestion: string) {
@@ -266,16 +283,17 @@ export class SearchBar implements OnInit {
     });
   }
 
+  @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
-    if (!target.closest('.search-bar') && !target.closest('.search-suggestions')) {
+    if (!target.closest('.search-bar-container')) {
       this.showSuggestions = false;
       this.selectedSuggestionIndex = -1;
     }
   }
 
   focusSearch() {
-    // This will be handled by SearchInputComponent
+    // Focus the search input
   }
 
   onEnterKey(event: any) {
@@ -287,24 +305,16 @@ export class SearchBar implements OnInit {
 
   private simulateUploadProgress(files: AttachedFile[]) {
     files.forEach(file => {
-      if (file.uploadStatus === 'pending') {
-        file.uploadStatus = 'uploading';
-        file.uploadProgress = 0;
-        
-        // Simulate progress animation
-        const interval = setInterval(() => {
-          if (file.uploadProgress !== undefined && file.uploadProgress < 100) {
-            file.uploadProgress += Math.random() * 15 + 5; // Random increment between 5-20%
-            if (file.uploadProgress >= 100) {
-              file.uploadProgress = 100;
-              file.uploadStatus = 'completed';
-              clearInterval(interval);
-            }
-          } else {
+      const interval = setInterval(() => {
+        if (file.uploadProgress !== undefined) {
+          file.uploadProgress += Math.random() * 20;
+          if (file.uploadProgress >= 100) {
+            file.uploadProgress = 100;
+            file.uploadStatus = 'completed';
             clearInterval(interval);
           }
-        }, 200); // Update every 200ms
-      }
+        }
+      }, 200);
     });
   }
 }

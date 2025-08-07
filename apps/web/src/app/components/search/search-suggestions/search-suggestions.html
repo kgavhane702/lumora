@@ -7,17 +7,13 @@
     (mouseenter)="onSuggestionHover(i)">
     
     <div class="suggestion-icon">
-      <app-icon 
-        [name]="getIconName()" 
-        [size]="16" 
-        [color]="getIconColor()">
-      </app-icon>
+      <mat-icon>{{ getIconName() }}</mat-icon>
     </div>
     
     <div class="suggestion-text">{{ suggestion }}</div>
     
     <div class="suggestion-go">
-      <app-icon name="arrow-up-left" [size]="16" color="#3b82f6"></app-icon>
+      <mat-icon>north_west</mat-icon>
     </div>
   </div>
 </div> 

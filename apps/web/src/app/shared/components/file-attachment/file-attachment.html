@@ -10,10 +10,7 @@
         
         <!-- File Icon -->
         <div class="file-icon">
-          <app-icon [name]="getFileIcon(file.type)" 
-                   [size]="14" 
-                   [color]="getFileColor(file.type)">
-          </app-icon>
+          <mat-icon>{{ getFileIcon(file.type) }}</mat-icon>
         </div>
         
         <!-- File Name and Size -->
@@ -38,7 +35,7 @@
                 (click)="onRemoveFile(file)"
                 [disabled]="file.uploadStatus === 'uploading'"
                 title="Remove file">
-          <app-icon name="close" [size]="12" color="#6b7280"></app-icon>
+          <mat-icon>close</mat-icon>
         </button>
       </div>
     </div>

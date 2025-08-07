@@ -1,14 +1,14 @@
 <aside class="sidebar" [class.mobile-open]="isMobileOpen">
   <!-- Mobile Close Button -->
   <button class="mobile-close-btn" (click)="onMobileClose()" *ngIf="isMobileOpen">
-    <app-icon name="close" [size]="20" color="#6b7280"></app-icon>
+    <mat-icon>close</mat-icon>
   </button>
 
   <!-- Sidebar Header -->
   <div class="sidebar-header">
     <div class="logo">
       <div class="logo-icon">
-        <app-icon name="apps" [size]="20" color="white"></app-icon>
+        <mat-icon>apps</mat-icon>
       </div>
       <span class="logo-text">Lumora</span>
     </div>
@@ -17,7 +17,7 @@
   <!-- New Chat Section -->
   <div class="new-chat-section">
     <button class="nav-button new-chat" (click)="onNewChat()">
-      <app-icon name="add" [size]="20" color="white"></app-icon>
+      <mat-icon>add</mat-icon>
       <span>New Chat</span>
     </button>
   </div>
@@ -28,15 +28,15 @@
     <div class="nav-section">
       <div class="nav-section-title">Main</div>
       <a routerLink="/search" routerLinkActive="active" class="nav-item">
-        <app-icon name="search" [size]="20" color="#6b7280"></app-icon>
+        <mat-icon>search</mat-icon>
         <span>Search</span>
       </a>
       <a routerLink="/chat" routerLinkActive="active" class="nav-item">
-        <app-icon name="chat" [size]="20" color="#6b7280"></app-icon>
+        <mat-icon>chat</mat-icon>
         <span>Chat</span>
       </a>
       <a routerLink="/home" routerLinkActive="active" class="nav-item">
-        <app-icon name="home" [size]="20" color="#6b7280"></app-icon>
+        <mat-icon>home</mat-icon>
         <span>Home</span>
       </a>
     </div>
@@ -50,7 +50,7 @@
         [class.active]="chat.isActive"
         (click)="onChatSelect(chat.id)">
         <div class="chat-icon">
-          <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
+          <mat-icon>chat</mat-icon>
         </div>
         <div class="chat-content">
           <div class="chat-title">{{ chat.title }}</div>
@@ -63,11 +63,11 @@
     <div class="nav-section">
       <div class="nav-section-title">Tools</div>
       <a routerLink="/settings" routerLinkActive="active" class="nav-item">
-        <app-icon name="settings" [size]="20" color="#6b7280"></app-icon>
+        <mat-icon>settings</mat-icon>
         <span>Settings</span>
       </a>
       <a routerLink="/help" routerLinkActive="active" class="nav-item">
-        <app-icon name="help" [size]="20" color="#6b7280"></app-icon>
+        <mat-icon>help</mat-icon>
         <span>Help</span>
       </a>
     </div>
@@ -75,7 +75,7 @@
     <!-- Upgrade Section -->
     <div class="nav-section">
       <button class="nav-button upgrade">
-        <app-icon name="star" [size]="20" color="white"></app-icon>
+        <mat-icon>star</mat-icon>
         <span>Upgrade to Pro</span>
       </button>
     </div>
@@ -85,7 +85,7 @@
   <div class="user-section">
     <div class="user-info">
       <div class="user-avatar">
-        <app-icon name="person" [size]="20" color="#6b7280"></app-icon>
+        <mat-icon>person</mat-icon>
       </div>
       <div class="user-details">
         <div class="user-name">{{ user.name }}</div>
