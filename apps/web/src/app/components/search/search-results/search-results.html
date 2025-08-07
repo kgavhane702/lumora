@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <!-- AI Answer Results -->
+  <!-- AI Answer Results with Tabs -->
   <div class="ai-results-list" *ngIf="!isLoading && results.length > 0">
     <div 
       class="ai-result-item" 
@@ -70,66 +70,115 @@
         </div>
       </div>
 
-      <!-- AI Answer Content -->
-      <div class="ai-answer-content">
-        <div class="answer-text" [innerHTML]="formatAnswer(result.answer)"></div>
-        
-        <!-- Sources Summary -->
-        <div class="sources-summary" *ngIf="result.references && result.references.length > 0">
-          <div class="sources-badge">
-            <app-icon name="link" [size]="14" color="#6b7280"></app-icon>
-            <span>Based on {{ result.references.length }} source{{ result.references.length > 1 ? 's' : '' }}</span>
-          </div>
-        </div>
+      <!-- Tab Navigation -->
+      <div class="tab-navigation" *ngIf="result.references && result.references.length > 0">
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'answer'"
+          (click)="switchTab('answer')">
+          <app-icon name="chat" [size]="16" color="currentColor"></app-icon>
+          <span>Answer</span>
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'sources'"
+          (click)="switchTab('sources')">
+          <app-icon name="link" [size]="16" color="currentColor"></app-icon>
+          <span>Sources ({{ result.references.length }})</span>
+        </button>
       </div>
 
-      <!-- References Section -->
-      <div class="references-section" *ngIf="result.references && result.references.length > 0">
-        <div class="references-header">
-          <h4 class="references-title">
-            <app-icon name="link" [size]="16" color="#6b7280"></app-icon>
-            Sources
-          </h4>
-          <span class="references-count">{{ result.references.length }} source{{ result.references.length > 1 ? 's' : '' }}</span>
-        </div>
-        
-        <div class="references-list">
-          <div 
-            class="reference-item" 
-            *ngFor="let reference of result.references; trackBy: trackByReference; let i = index">
-            <div class="reference-number">{{ i + 1 }}</div>
-            <div class="reference-content">
-              <div class="reference-title">{{ reference.title }}</div>
-              <div class="reference-url">{{ reference.url }}</div>
-              <div class="reference-snippet" *ngIf="reference.snippet">{{ reference.snippet }}</div>
-              <div class="reference-meta" *ngIf="reference.publishedDate">
-                <span class="reference-date">{{ reference.publishedDate | date:'MMM d, y' }}</span>
-                <span class="reference-domain" *ngIf="reference.domain">{{ reference.domain }}</span>
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Answer Tab -->
+        <div class="tab-panel" [class.active]="activeTab === 'answer'">
+          <!-- Top Sources (Limited to 4) -->
+          <div class="top-sources-container" *ngIf="result.references && result.references.length > 0">
+            <div class="top-sources-grid">
+              <div 
+                class="source-box" 
+                *ngFor="let reference of result.references.slice(0, 4); trackBy: trackByReference; let i = index"
+                (click)="onReferenceClick(reference)">
+                <div class="source-box-content">
+                  <div class="source-domain">{{ reference.domain || getDomainFromUrl(reference.url) }}</div>
+                  <div class="source-title">{{ reference.title }}</div>
+                  <div class="source-meta">
+                    <span class="source-date" *ngIf="reference.publishedDate">{{ reference.publishedDate | date:'MMM d, y' }}</span>
+                    <span class="source-relevance">Relevance: {{ reference.relevance }}%</span>
+                  </div>
+                </div>
+                <div class="source-box-action">
+                  <app-icon name="open-in-new" [size]="14" color="#6b7280"></app-icon>
+                </div>
               </div>
             </div>
-            <button class="reference-action" (click)="onReferenceClick(reference)" title="Open source">
-              <app-icon name="open-in-new" [size]="16" color="#6b7280"></app-icon>
-            </button>
+          </div>
+
+          <!-- AI Answer Content -->
+          <div class="ai-answer-content">
+            <div class="answer-text" [innerHTML]="formatAnswer(result.answer)"></div>
+            
+            <!-- Sources Summary -->
+            <div class="sources-summary" *ngIf="result.references && result.references.length > 0">
+              <div class="sources-badge">
+                <app-icon name="link" [size]="14" color="#6b7280"></app-icon>
+                <span>Based on {{ result.references.length }} source{{ result.references.length > 1 ? 's' : '' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Follow-up Questions -->
+          <div class="follow-up-section" *ngIf="result.followUpQuestions && result.followUpQuestions.length > 0">
+            <div class="follow-up-header">
+              <h4 class="follow-up-title">
+                <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
+                Related questions
+              </h4>
+            </div>
+            <div class="follow-up-list">
+              <button 
+                class="follow-up-question" 
+                *ngFor="let question of result.followUpQuestions"
+                (click)="onFollowUpClick(question)">
+                <app-icon name="arrow-right" [size]="14" color="#6b7280"></app-icon>
+                <span>{{ question }}</span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Follow-up Questions -->
-      <div class="follow-up-section" *ngIf="result.followUpQuestions && result.followUpQuestions.length > 0">
-        <div class="follow-up-header">
-          <h4 class="follow-up-title">
-            <app-icon name="chat" [size]="16" color="#6b7280"></app-icon>
-            Related questions
-          </h4>
-        </div>
-        <div class="follow-up-list">
-          <button 
-            class="follow-up-question" 
-            *ngFor="let question of result.followUpQuestions"
-            (click)="onFollowUpClick(question)">
-            <app-icon name="arrow-right" [size]="14" color="#6b7280"></app-icon>
-            <span>{{ question }}</span>
-          </button>
+        <!-- Sources Tab -->
+        <div class="tab-panel" [class.active]="activeTab === 'sources'">
+          <div class="sources-tab-content">
+            <div class="sources-header">
+              <h4 class="sources-title">
+                <app-icon name="link" [size]="16" color="#6b7280"></app-icon>
+                All Sources ({{ result.references.length }})
+              </h4>
+            </div>
+            
+            <div class="sources-list">
+              <div 
+                class="source-item" 
+                *ngFor="let reference of result.references; trackBy: trackByReference; let i = index"
+                (click)="onReferenceClick(reference)">
+                <div class="source-number">{{ i + 1 }}</div>
+                <div class="source-content">
+                  <div class="source-title">{{ reference.title }}</div>
+                  <div class="source-url">{{ reference.url }}</div>
+                  <div class="source-snippet" *ngIf="reference.snippet">{{ reference.snippet }}</div>
+                  <div class="source-meta">
+                    <span class="source-domain">{{ reference.domain || getDomainFromUrl(reference.url) }}</span>
+                    <span class="source-date" *ngIf="reference.publishedDate">{{ reference.publishedDate | date:'MMM d, y' }}</span>
+                    <span class="source-relevance">Relevance: {{ reference.relevance }}%</span>
+                  </div>
+                </div>
+                <div class="source-action">
+                  <app-icon name="open-in-new" [size]="16" color="#6b7280"></app-icon>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

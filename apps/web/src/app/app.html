@@ -1,4 +1,4 @@
-<div class="app-container">
+<div class="app-container" [class.mobile-menu-open]="isMobileMenuOpen">
   <!-- Mobile Menu Toggle -->
   <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
     <app-icon name="menu" [size]="24" color="currentColor"></app-icon>

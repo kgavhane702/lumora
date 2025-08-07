@@ -19,12 +19,18 @@ export class SearchResults {
   @Output() followUpClick = new EventEmitter<string>();
   @Output() continueSearch = new EventEmitter<SearchResult>();
 
+  activeTab: 'answer' | 'sources' = 'answer';
+
   trackByResult(index: number, result: SearchResult): string {
     return result.id || index.toString();
   }
 
   trackByReference(index: number, reference: Reference): string {
     return reference.url || index.toString();
+  }
+
+  switchTab(tab: 'answer' | 'sources') {
+    this.activeTab = tab;
   }
 
   formatAnswer(answer: string): string {
@@ -76,5 +82,14 @@ export class SearchResults {
 
   onFollowUpClick(question: string) {
     this.followUpClick.emit(question);
+  }
+
+  getDomainFromUrl(url: string): string {
+    try {
+      const domain = new URL(url).hostname.replace('www.', '');
+      return domain;
+    } catch {
+      return url;
+    }
   }
 }

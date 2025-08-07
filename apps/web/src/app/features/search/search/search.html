@@ -109,53 +109,57 @@
 
   <!-- Chat Layout (Subsequent Searches) -->
   <div class="chat-layout" *ngIf="hasActiveSessions">
-    <!-- Scrollable Results Area -->
-    <div class="results-scroll-area">
-      <div class="sessions-container">
-        <div
-          class="session-item"
-          *ngFor="let session of searchSessions; let i = index; trackBy: trackBySession"
-          #currentSessionElem=""
-          [attr.data-last]="i === searchSessions.length - 1 ? true : null">
-          
-          <div class="session-header">
-            <div class="query-section">
-              <div class="query-text">{{ session.query }}</div>
-              <div class="query-actions">
-                <button class="action-btn" title="Edit query">
-                  <app-icon name="edit" [size]="16" color="#6b7280"></app-icon>
-                </button>
-                <button class="action-btn" title="Copy query">
-                  <app-icon name="content-copy" [size]="16" color="#6b7280"></app-icon>
-                </button>
+    <!-- Main Content Area -->
+    <div class="chat-content">
+      <!-- Results Container -->
+      <div class="results-container">
+        <div class="sessions-container">
+          <div
+            class="session-item"
+            *ngFor="let session of searchSessions; let i = index; trackBy: trackBySession"
+            #currentSessionElem=""
+            [attr.data-last]="i === searchSessions.length - 1 ? true : null">
+            
+            <div class="session-header">
+              <div class="query-section">
+                <div class="query-text">{{ session.query }}</div>
+                <div class="query-actions">
+                  <button class="action-btn" title="Edit query">
+                    <app-icon name="edit" [size]="16" color="#6b7280"></app-icon>
+                  </button>
+                  <button class="action-btn" title="Copy query">
+                    <app-icon name="content-copy" [size]="16" color="#6b7280"></app-icon>
+                  </button>
+                </div>
               </div>
+              <div class="session-timestamp">{{ formatTimestamp(session.timestamp) }}</div>
             </div>
-            <div class="session-timestamp">{{ formatTimestamp(session.timestamp) }}</div>
-          </div>
-          <div class="session-results">
-            <app-search-results 
-              [results]="session.results"
-              [isLoading]="session.isLoading"
-              (resultClick)="onResultClick($event)"
-              (referenceClick)="onReferenceClick($event)"
-              (followUpClick)="onFollowUpClick($event)"
-              (continueSearch)="onContinueSearch($event)">
-            </app-search-results>
+            <div class="session-results">
+              <app-search-results 
+                [results]="session.results"
+                [isLoading]="session.isLoading"
+                (resultClick)="onResultClick($event)"
+                (referenceClick)="onReferenceClick($event)"
+                (followUpClick)="onFollowUpClick($event)"
+                (continueSearch)="onContinueSearch($event)">
+              </app-search-results>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Fixed Search Bar at Bottom -->
-    <div class="fixed-search-container">
-      <app-search-bar 
-        #searchBarChat
-        [placeholder]="'Ask a follow-up question...'"
-        [autoFocus]="false"
-        [isSearching]="isSearching"
-        (search)="onSearch($event)"
-        (stopSearch)="onStopSearch()">
-      </app-search-bar>
+      <!-- Search Bar Container -->
+      <div class="search-bar-container">
+        <app-search-bar 
+          #searchBarChat
+          [placeholder]="'Ask a follow-up question...'"
+          [autoFocus]="false"
+          [isSearching]="isSearching"
+          [showAutoSuggestions]="false"
+          (search)="onSearch($event)"
+          (stopSearch)="onStopSearch()">
+        </app-search-bar>
+      </div>
     </div>
   </div>
 </div>
