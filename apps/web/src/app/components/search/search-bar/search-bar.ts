@@ -10,6 +10,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SearchInputComponent } from '../search-input/search-input';
 import { SearchSuggestionsComponent } from '../search-suggestions/search-suggestions';
 import { FileAttachmentComponent, AttachedFile } from '../../../shared/components/file-attachment/file-attachment';
+import { FileUploadService } from '../../../shared/services/file-upload.service';
+import { NotificationService } from '../../../shared/services/notification.service';
+import { ErrorHandlerService } from '../../../shared/services/error-handler.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -61,6 +64,12 @@ export class SearchBar implements OnInit {
   selectedSuggestionIndex: number = -1;
   acceptedFileTypes: string = '.pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png';
   attachedFiles: AttachedFile[] = [];
+
+  constructor(
+    private fileUploadService: FileUploadService,
+    private notificationService: NotificationService,
+    private errorHandler: ErrorHandlerService
+  ) {}
 
   ngOnInit() {
     // Initialize component
@@ -170,29 +179,17 @@ export class SearchBar implements OnInit {
   }
 
   handleFileUpload(files: File[]) {
-    const validFiles: File[] = [];
-    const errors: string[] = [];
+    // Use FileUploadService for validation
+    const { valid, invalid } = this.fileUploadService.validateFiles(files);
 
-    files.forEach(file => {
-      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
-      const maxSize = 10 * 1024 * 1024; // 10MB
-
-      if (!this.acceptedFileTypes.includes(fileExtension)) {
-        errors.push(`${file.name} - Invalid file type`);
-      } else if (file.size > maxSize) {
-        errors.push(`${file.name} - File too large (max 10MB)`);
-      } else {
-        validFiles.push(file);
-      }
-    });
-
-    if (errors.length > 0) {
-      console.error('File upload errors:', errors);
-      // TODO: Show error messages to user
+    if (invalid.length > 0) {
+      const errorMessage = `Invalid files: ${invalid.map(item => item.file.name).join(', ')}`;
+      this.notificationService.error('Upload Error', errorMessage);
+      this.errorHandler.handleFileError(new Error(errorMessage));
     }
 
-    if (validFiles.length > 0) {
-      this.onFileUpload(validFiles);
+    if (valid.length > 0) {
+      this.onFileUpload(valid);
     }
   }
 
@@ -212,17 +209,34 @@ export class SearchBar implements OnInit {
     }));
 
     this.attachedFiles = [...this.attachedFiles, ...newAttachedFiles];
-    this.simulateUploadProgress(newAttachedFiles);
+    
+    // Use FileUploadService for actual upload
+    this.fileUploadService.uploadFiles(files).subscribe(results => {
+      results.forEach((result, index) => {
+        const attachedFile = newAttachedFiles[index];
+        if (result.success) {
+          attachedFile.uploadStatus = 'completed';
+          attachedFile.uploadProgress = 100;
+          this.notificationService.showSuccess(`File ${attachedFile.name} uploaded successfully`);
+        } else {
+          attachedFile.uploadStatus = 'error';
+          this.notificationService.error('Upload Failed', `Failed to upload ${attachedFile.name}`);
+        }
+      });
+    });
+
     this.fileUpload.emit(files);
   }
 
   onFileRemove(file: AttachedFile) {
     this.attachedFiles = this.attachedFiles.filter(f => f.id !== file.id);
+    this.notificationService.showInfo(`Removed ${file.name}`);
   }
 
   onFileError(error: { file: File; error: string }) {
     console.error('File upload error:', error);
-    // TODO: Show error message to user
+    this.notificationService.error('File Error', error.error);
+    this.errorHandler.handleFileError(new Error(error.error));
   }
 
   generateSuggestions() {

@@ -3,10 +3,16 @@ import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../../components/search/search-bar/search-bar';
 import { SearchResults } from '../../../components/search/search-results/search-results';
 import { SearchResult, Reference } from '../../../shared/interfaces/search-result';
-import { MockDataService } from '../../../core/services/mock-data.service';
+import { SearchQuery } from '../../../shared/interfaces/search-query';
+import { SearchService } from '../../../core/services/search';
+import { NotificationService } from '../../../shared/services/notification.service';
+import { ErrorHandlerService } from '../../../shared/services/error-handler.service';
+import { FileUploadService } from '../../../shared/services/file-upload.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 interface SearchSession {
   id: string;
@@ -28,24 +34,35 @@ export class Search implements OnInit, AfterViewInit {
   
   searchSessions: SearchSession[] = [];
   currentSession: SearchSession | null = null;
-  isSearching: boolean = false; // Track search state
-  private searchTimeout: any = null; // For stopping search
-  showDragOverlay: boolean = false; // Track drag overlay state
-  private dragCounter: number = 0; // Track drag enter/leave events
+  isSearching: boolean = false;
+  private searchTimeout: any = null;
+  showDragOverlay: boolean = false;
+  private dragCounter: number = 0;
 
   @ViewChildren('currentSessionElem', { read: ElementRef }) sessionElems!: QueryList<ElementRef>;
   @ViewChild('searchBar') searchBar!: SearchBar;
   @ViewChild('searchBarChat') searchBarChat!: SearchBar;
 
-  constructor(private mockDataService: MockDataService) {}
+  constructor(
+    private searchService: SearchService,
+    private notificationService: NotificationService,
+    private errorHandler: ErrorHandlerService,
+    private fileUploadService: FileUploadService
+  ) {}
 
   ngOnInit() {
-    // Initialize component
     this.setupGlobalDragListeners();
+    this.loadSearchHistory();
+  }
+
+  private loadSearchHistory() {
+    // Load search history from the service
+    this.searchService.getSearchHistory().subscribe(history => {
+      console.log('Loaded search history:', history);
+    });
   }
 
   private setupGlobalDragListeners() {
-    // Add global drag event listeners to handle window boundaries
     document.addEventListener('dragenter', (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -77,7 +94,6 @@ export class Search implements OnInit, AfterViewInit {
       this.dragCounter = 0;
     });
 
-    // Prevent default drag behavior on the entire document
     document.addEventListener('dragover', (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -90,12 +106,11 @@ export class Search implements OnInit, AfterViewInit {
     });
   }
 
-  // Global drag & drop handlers for the entire search page
+  // Global drag & drop handlers
   @HostListener('dragenter', ['$event'])
   onDragEnter(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    
     this.dragCounter++;
     this.showDragOverlay = true;
   }
@@ -104,8 +119,6 @@ export class Search implements OnInit, AfterViewInit {
   onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    
-    // Keep overlay visible while dragging over
     this.showDragOverlay = true;
   }
 
@@ -113,7 +126,6 @@ export class Search implements OnInit, AfterViewInit {
   onDragLeave(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    
     this.dragCounter--;
     if (this.dragCounter <= 0) {
       this.showDragOverlay = false;
@@ -126,7 +138,6 @@ export class Search implements OnInit, AfterViewInit {
     event.preventDefault();
     event.stopPropagation();
     
-    // Hide drag overlay
     this.showDragOverlay = false;
     this.dragCounter = 0;
     
@@ -137,42 +148,30 @@ export class Search implements OnInit, AfterViewInit {
         fileArray.push(files[i]);
       }
       
-      // Pass files to the appropriate search bar component
-      if (this.hasActiveSessions && this.searchBarChat) {
-        // If we have active sessions, use the chat search bar
-        this.searchBarChat.handleExternalFileUpload(fileArray);
-      } else if (this.searchBar) {
-        // Otherwise use the initial search bar
-        this.searchBar.handleExternalFileUpload(fileArray);
-      }
+      this.handleFileUpload(fileArray);
     }
     
-    return false; // Prevent default browser behavior
+    return false;
   }
 
   @HostListener('dragend', ['$event'])
   onDragEnd(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    
-    // Hide overlay when drag ends
     this.showDragOverlay = false;
     this.dragCounter = 0;
   }
 
   @HostListener('keydown.escape', ['$event'])
   onEscapeKey(event: Event) {
-    // Hide overlay when Escape is pressed
     this.showDragOverlay = false;
     this.dragCounter = 0;
   }
 
-  // Additional handlers for the chat layout specifically
   @HostListener('window:dragenter', ['$event'])
   onWindowDragEnter(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    
     this.dragCounter++;
     this.showDragOverlay = true;
   }
@@ -181,7 +180,6 @@ export class Search implements OnInit, AfterViewInit {
   onWindowDragLeave(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    
     this.dragCounter--;
     if (this.dragCounter <= 0) {
       this.showDragOverlay = false;
@@ -194,7 +192,6 @@ export class Search implements OnInit, AfterViewInit {
     event.preventDefault();
     event.stopPropagation();
     
-    // Hide drag overlay
     this.showDragOverlay = false;
     this.dragCounter = 0;
     
@@ -205,25 +202,16 @@ export class Search implements OnInit, AfterViewInit {
         fileArray.push(files[i]);
       }
       
-      // Pass files to the appropriate search bar component
-      if (this.hasActiveSessions && this.searchBarChat) {
-        // If we have active sessions, use the chat search bar
-        this.searchBarChat.handleExternalFileUpload(fileArray);
-      } else if (this.searchBar) {
-        // Otherwise use the initial search bar
-        this.searchBar.handleExternalFileUpload(fileArray);
-      }
+      this.handleFileUpload(fileArray);
     }
     
-    return false; // Prevent default browser behavior
+    return false;
   }
 
   @HostListener('window:dragend', ['$event'])
   onWindowDragEnd(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    
-    // Hide overlay when drag ends
     this.showDragOverlay = false;
     this.dragCounter = 0;
   }
@@ -238,10 +226,19 @@ export class Search implements OnInit, AfterViewInit {
   }
 
   onSearch(query: string) {
-    if (!query.trim() || this.isSearching) return; // Prevent multiple requests
+    if (!query.trim() || this.isSearching) return;
     
-    // Set searching state
     this.isSearching = true;
+    this.notificationService.showSearchStarted();
+    
+    // Create search query object
+    const searchQuery: SearchQuery = {
+      query: query.trim(),
+      timestamp: new Date(),
+      searchMode: 'both',
+      includeReferences: true,
+      focus: 'concise'
+    };
     
     // Create new search session
     const newSession: SearchSession = {
@@ -252,39 +249,64 @@ export class Search implements OnInit, AfterViewInit {
       isLoading: true
     };
     
-    // Add to sessions list
     this.searchSessions.push(newSession);
     this.currentSession = newSession;
     
-    // Simulate API call with timeout for stopping
-    this.searchTimeout = setTimeout(() => {
-      if (this.isSearching) { // Only complete if still searching
-        newSession.results = this.mockDataService.getMockSearchResults();
-        newSession.isLoading = false;
+    // Use SearchService to execute search
+    this.searchService.executeSearch(searchQuery).pipe(
+      catchError(error => {
+        this.errorHandler.handleSearchError(error, {
+          component: 'SearchComponent',
+          action: 'onSearch',
+          data: { query: query.trim() }
+        });
+        return of(null);
+      }),
+      finalize(() => {
         this.isSearching = false;
+        this.notificationService.showSearchCompleted();
+      })
+    ).subscribe(result => {
+      if (result) {
+        newSession.results = [result];
+        newSession.isLoading = false;
+        this.notificationService.showSuccess(`Found results for "${query.trim()}"`);
+      } else {
+        newSession.isLoading = false;
+        newSession.results = [];
       }
-    }, 2000);
-    setTimeout(() => this.scrollToCurrentSession(), 0); // Ensure scroll after DOM update
+    });
+    
+    setTimeout(() => this.scrollToCurrentSession(), 0);
   }
 
   onStopSearch() {
     if (this.isSearching) {
       this.isSearching = false;
       
-      // Clear the timeout
       if (this.searchTimeout) {
         clearTimeout(this.searchTimeout);
         this.searchTimeout = null;
       }
       
-      // Mark current session as stopped and complete it
       if (this.currentSession) {
         this.currentSession.isLoading = false;
-        // If no results yet, add some results when stopped
         if (this.currentSession.results.length === 0) {
-          this.currentSession.results = this.mockDataService.getMockSearchResults();
+          // Add mock results when stopped
+          this.currentSession.results = [{
+            id: Date.now().toString(),
+            answer: 'Search was stopped by user.',
+            references: [],
+            modelUsed: 'gpt-4o',
+            confidence: 0.5,
+            searchTime: 0,
+            timestamp: new Date(),
+            query: this.currentSession.query
+          }];
         }
       }
+      
+      this.notificationService.showInfo('Search stopped');
     }
   }
 
@@ -298,11 +320,13 @@ export class Search implements OnInit, AfterViewInit {
 
   onResultClick(result: SearchResult) {
     console.log('Result clicked:', result);
+    this.notificationService.showInfo('Result clicked');
   }
 
   onReferenceClick(reference: Reference) {
     console.log('Reference clicked:', reference);
     window.open(reference.url, '_blank');
+    this.notificationService.showInfo('Opening reference in new tab');
   }
 
   onFollowUpClick(question: string) {
@@ -310,20 +334,33 @@ export class Search implements OnInit, AfterViewInit {
   }
 
   onContinueSearch(result: SearchResult) {
-    // Continue searching with the same query but different focus
     const followUpQuery = `Continue searching about: ${result.query}`;
     this.onSearch(followUpQuery);
   }
 
   onFileUpload(files: File[]) {
     console.log('Files uploaded:', files.map(f => f.name));
-    // Handle file upload - just log for now, don't auto-search
-    // The files will be visible in the search bar attachment area
-    console.log(`Attached ${files.length} file(s) to the search bar`);
     
-    // Pass files to the search bar component
-    // We need to find the search bar component and pass the files
-    // For now, we'll emit an event that the parent can handle
+    // Validate files using FileUploadService
+    const { valid, invalid } = this.fileUploadService.validateFiles(files);
+    
+    if (invalid.length > 0) {
+      const errorMessage = `Invalid files: ${invalid.map(item => item.file.name).join(', ')}`;
+      this.notificationService.error('Upload Error', errorMessage);
+    }
+    
+    if (valid.length > 0) {
+      this.notificationService.showInfo(`Attached ${valid.length} file(s) to search`);
+      
+      // Upload files using FileUploadService
+      this.fileUploadService.uploadFiles(valid).subscribe(results => {
+        console.log('Files uploaded successfully:', results);
+      });
+    }
+  }
+
+  private handleFileUpload(files: File[]) {
+    this.onFileUpload(files);
   }
 
   formatTimestamp(date: Date): string {
@@ -345,34 +382,34 @@ export class Search implements OnInit, AfterViewInit {
   // Navigation Menu Methods
   onNewSearch() {
     console.log('New search requested');
-    // TODO: Implement new search functionality
-    // This could clear current sessions and start fresh
     this.searchSessions = [];
     this.currentSession = null;
+    this.notificationService.showInfo('Started new search session');
   }
 
   onClearHistory() {
     console.log('Clear history requested');
-    // TODO: Implement clear history functionality
+    this.searchService.clearSearchHistory();
     this.searchSessions = [];
     this.currentSession = null;
+    this.notificationService.showSuccess('Search history cleared');
   }
 
   onShareResults() {
     console.log('Share results requested');
+    this.notificationService.showInfo('Sharing results...');
     // TODO: Implement share functionality
-    // This could share the current search results
   }
 
   onBookmarkResults() {
     console.log('Bookmark results requested');
+    this.notificationService.showSuccess('Results bookmarked');
     // TODO: Implement bookmark functionality
-    // This could bookmark the current search session
   }
 
   onExportResults() {
     console.log('Export results requested');
+    this.notificationService.showInfo('Exporting results...');
     // TODO: Implement export functionality
-    // This could export search results to PDF, JSON, etc.
   }
 }

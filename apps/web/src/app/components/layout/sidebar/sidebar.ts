@@ -26,7 +26,7 @@ interface User {
 })
 export class SidebarComponent {
   @Input() isMobileOpen: boolean = false;
-  @Input() user: User = { name: 'John Doe', email: 'john@example.com' };
+  @Input() user: User | null = null;
   @Input() chatSessions: ChatSession[] = [];
   
   @Output() newChat = new EventEmitter<void>();

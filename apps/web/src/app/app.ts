@@ -1,12 +1,17 @@
-import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
+import { Component, ViewChild, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
-import { DatePipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { SidebarComponent } from './components/layout/sidebar/sidebar';
 import { Header } from './components/layout/header/header';
+import { AuthService } from './core/services/auth';
+import { NotificationService } from './shared/services/notification.service';
+import { ErrorHandlerService } from './shared/services/error-handler.service';
+import { User } from './shared/interfaces/user';
 import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 interface ChatSession {
   id: string;
@@ -15,18 +20,11 @@ interface ChatSession {
   isActive: boolean;
 }
 
-interface User {
-  name: string;
-  email: string;
-  avatar?: string;
-}
-
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet, 
-    DatePipe,
     CommonModule,
     MatIconModule, 
     MatButtonModule, 
@@ -37,52 +35,74 @@ interface User {
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'lumora';
   isMobileMenuOpen = false;
   isMobile = false;
   isSearchResultsPage = false;
+  isAuthenticated = false;
+  user: User | null = null;
   
   @ViewChild('drawer') drawer!: MatSidenav;
-  
-  user: User = {
-    name: 'John Doe',
-    email: 'john@example.com'
-  };
   
   chatSessions: ChatSession[] = [
     {
       id: '1',
       title: 'How to implement authentication...',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
       isActive: false
     },
     {
       id: '2',
       title: 'Best practices for Angular...',
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
       isActive: false
     },
     {
       id: '3',
       title: 'Understanding TypeScript...',
-      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
       isActive: false
     }
   ];
 
-  constructor(private router: Router) {}
+  private subscriptions: Subscription[] = [];
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    private errorHandler: ErrorHandlerService
+  ) {}
 
   ngOnInit() {
     this.checkScreenSize();
     this.setupRouteDetection();
+    this.loadUserData();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  private loadUserData() {
+    // Subscribe to auth state changes
+    this.subscriptions.push(
+      this.authService.getAuthState().subscribe(state => {
+        this.isAuthenticated = state.isAuthenticated;
+        this.user = state.user;
+        
+        if (this.isAuthenticated && this.user) {
+          this.notificationService.showSuccess(`Welcome back, ${this.user.name}!`);
+        }
+      })
+    );
   }
 
   private setupRouteDetection() {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      // Check if we're on a search results page (more specific)
       this.isSearchResultsPage = event.url.includes('/results') || 
                                  (event.url.includes('/search') && event.url !== '/search');
     });
@@ -99,7 +119,6 @@ export class AppComponent implements OnInit {
       this.drawer.mode = this.isMobile ? 'over' : 'side';
       this.drawer.opened = !this.isMobile;
       
-      // Ensure sidebar is closed on mobile by default
       if (this.isMobile && this.drawer.opened) {
         this.drawer.close();
       }
@@ -124,31 +143,41 @@ export class AppComponent implements OnInit {
 
   onNewChat() {
     console.log('New chat requested');
-    // TODO: Implement new chat functionality
+    this.notificationService.showInfo('Creating new chat session...');
   }
 
   onChatSelect(chatId: string) {
     console.log('Chat selected:', chatId);
-    // TODO: Implement chat selection functionality
+    this.notificationService.showInfo('Switching to chat session');
   }
 
   onShareResults() {
     console.log('Share results');
-    // TODO: Implement share functionality
+    this.notificationService.showInfo('Sharing results...');
   }
 
   onBookmarkResults() {
     console.log('Bookmark results');
-    // TODO: Implement bookmark functionality
+    this.notificationService.showSuccess('Results bookmarked');
   }
 
-  // Handle mobile menu toggle from child components (like search)
   onChildMobileMenuToggle() {
     this.toggleMobileMenu();
   }
 
-  // Update search results page detection
   updateSearchResultsPage(isSearchResults: boolean) {
     this.isSearchResultsPage = isSearchResults;
+  }
+
+  onLogout() {
+    this.authService.logout();
+    this.notificationService.showSuccess('Logged out successfully');
+    this.router.navigate(['/login']);
+  }
+
+  onProfileUpdate() {
+    if (this.user) {
+      this.notificationService.showInfo('Opening profile settings...');
+    }
   }
 }
