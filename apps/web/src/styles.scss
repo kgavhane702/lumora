@@ -21,6 +21,123 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Material Icon Color Overrides - Make Icons Lighter */
+mat-icon {
+  color: #4b5563 !important; /* Medium gray - 50% darker than light gray */
+  opacity: 0.9;
+  transition: all 0.2s ease;
+  /* Fix responsive icon sizing */
+  width: auto !important;
+  height: auto !important;
+  min-width: 20px;
+  min-height: 20px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Submit Button Specific Styles */
+.search-button mat-icon {
+  color: #93c5fd !important; /* Light blue when not active */
+  opacity: 1;
+}
+
+.search-button:hover mat-icon {
+  color: #3b82f6 !important; /* Blue lumora color on hover */
+}
+
+.search-button:not(:disabled):hover mat-icon {
+  color: #3b82f6 !important; /* Blue lumora color when active/enabled */
+}
+
+/* Active states for other icons */
+.nav-icons .active mat-icon,
+.action-icons button:hover mat-icon {
+  color: #3b82f6 !important; /* Blue lumora color for active/hover states */
+  opacity: 1;
+}
+
+/* Recording state for voice button */
+.voice-btn.recording mat-icon {
+  color: #ef4444 !important; /* Red for recording state */
+}
+
+/* Searching state for search button - NO HOVER EFFECT */
+.search-button.searching mat-icon {
+  color: #ef4444 !important; /* Red for searching/stop state */
+}
+
+.search-button.searching:hover mat-icon {
+  color: #ef4444 !important; /* Keep red even on hover */
+}
+
+/* Quick Action and Feature Icons - Make them white */
+.nav-button.new-chat mat-icon,
+.nav-button.upgrade mat-icon {
+  color: white !important;
+  opacity: 1;
+}
+
+/* Quick Action Cards and Feature Icons - Make them white */
+.quick-action-card mat-icon,
+.feature-card mat-icon,
+.action-card mat-icon {
+  color: white !important;
+  opacity: 1;
+}
+
+/* Search Bar Attachment Icon - Keep it larger */
+.file-upload-btn mat-icon {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  font-size: 20px;
+}
+
+/* File Attachment Component Icons - Smaller size */
+.file-attachment mat-icon,
+.attach-file-icon mat-icon {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  font-size: 12px;
+}
+
+/* Fix trending icon in autosuggestions */
+.suggestion-icon mat-icon {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  font-size: 16px;
+}
+
+/* Autosuggestion arrow icon - Lumora blue */
+.suggestion-go mat-icon {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  font-size: 16px;
+  color: #3b82f6 !important; /* Lumora blue */
+}
+
+/* Fix stop icon in search results */
+.search-button.searching mat-icon {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  font-size: 20px;
+  /* Ensure it's fully visible */
+  overflow: visible !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Utility Classes */
 .container {
   max-width: 1200px;

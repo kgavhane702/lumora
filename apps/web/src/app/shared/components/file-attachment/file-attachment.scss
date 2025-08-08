@@ -16,7 +16,7 @@
 .file-list {
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 6px;
   overflow-x: auto;
   overflow-y: hidden; // Prevent vertical scroll
   padding: 4px 0;
@@ -66,16 +66,21 @@
   justify-content: center;
   width: 16px;
   height: 16px;
-  background: rgba(59, 130, 246, 0.1);
-  border-radius: 3px;
   flex-shrink: 0;
+  
+  mat-icon {
+    width: 12px !important;
+    height: 12px !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
+    font-size: 12px;
+  }
 }
 
 .file-info {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  flex: 1;
   min-width: 0;
 }
 
@@ -136,12 +141,11 @@
   border-radius: 2px;
   cursor: pointer;
   transition: all 0.2s ease;
-  flex-shrink: 0;
   
   &:hover {
     background: rgba(239, 68, 68, 0.1);
     
-    app-icon {
+    mat-icon {
       color: #dc2626 !important;
     }
   }
@@ -149,6 +153,15 @@
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  
+  mat-icon {
+    width: 10px !important;
+    height: 10px !important;
+    min-width: 10px !important;
+    min-height: 10px !important;
+    font-size: 10px;
+    color: #6b7280;
   }
 }
 
@@ -181,6 +194,14 @@
   .file-icon {
     width: 14px;
     height: 14px;
+    
+    mat-icon {
+      width: 10px !important;
+      height: 10px !important;
+      min-width: 10px !important;
+      min-height: 10px !important;
+      font-size: 10px;
+    }
   }
   
   .file-name {
@@ -190,6 +211,19 @@
   
   .file-size {
     font-size: 8px;
+  }
+  
+  .remove-btn {
+    width: 12px;
+    height: 12px;
+    
+    mat-icon {
+      width: 8px !important;
+      height: 8px !important;
+      min-width: 8px !important;
+      min-height: 8px !important;
+      font-size: 8px;
+    }
   }
 }
 
@@ -203,6 +237,14 @@
   .file-icon {
     width: 12px;
     height: 12px;
+    
+    mat-icon {
+      width: 8px !important;
+      height: 8px !important;
+      min-width: 8px !important;
+      min-height: 8px !important;
+      font-size: 8px;
+    }
   }
   
   .file-name {
@@ -212,5 +254,18 @@
   
   .file-size {
     font-size: 7px;
+  }
+  
+  .remove-btn {
+    width: 10px;
+    height: 10px;
+    
+    mat-icon {
+      width: 6px !important;
+      height: 6px !important;
+      min-width: 6px !important;
+      min-height: 6px !important;
+      font-size: 6px;
+    }
   }
 }

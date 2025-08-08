@@ -101,12 +101,46 @@
 }
 
 .search-button {
+  /* Submit button specific styles */
+  &:not(:disabled) {
+    background: rgba(147, 197, 253, 0.1); /* Light blue background */
+    
+    &:hover {
+      background: rgba(59, 130, 246, 0.15); /* Slightly darker blue on hover */
+    }
+  }
+  
   &.searching {
     background: rgba(239, 68, 68, 0.1);
     
     &:hover {
       background: rgba(239, 68, 68, 0.2);
     }
+    
+    /* Ensure stop icon is fully visible */
+    mat-icon {
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
+      min-height: 20px !important;
+      font-size: 20px;
+      overflow: visible !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  
+  /* Ensure all search button icons are properly sized */
+  mat-icon {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    font-size: 20px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -118,12 +152,12 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+ 0%, 100% {
+   opacity: 1;
+ }
+ 50% {
+   opacity: 0.7;
+ }
 }
 
 /* File attachment styles inside search bar - only show when files exist */
@@ -139,8 +173,24 @@ app-file-attachment {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  /* Fixed positioning for search bar in chat layout */
+  .search-page .chat-layout .search-bar-container {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 1rem !important;
+    border-top: 1px solid rgba(229, 231, 235, 0.3) !important;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1) !important;
+  }
+  
   .search-bar {
-    padding: 6px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 0;
   }
   
   .action-bar {
@@ -168,8 +218,13 @@ app-file-attachment {
 }
 
 @media (max-width: 480px) {
+  /* Fixed positioning for search bar in chat layout */
+  .search-page .chat-layout .search-bar-container {
+    padding: 0.75rem !important;
+  }
+  
   .search-bar {
-    padding: 4px;
+    padding: 6px 10px;
   }
   
   .action-bar {

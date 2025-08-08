@@ -1,21 +1,43 @@
-<div class="app-container">
-  <!-- Mobile Menu Button -->
-  <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
-    <mat-icon>menu</mat-icon>
-  </button>
+<!-- Material Layout Container -->
+<mat-sidenav-container class="app-sidenav-container">
+  
+  <!-- Sidebar Navigation -->
+  <mat-sidenav 
+    #drawer 
+    class="app-sidenav" 
+    fixedInViewport
+    [attr.role]="'navigation'"
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="!isMobile"
+    [disableClose]="false"
+    [autoFocus]="false">
+    
+    <!-- Use existing sidebar component -->
+    <app-sidebar
+      [isMobileOpen]="isMobileMenuOpen"
+      [user]="user"
+      [chatSessions]="chatSessions"
+      (newChat)="onNewChat()"
+      (chatSelect)="onChatSelect($event)"
+      (mobileClose)="closeMobileMenu()">
+    </app-sidebar>
+  </mat-sidenav>
 
-  <!-- Sidebar -->
-  <app-sidebar
-    [isMobileOpen]="isMobileMenuOpen"
-    [user]="user"
-    [chatSessions]="chatSessions"
-    (newChat)="onNewChat()"
-    (chatSelect)="onChatSelect($event)"
-    (mobileClose)="closeMobileMenu()">
-  </app-sidebar>
+  <!-- Main Content Area -->
+  <mat-sidenav-content class="app-sidenav-content">
+    
+    <!-- Header Component -->
+    <app-header
+      [isSearchResultsPage]="isSearchResultsPage"
+      (mobileMenuToggle)="toggleMobileMenu()"
+      (shareResults)="onShareResults()"
+      (bookmarkResults)="onBookmarkResults()">
+    </app-header>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
-</div>
+    <!-- Main Content -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

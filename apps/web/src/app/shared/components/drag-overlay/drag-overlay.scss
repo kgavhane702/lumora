@@ -37,6 +37,14 @@
   background: rgba(59, 130, 246, 0.1);
   border-radius: 50%;
   border: 2px dashed rgba(59, 130, 246, 0.3);
+  
+  mat-icon {
+    color: #3b82f6 !important; /* Blue lumora color for drag overlay icon */
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    opacity: 1;
+  }
 }
 
 .overlay-text {

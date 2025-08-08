@@ -307,6 +307,38 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .initial-search-layout {
+    padding: 1rem 0.75rem;
+  }
+  
+  .search-container {
+    gap: 1.5rem;
+  }
+  
+  .search-header {
+    .brand-title {
+      font-size: 2.5rem;
+    }
+    
+    .brand-subtitle {
+      font-size: 1rem;
+    }
+  }
+  
+  .session-header {
+    padding: 16px 24px;
+  }
+  
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .initial-search-layout {
     padding: 1rem 0.75rem;
