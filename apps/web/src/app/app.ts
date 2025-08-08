@@ -1,11 +1,12 @@
 import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { DatePipe, CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { SidebarComponent } from './components/layout/sidebar/sidebar';
 import { Header } from './components/layout/header/header';
+import { filter } from 'rxjs/operators';
 
 interface ChatSession {
   id: string;
@@ -26,6 +27,7 @@ interface User {
   imports: [
     RouterOutlet, 
     DatePipe,
+    CommonModule,
     MatIconModule, 
     MatButtonModule, 
     MatSidenavModule,
@@ -69,8 +71,21 @@ export class AppComponent implements OnInit {
     }
   ];
 
+  constructor(private router: Router) {}
+
   ngOnInit() {
     this.checkScreenSize();
+    this.setupRouteDetection();
+  }
+
+  private setupRouteDetection() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      // Check if we're on a search results page (more specific)
+      this.isSearchResultsPage = event.url.includes('/results') || 
+                                 (event.url.includes('/search') && event.url !== '/search');
+    });
   }
 
   @HostListener('window:resize')
@@ -125,5 +140,15 @@ export class AppComponent implements OnInit {
   onBookmarkResults() {
     console.log('Bookmark results');
     // TODO: Implement bookmark functionality
+  }
+
+  // Handle mobile menu toggle from child components (like search)
+  onChildMobileMenuToggle() {
+    this.toggleMobileMenu();
+  }
+
+  // Update search results page detection
+  updateSearchResultsPage(isSearchResults: boolean) {
+    this.isSearchResultsPage = isSearchResults;
   }
 }

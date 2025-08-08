@@ -94,4 +94,9 @@ export class SearchResults {
       return url;
     }
   }
+
+  getDomainIcon(domain: string): string {
+    // Return first letter of domain for icon
+    return domain.charAt(0).toUpperCase();
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, QueryList, ViewChildren, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, QueryList, ViewChildren, ElementRef, HostListener, ViewChild, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../../components/search/search-bar/search-bar';
 import { SearchResults } from '../../../components/search/search-results/search-results';
@@ -6,6 +6,7 @@ import { SearchResult, Reference } from '../../../shared/interfaces/search-resul
 import { MockDataService } from '../../../core/services/mock-data.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface SearchSession {
   id: string;
@@ -18,11 +19,13 @@ interface SearchSession {
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, SearchBar, SearchResults, MatIconModule, MatButtonModule],
+  imports: [CommonModule, SearchBar, SearchResults, MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './search.html',
   styleUrls: ['./search.scss']
 })
 export class Search implements OnInit, AfterViewInit {
+  @Output() mobileMenuToggle = new EventEmitter<void>();
+  
   searchSessions: SearchSession[] = [];
   currentSession: SearchSession | null = null;
   isSearching: boolean = false; // Track search state
@@ -337,5 +340,39 @@ export class Search implements OnInit, AfterViewInit {
 
   trackBySession(index: number, session: SearchSession): string {
     return session.id;
+  }
+
+  // Navigation Menu Methods
+  onNewSearch() {
+    console.log('New search requested');
+    // TODO: Implement new search functionality
+    // This could clear current sessions and start fresh
+    this.searchSessions = [];
+    this.currentSession = null;
+  }
+
+  onClearHistory() {
+    console.log('Clear history requested');
+    // TODO: Implement clear history functionality
+    this.searchSessions = [];
+    this.currentSession = null;
+  }
+
+  onShareResults() {
+    console.log('Share results requested');
+    // TODO: Implement share functionality
+    // This could share the current search results
+  }
+
+  onBookmarkResults() {
+    console.log('Bookmark results requested');
+    // TODO: Implement bookmark functionality
+    // This could bookmark the current search session
+  }
+
+  onExportResults() {
+    console.log('Export results requested');
+    // TODO: Implement export functionality
+    // This could export search results to PDF, JSON, etc.
   }
 }

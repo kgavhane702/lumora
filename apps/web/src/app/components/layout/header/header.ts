@@ -13,13 +13,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class Header {
   @Input() isSearchResultsPage = false;
-  @Output() mobileMenuToggle = new EventEmitter<void>();
   @Output() shareResults = new EventEmitter<void>();
   @Output() bookmarkResults = new EventEmitter<void>();
-
-  toggleMobileMenu() {
-    this.mobileMenuToggle.emit();
-  }
 
   onShare() {
     this.shareResults.emit();

@@ -109,6 +109,30 @@
 
   <!-- Chat Layout (Subsequent Searches) -->
   <div class="chat-layout" *ngIf="hasActiveSessions">
+    <!-- Navigation Menu -->
+    <div class="search-nav-menu">
+      <div class="nav-menu-content">
+        <div class="nav-menu-left">
+          <!-- Left side empty for now -->
+        </div>
+        
+        <div class="nav-menu-right">
+          <button class="nav-menu-btn" (click)="onShareResults()" matTooltip="Share Results">
+            <mat-icon>share</mat-icon>
+            <span>Share</span>
+          </button>
+          <button class="nav-menu-btn" (click)="onBookmarkResults()" matTooltip="Bookmark">
+            <mat-icon>bookmark_border</mat-icon>
+            <span>Bookmark</span>
+          </button>
+          <button class="nav-menu-btn" (click)="onExportResults()" matTooltip="Export Results">
+            <mat-icon>download</mat-icon>
+            <span>Export</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Main Content Area -->
     <div class="chat-content">
       <!-- Results Container -->
@@ -121,9 +145,9 @@
             [attr.data-last]="i === searchSessions.length - 1 ? true : null">
             
             <div class="session-header">
-              <div class="query-section">
-                <div class="query-text">{{ session.query }}</div>
-                <div class="query-actions">
+              <div class="session-title">
+                <h2 class="query-title">{{ session.query }}</h2>
+                <div class="session-actions">
                   <button class="action-btn" title="Edit query">
                     <mat-icon>edit</mat-icon>
                   </button>
@@ -132,7 +156,6 @@
                   </button>
                 </div>
               </div>
-              <div class="session-timestamp">{{ formatTimestamp(session.timestamp) }}</div>
             </div>
             <div class="session-results">
               <app-search-results 

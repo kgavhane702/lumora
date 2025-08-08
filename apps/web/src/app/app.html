@@ -26,16 +26,21 @@
   <!-- Main Content Area -->
   <mat-sidenav-content class="app-sidenav-content">
     
-    <!-- Header Component -->
+    <!-- Header Component - Only on Search Results Page -->
     <app-header
+      *ngIf="isSearchResultsPage"
       [isSearchResultsPage]="isSearchResultsPage"
-      (mobileMenuToggle)="toggleMobileMenu()"
       (shareResults)="onShareResults()"
       (bookmarkResults)="onBookmarkResults()">
     </app-header>
 
     <!-- Main Content -->
     <main class="main-content">
+      <!-- Mobile Menu Button - Global for all pages -->
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>

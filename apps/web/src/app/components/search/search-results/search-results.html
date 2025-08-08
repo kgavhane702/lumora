@@ -43,32 +43,7 @@
       *ngFor="let result of results; trackBy: trackByResult; let i = index">
       
       <!-- AI Answer Header -->
-      <div class="ai-answer-header">
-        <div class="ai-model-info">
-          <div class="model-badge">
-            <mat-icon>verified</mat-icon>
-            <span class="model-name">{{ result.modelUsed }}</span>
-          </div>
-          <div class="confidence-indicator" *ngIf="result.confidence">
-            <div class="confidence-bar">
-              <div class="confidence-fill" [style.width.%]="result.confidence"></div>
-            </div>
-            <span class="confidence-text">{{ result.confidence }}% confident</span>
-          </div>
-        </div>
-        
-        <div class="ai-answer-actions">
-          <button class="action-btn" (click)="onCopyAnswer(result)" title="Copy answer">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-          <button class="action-btn" (click)="onShareAnswer(result)" title="Share answer">
-            <mat-icon>share</mat-icon>
-          </button>
-          <button class="action-btn" (click)="onContinueSearch(result)" title="Continue searching">
-            <mat-icon>search</mat-icon>
-          </button>
-        </div>
-      </div>
+      <!-- Removed empty header div to eliminate blank space -->
 
       <!-- Tab Navigation -->
       <div class="tab-navigation" *ngIf="result.references && result.references.length > 0">
@@ -94,21 +69,17 @@
         <div class="tab-panel" [class.active]="activeTab === 'answer'">
           <!-- Top Sources (Limited to 4) -->
           <div class="top-sources-container" *ngIf="result.references && result.references.length > 0">
-            <div class="top-sources-grid">
+            <div class="sources-grid">
               <div 
-                class="source-box" 
+                class="source-card" 
                 *ngFor="let reference of result.references.slice(0, 4); trackBy: trackByReference; let i = index"
                 (click)="onReferenceClick(reference)">
-                <div class="source-box-content">
+                <div class="source-icon">
+                  <div class="source-domain-icon">{{ getDomainIcon(reference.domain || getDomainFromUrl(reference.url)) }}</div>
+                </div>
+                <div class="source-content">
                   <div class="source-domain">{{ reference.domain || getDomainFromUrl(reference.url) }}</div>
                   <div class="source-title">{{ reference.title }}</div>
-                  <div class="source-meta">
-                    <span class="source-date" *ngIf="reference.publishedDate">{{ reference.publishedDate | date:'MMM d, y' }}</span>
-                    <span class="source-relevance">Relevance: {{ reference.relevance }}%</span>
-                  </div>
-                </div>
-                <div class="source-box-action">
-                  <mat-icon>open_in_new</mat-icon>
                 </div>
               </div>
             </div>
@@ -184,13 +155,26 @@
 
       <!-- Search Metadata -->
       <div class="search-metadata" *ngIf="result.searchTime">
-        <div class="metadata-item">
-          <mat-icon>schedule</mat-icon>
-          <span>{{ result.searchTime }}s</span>
+        <div class="metadata-left">
+          <div class="metadata-item">
+            <mat-icon>schedule</mat-icon>
+            <span>{{ result.searchTime }}s</span>
+          </div>
+          <div class="metadata-item" *ngIf="result.tokenUsage">
+            <mat-icon>memory</mat-icon>
+            <span>{{ result.tokenUsage.total }} tokens</span>
+          </div>
         </div>
-        <div class="metadata-item" *ngIf="result.tokenUsage">
-          <mat-icon>memory</mat-icon>
-          <span>{{ result.tokenUsage.total }} tokens</span>
+        <div class="ai-answer-actions">
+          <button class="action-btn" (click)="onCopyAnswer(result)" title="Copy answer">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          <button class="action-btn" (click)="onShareAnswer(result)" title="Share answer">
+            <mat-icon>share</mat-icon>
+          </button>
+          <button class="action-btn" (click)="onContinueSearch(result)" title="Continue searching">
+            <mat-icon>search</mat-icon>
+          </button>
         </div>
       </div>
     </div>
