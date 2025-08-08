@@ -79,6 +79,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.checkScreenSize();
     this.setupRouteDetection();
     this.loadUserData();
+    
+    // Ensure proper initial state
+    if (!this.isMobile) {
+      this.isMobileMenuOpen = true;
+    }
   }
 
   ngOnDestroy() {
@@ -125,20 +130,27 @@ export class AppComponent implements OnInit, OnDestroy {
         this.drawer.close();
         this.isMobileMenuOpen = false;
       } else {
-        // On desktop, ensure sidebar is always open
+        // On desktop, ensure sidebar is always open and visible
         this.drawer.open();
         this.isMobileMenuOpen = true;
+        // Force the drawer to stay open on desktop
+        setTimeout(() => {
+          if (this.drawer && !this.isMobile) {
+            this.drawer.open();
+          }
+        }, 100);
       }
     }
   }
 
   onSidenavOpenedChange(opened: boolean) {
-    // Always sync the state when sidenav opens/closes
-    this.isMobileMenuOpen = opened;
-    
-    // If it's mobile and the sidenav closed, ensure our state is updated
-    if (this.isMobile && !opened) {
-      this.isMobileMenuOpen = false;
+    // Only sync state on mobile devices
+    if (this.isMobile) {
+      this.isMobileMenuOpen = opened;
+    }
+    // On desktop, always keep sidebar open
+    else {
+      this.isMobileMenuOpen = true;
     }
   }
 
