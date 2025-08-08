@@ -63,17 +63,19 @@ body {
 /* Mobile Menu Toggle */
 .mobile-menu-btn {
   display: none; /* Hidden by default */
-  position: absolute;
-  top: 0.5rem;
+  position: fixed; /* Changed from absolute to fixed */
+  top: 1rem;
   left: 1rem;
-  z-index: 1001;
-  background: rgba(255, 255, 255, 0.9);
+  z-index: 1002; /* Increased z-index */
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.75rem; /* Increased padding for better touch target */
   cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 44px; /* Ensure minimum touch target */
+  min-height: 44px; /* Ensure minimum touch target */
   
   &:hover {
     background: rgba(255, 255, 255, 1);
@@ -81,8 +83,16 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
+  mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+  }
+  
   @media (max-width: 1024px) {
     display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -120,12 +130,12 @@ body {
 /* Responsive Design */
 @media (max-width: 1024px) {
   .app-sidenav {
-    width: 280px;
-    max-width: 280px;
+    width: 80px; /* Match sidebar width */
+    max-width: 80px;
   }
   
   .main-content {
-    /* No padding */
+    margin-left: 80px; /* Add margin to account for sidebar */
   }
   
   /* Show mobile menu button on tablets and smaller screens */
@@ -136,17 +146,19 @@ body {
 
 @media (max-width: 768px) {
   .app-sidenav {
-    width: 280px;
-    max-width: 280px;
+    width: 80px; /* Match sidebar width */
+    max-width: 80px;
     
     /* Mobile mode - overlay */
     &[mode="over"] {
-      width: 280px;
-      max-width: 280px;
+      width: 80px;
+      max-width: 80px;
     }
   }
   
   .main-content {
+    margin-left: 0; /* Remove margin on mobile */
+    
     /* Only add bottom padding when on search results page */
     .search-page .chat-layout & {
       padding-bottom: 100px;
@@ -156,11 +168,13 @@ body {
 
 @media (max-width: 480px) {
   .app-sidenav {
-    width: 280px;
-    max-width: 280px;
+    width: 72px; /* Match sidebar width for small screens */
+    max-width: 72px;
   }
   
   .main-content {
+    margin-left: 0; /* Remove margin on mobile */
+    
     /* Only add bottom padding when on search results page */
     .search-page .chat-layout & {
       padding-bottom: 80px;
@@ -334,8 +348,9 @@ app-icon {
   }
   
   .mobile-menu-btn {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 48px;
+    min-width: 48px;
+    padding: 0.875rem;
   }
 }
 

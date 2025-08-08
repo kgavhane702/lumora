@@ -8,9 +8,10 @@
     fixedInViewport
     [attr.role]="'navigation'"
     [mode]="isMobile ? 'over' : 'side'"
-    [opened]="!isMobile"
+    [opened]="isMobileMenuOpen"
     [disableClose]="false"
-    [autoFocus]="false">
+    [autoFocus]="false"
+    (openedChange)="onSidenavOpenedChange($event)">
     
     <!-- Use existing sidebar component -->
     <app-sidebar

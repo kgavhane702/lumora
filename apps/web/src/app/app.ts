@@ -114,22 +114,46 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   checkScreenSize() {
+    const wasMobile = this.isMobile;
     this.isMobile = window.innerWidth <= 1024;
+    
     if (this.drawer) {
       this.drawer.mode = this.isMobile ? 'over' : 'side';
-      this.drawer.opened = !this.isMobile;
       
-      if (this.isMobile && this.drawer.opened) {
+      if (this.isMobile) {
+        // On mobile, ensure sidebar is closed initially
         this.drawer.close();
+        this.isMobileMenuOpen = false;
+      } else {
+        // On desktop, ensure sidebar is always open
+        this.drawer.open();
+        this.isMobileMenuOpen = true;
       }
     }
   }
 
+  onSidenavOpenedChange(opened: boolean) {
+    // Always sync the state when sidenav opens/closes
+    this.isMobileMenuOpen = opened;
+    
+    // If it's mobile and the sidenav closed, ensure our state is updated
+    if (this.isMobile && !opened) {
+      this.isMobileMenuOpen = false;
+    }
+  }
+
   toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    if (this.drawer) {
-      if (this.isMobile) {
-        this.drawer.toggle();
+    if (this.isMobile) {
+      // Toggle the state first
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+      
+      // Then tell the sidenav to open/close based on our state
+      if (this.drawer) {
+        if (this.isMobileMenuOpen) {
+          this.drawer.open();
+        } else {
+          this.drawer.close();
+        }
       }
     }
   }
