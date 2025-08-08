@@ -8,14 +8,13 @@
   left: 0;
   top: 0;
   z-index: 1000;
-  overflow: hidden; // Changed from overflow-y: auto
+  overflow: hidden;
   transition: all 0.3s ease;
 
   &.mobile-open {
     transform: translateX(0);
   }
 
-  // Remove scrollbar since we don't want scrolling
   &::-webkit-scrollbar {
     display: none;
   }
@@ -24,17 +23,17 @@
 .mobile-close-btn {
   position: absolute;
   top: 1rem;
-  right: -48px; // Position outside the sidebar on the right
+  right: -48px;
   z-index: 1001;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid #e5e7eb;
-  border-left: none; // Remove left border to attach to sidebar
-  border-radius: 0 8px 8px 0; // Only round right corners
+  border-left: none;
+  border-radius: 0 8px 8px 0;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
   width: 48px;
   height: 48px;
-  display: none; // Hidden by default
+  display: none;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -59,7 +58,7 @@
   }
   
   &:hover mat-icon {
-    color: #ef4444; // Red color on hover
+    color: #ef4444;
   }
 }
 
@@ -67,13 +66,13 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 12px 8px; // Reduced padding
-  justify-content: space-between; // Distribute space evenly
+  padding: 12px 8px;
+  justify-content: space-between;
 }
 
 .sidebar-header {
-  margin-bottom: 16px; // Reduced
-  padding-bottom: 8px; // Reduced
+  margin-bottom: 16px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #f3f4f6;
   display: flex;
   justify-content: center;
@@ -90,21 +89,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px; // Reduced
-  height: 28px; // Reduced
+  width: 48px; // Same size as navigation buttons
+  height: 48px; // Same size as navigation buttons
   background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  border-radius: 6px;
+  border-radius: 8px; // Same border radius as buttons
   
   mat-icon {
     color: white !important;
-    font-size: 16px; // Reduced
-    width: 16px; // Reduced
-    height: 16px; // Reduced
+    font-size: 18px; // Same size as other icons
+    width: 18px; // Same size as other icons
+    height: 18px; // Same size as other icons
   }
 }
 
 .new-chat-section {
-  margin-bottom: 16px; // Reduced
+  margin-bottom: 16px;
   display: flex;
   justify-content: center;
   flex-shrink: 0;
@@ -114,20 +113,22 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px; // Reduced
-  justify-content: space-between; // Distribute evenly
-  min-height: 0; // Allow flex to shrink
+  gap: 4px;
+  justify-content: space-between;
+  min-height: 0;
+  position: relative; // Add position relative
 }
 
 .nav-section {
   display: flex;
   flex-direction: column;
-  gap: 2px; // Reduced
-  margin-bottom: 8px; // Reduced
+  gap: 1rem;
+  margin-bottom: 8px;
+  position: relative; // Add position relative
 
   &.upgrade-section {
     margin-top: auto;
-    margin-bottom: 8px; // Reduced
+    margin-bottom: 8px;
   }
 }
 
@@ -144,6 +145,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   margin: 0 auto;
+  position: relative; // Add position relative
   
   &:hover {
     background: #f9fafb;
@@ -163,9 +165,9 @@
     
     mat-icon {
       color: white !important;
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
     }
   }
   
@@ -181,16 +183,16 @@
     
     mat-icon {
       color: white !important;
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
     }
   }
   
   mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -199,14 +201,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 56px; // Reduced height
+  height: 48px; // Consistent height with buttons
+  padding: 6px 4px;
   border-radius: 8px;
-  color: #374151;
   text-decoration: none;
+  color: #374151;
   transition: all 0.2s ease;
   margin: 0 auto;
-  padding: 6px 4px; // Reduced padding
+  width: 48px;
+  position: relative;
   
   &:hover {
     background: #f9fafb;
@@ -217,34 +220,36 @@
   &.active {
     background: #eff6ff;
     color: #3b82f6;
+    width: 48px; // Same size as default
+    height: 48px; // Same size as default
+    border-radius: 8px;
+    transform: scale(1.05);
+    z-index: 1;
   }
   
   mat-icon {
-    font-size: 18px; // Reduced
-    width: 18px; // Reduced
-    height: 18px; // Reduced
-    margin-bottom: 3px; // Reduced
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-bottom: 3px;
   }
 }
 
 .menu-label {
-  font-size: 9px; // Reduced
+  font-size: 9px;
   font-weight: 500;
   text-align: center;
-  line-height: 1.1; // Reduced
+  line-height: 1.1;
   color: inherit;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 56px;
+  max-width: 100%;
 }
 
 .user-section {
-  margin-top: auto;
-  padding-top: 8px; // Reduced
+  padding-top: 8px;
   border-top: 1px solid #f3f4f6;
-  display: flex;
-  justify-content: center;
   flex-shrink: 0;
 }
 
@@ -253,16 +258,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 56px; // Reduced height
+  height: 56px;
+  padding: 6px 4px;
   border-radius: 8px;
   transition: all 0.2s ease;
-  cursor: pointer;
-  padding: 6px 4px; // Reduced padding
   
   &:hover {
     background: #f9fafb;
-    transform: scale(1.05);
   }
 }
 
@@ -270,50 +272,51 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px; // Reduced
-  height: 28px; // Reduced
-  background: #3b82f6;
+  width: 28px;
+  height: 28px;
+  background: #f3f4f6;
   border-radius: 50%;
-  margin-bottom: 3px; // Reduced
+  margin-bottom: 3px;
   
   mat-icon {
-    color: white !important;
-    font-size: 14px; // Reduced
-    width: 14px; // Reduced
-    height: 14px; // Reduced
+    color: #6b7280;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
   }
+}
+
+/* Custom Tooltip Styling */
+::ng-deep .sidebar-tooltip {
+  background: rgba(0, 0, 0, 0.9) !important;
+  color: white !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  max-width: 200px !important;
+  white-space: nowrap !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
   .sidebar {
     width: 80px;
-    transform: translateX(-100%);
-    
-    &.mobile-open {
-      transform: translateX(0);
-    }
-  }
-  
-  .mobile-close-btn {
-    display: flex; // Show on mobile
-    right: -48px; // Keep consistent positioning
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .sidebar {
     width: 80px;
-    transform: translateX(-100%);
     
-    &.mobile-open {
-      transform: translateX(0);
+    &[mode="over"] {
+      width: 80px;
     }
   }
   
   .mobile-close-btn {
-    display: flex; // Show on mobile
-    right: -48px;
+    display: flex;
   }
 }
 
@@ -322,45 +325,39 @@
     width: 72px;
   }
   
-  .sidebar-content {
-    padding: 8px 4px; // Reduced
-  }
-  
-  .mobile-close-btn {
-    right: -44px; // Slightly smaller for small screens
+  .nav-button,
+  .nav-item {
     width: 44px;
     height: 44px;
+  }
+  
+  .logo-icon {
+    width: 28px;
+    height: 28px;
     
     mat-icon {
-      width: 18px;
-      height: 18px;
-      font-size: 18px;
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
     }
   }
   
-  .nav-button {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .nav-item, .user-info {
-    width: 56px;
-    height: 48px; // Reduced
-  }
-  
-  .menu-label {
-    font-size: 8px; // Reduced
-    max-width: 48px;
+  .nav-button mat-icon,
+  .nav-item mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
   }
   
   .user-avatar {
-    width: 24px; // Reduced
-    height: 24px; // Reduced
+    width: 24px;
+    height: 24px;
     
     mat-icon {
-      font-size: 12px; // Reduced
-      width: 12px; // Reduced
-      height: 12px; // Reduced
+      font-size: 12px;
+      width: 12px;
+      height: 12px;
     }
   }
 }
+

@@ -10,7 +10,7 @@
     <div class="sidebar-header">
       <div class="logo">
         <div class="logo-icon">
-          <mat-icon>apps</mat-icon>
+          <mat-icon>star</mat-icon>
         </div>
       </div>
     </div>
@@ -20,8 +20,9 @@
       <button 
         class="nav-button new-chat" 
         (click)="onNewChat()"
-        matTooltip="New Chat"
-        matTooltipPosition="right">
+        matTooltip="Start a new conversation"
+        matTooltipPosition="right"
+        matTooltipClass="sidebar-tooltip">
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -60,8 +61,9 @@
       <div class="nav-section upgrade-section">
         <button 
           class="nav-button upgrade"
-          matTooltip="Upgrade to Pro"
-          matTooltipPosition="right">
+          matTooltip="Upgrade to Lumora Pro"
+          matTooltipPosition="right"
+          matTooltipClass="sidebar-tooltip">
           <mat-icon>star</mat-icon>
         </button>
       </div>
