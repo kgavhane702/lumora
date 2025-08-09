@@ -1,6 +1,6 @@
 .sidebar {
   width: 80px;
-  background: #ffffff;
+  background: #f9fafb;
   border-right: 1px solid #e5e7eb;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   position: fixed;
@@ -96,9 +96,9 @@
   
   mat-icon {
     color: white !important;
-    font-size: 18px; // Same size as other icons
-    width: 18px; // Same size as other icons
-    height: 18px; // Same size as other icons
+    font-size: 20px; // Same size as other icons
+    width: 20px; // Same size as other icons
+    height: 20px; // Same size as other icons
   }
 }
 
@@ -145,7 +145,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   margin: 0 auto;
-  position: relative; // Add position relative
+  position: relative;
   
   &:hover {
     background: #f9fafb;
@@ -165,9 +165,9 @@
     
     mat-icon {
       color: white !important;
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
     }
   }
   
@@ -183,16 +183,16 @@
     
     mat-icon {
       color: white !important;
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
     }
   }
   
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -201,7 +201,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 48px; // Consistent height with buttons
+  height: 48px;
   padding: 6px 4px;
   border-radius: 8px;
   text-decoration: none;
@@ -220,23 +220,23 @@
   &.active {
     background: #eff6ff;
     color: #3b82f6;
-    width: 48px; // Same size as default
-    height: 48px; // Same size as default
+    width: 48px;
+    height: 48px;
     border-radius: 8px;
     transform: scale(1.05);
     z-index: 1;
   }
   
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
     margin-bottom: 3px;
   }
 }
 
 .menu-label {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   text-align: center;
   line-height: 1.1;
@@ -258,7 +258,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 56px;
+  height: 48px;
   padding: 6px 4px;
   border-radius: 8px;
   transition: all 0.2s ease;
