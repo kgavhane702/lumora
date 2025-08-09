@@ -31,6 +31,12 @@ export class SearchSuggestionsComponent {
   }
 
   getIconName(): string {
-    return this.searchQuery.trim() ? 'search' : 'trending_up';
+    // Show trending icon for trending suggestions when search is empty
+    if (!this.searchQuery.trim()) {
+      return 'trending_up';
+    }
+    
+    // Show search icon for search-based suggestions
+    return 'search';
   }
 } 
