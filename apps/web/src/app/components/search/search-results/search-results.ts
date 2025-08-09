@@ -7,11 +7,17 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TabContainer } from '../../../shared/components/ui/tabs/tab-container/tab-container';
 import { TabPanel } from '../../../shared/components/ui/tabs/tab-panel/tab-panel';
 import { Tab, TabChangeEvent } from '../../../shared/interfaces/tab';
+import { LoadingSpinner } from '../../../shared/components/feedback/loading-spinner/loading-spinner';
+import { SkeletonLoader } from '../../../shared/components/feedback/skeleton-loader/skeleton-loader';
+import { EmptyState } from '../../../shared/components/feedback/empty-state/empty-state';
+import { SourceCard } from '../sources/source-card/source-card';
+import { FollowUpQuestions } from '../../../shared/components/interactive/follow-up-questions/follow-up-questions';
+import { SourcesBadge } from '../../../shared/components/display/sources-badge/sources-badge';
 
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, TabContainer, TabPanel],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, TabContainer, TabPanel, LoadingSpinner, SkeletonLoader, EmptyState, SourceCard, FollowUpQuestions, SourcesBadge],
   templateUrl: './search-results.html',
   styleUrls: ['./search-results.scss']
 })

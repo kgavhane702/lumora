@@ -1,0 +1,22 @@
+<div class="loading-container" [class.centered]="centered" [attr.data-size]="size">
+  <!-- Pulse Dots Animation -->
+  <div class="loading-animation" [ngSwitch]="variant">
+    <div *ngSwitchCase="'dots'" class="pulse-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    
+    <div *ngSwitchCase="'circle'" class="spinner-circle"></div>
+    
+    <div *ngSwitchCase="'bars'" class="spinner-bars">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </div>
+  
+  <p class="loading-text">{{ message }}</p>
+  <p class="loading-subtext" *ngIf="subMessage">{{ subMessage }}</p>
+</div>

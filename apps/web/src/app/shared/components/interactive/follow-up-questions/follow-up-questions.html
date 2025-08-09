@@ -1,0 +1,18 @@
+<div class="follow-up-section" *ngIf="questions.length > 0" [attr.data-variant]="variant">
+  <div class="follow-up-header">
+    <h4 class="follow-up-title">
+      <mat-icon>{{ icon }}</mat-icon>
+      {{ title }}
+    </h4>
+  </div>
+  
+  <div class="follow-up-list">
+    <button 
+      class="follow-up-question" 
+      *ngFor="let question of visibleQuestions"
+      (click)="onQuestionClick(question)">
+      <mat-icon>arrow_forward</mat-icon>
+      <span>{{ question }}</span>
+    </button>
+  </div>
+</div>

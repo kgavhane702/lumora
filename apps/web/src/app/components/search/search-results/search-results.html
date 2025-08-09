@@ -1,40 +1,21 @@
 <div class="search-results-container">
   <!-- Loading State -->
-  <div class="loading-container" *ngIf="isLoading && results.length === 0">
-    <div class="loading-animation">
-      <div class="pulse-dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-    </div>
-    <p class="loading-text">Searching for answers...</p>
-    <p class="loading-subtext">This may take a few seconds</p>
-  </div>
+  <app-loading-spinner 
+    *ngIf="isLoading && results.length === 0"
+    message="Searching for answers..."
+    subMessage="This may take a few seconds"
+    variant="dots">
+  </app-loading-spinner>
 
   <!-- Skeleton Loading for Results -->
-  <div class="skeleton-container" *ngIf="isLoading && results.length === 0">
-    <div class="skeleton-item" *ngFor="let item of [1, 2, 3]">
-      <div class="skeleton-header">
-        <div class="skeleton-model"></div>
-        <div class="skeleton-actions">
-          <div class="skeleton-action"></div>
-          <div class="skeleton-action"></div>
-        </div>
-      </div>
-      <div class="skeleton-content">
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line short"></div>
-      </div>
-      <div class="skeleton-references">
-        <div class="skeleton-reference" *ngFor="let ref of [1, 2]">
-          <div class="skeleton-ref-title"></div>
-          <div class="skeleton-ref-url"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <app-skeleton-loader 
+    *ngIf="isLoading && results.length === 0"
+    type="search-result"
+    [count]="3"
+    [showHeader]="true"
+    [showActions]="true"
+    [showReferences]="true">
+  </app-skeleton-loader>
 
   <!-- AI Answer Results with Tabs -->
   <div class="ai-results-list" *ngIf="!isLoading && results.length > 0">
@@ -56,18 +37,12 @@
           <!-- Top Sources (Limited to 4) -->
           <div class="top-sources-container" *ngIf="result.references && result.references.length > 0">
             <div class="sources-grid">
-              <div 
-                class="source-card" 
-                *ngFor="let reference of result.references.slice(0, 4); trackBy: trackByReference; let i = index"
-                (click)="onReferenceClick(reference)">
-                <div class="source-icon">
-                  <div class="source-domain-icon">{{ getDomainIcon(reference.domain || getDomainFromUrl(reference.url)) }}</div>
-                </div>
-                <div class="source-content">
-                  <div class="source-domain">{{ reference.domain || getDomainFromUrl(reference.url) }}</div>
-                  <div class="source-title">{{ reference.title }}</div>
-                </div>
-              </div>
+              <app-source-card
+                *ngFor="let reference of result.references.slice(0, 4); trackBy: trackByReference"
+                [source]="reference"
+                variant="compact"
+                (sourceClick)="onReferenceClick($event)">
+              </app-source-card>
             </div>
           </div>
 
@@ -77,31 +52,22 @@
             
             <!-- Sources Summary -->
             <div class="sources-summary" *ngIf="result.references && result.references.length > 0">
-              <div class="sources-badge">
-                <mat-icon>link</mat-icon>
-                <span>Based on {{ result.references.length }} source{{ result.references.length > 1 ? 's' : '' }}</span>
-              </div>
+              <app-sources-badge 
+                [count]="result.references.length"
+                variant="default">
+              </app-sources-badge>
             </div>
           </div>
 
           <!-- Follow-up Questions -->
-          <div class="follow-up-section" *ngIf="result.followUpQuestions && result.followUpQuestions.length > 0">
-            <div class="follow-up-header">
-              <h4 class="follow-up-title">
-                <mat-icon>chat</mat-icon>
-                Related questions
-              </h4>
-            </div>
-            <div class="follow-up-list">
-              <button 
-                class="follow-up-question" 
-                *ngFor="let question of result.followUpQuestions"
-                (click)="onFollowUpClick(question)">
-                <mat-icon>arrow_forward</mat-icon>
-                <span>{{ question }}</span>
-              </button>
-            </div>
-          </div>
+          <app-follow-up-questions
+            *ngIf="result.followUpQuestions && result.followUpQuestions.length > 0"
+            [questions]="result.followUpQuestions"
+            title="Related questions"
+            icon="chat"
+            variant="list"
+            (questionClick)="onFollowUpClick($event)">
+          </app-follow-up-questions>
         </app-tab-panel>
 
         <app-tab-panel tabId="sources" [activeTab]="activeTab">
@@ -147,23 +113,14 @@
           </div>
 
           <!-- Follow-up Questions -->
-          <div class="follow-up-section" *ngIf="result.followUpQuestions && result.followUpQuestions.length > 0">
-            <div class="follow-up-header">
-              <h4 class="follow-up-title">
-                <mat-icon>chat</mat-icon>
-                Related questions
-              </h4>
-            </div>
-            <div class="follow-up-list">
-              <button 
-                class="follow-up-question" 
-                *ngFor="let question of result.followUpQuestions"
-                (click)="onFollowUpClick(question)">
-                <mat-icon>arrow_forward</mat-icon>
-                <span>{{ question }}</span>
-              </button>
-            </div>
-          </div>
+          <app-follow-up-questions
+            *ngIf="result.followUpQuestions && result.followUpQuestions.length > 0"
+            [questions]="result.followUpQuestions"
+            title="Related questions"
+            icon="chat"
+            variant="list"
+            (questionClick)="onFollowUpClick($event)">
+          </app-follow-up-questions>
         </div>
       </ng-template>
 
@@ -195,11 +152,11 @@
   </div>
 
   <!-- No Results -->
-  <div class="no-results" *ngIf="!isLoading && results.length === 0">
-    <div class="no-results-icon">
-      <mat-icon>search</mat-icon>
-    </div>
-    <h3 class="no-results-title">No results found</h3>
-    <p class="no-results-text">Try adjusting your search terms or ask a different question.</p>
-  </div>
+  <app-empty-state 
+    *ngIf="!isLoading && results.length === 0"
+    type="search"
+    icon="search"
+    title="No results found"
+    message="Try adjusting your search terms or ask a different question.">
+  </app-empty-state>
 </div>
