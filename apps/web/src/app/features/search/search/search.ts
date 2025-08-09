@@ -2,6 +2,10 @@ import { Component, OnInit, AfterViewInit, QueryList, ViewChildren, ElementRef, 
 import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../../components/search/search-bar/search-bar';
 import { SearchResults } from '../../../components/search/search-results/search-results';
+import { ActionBarComponent } from '../../../shared/components/ui/action-bar/action-bar';
+import { BrandHeaderComponent } from '../../../shared/components/ui/brand-header/brand-header';
+import { QuickActionsGridComponent } from '../../../components/home/quick-actions-grid/quick-actions-grid';
+import { FeaturesShowcaseComponent } from '../../../components/home/features-showcase/features-showcase';
 import { SearchResult, Reference } from '../../../shared/interfaces/search-result';
 import { SearchQuery } from '../../../shared/interfaces/search-query';
 import { SearchService } from '../../../core/services/search';
@@ -25,7 +29,7 @@ interface SearchSession {
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, SearchBar, SearchResults, MatIconModule, MatButtonModule, MatTooltipModule],
+  imports: [CommonModule, SearchBar, SearchResults, ActionBarComponent, BrandHeaderComponent, QuickActionsGridComponent, FeaturesShowcaseComponent, MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './search.html',
   styleUrls: ['./search.scss']
 })

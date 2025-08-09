@@ -3,10 +3,7 @@
   <div class="initial-search-layout" *ngIf="isFirstSearch">
     <div class="search-container">
       <!-- Header -->
-      <div class="search-header">
-        <h1 class="brand-title">Lumora</h1>
-        <p class="brand-subtitle">AI-powered search and reasoning engine</p>
-      </div>
+      <app-brand-header></app-brand-header>
 
       <!-- Initial Search Bar -->
       <div class="search-bar-container">
@@ -22,116 +19,26 @@
       </div>
 
       <!-- Quick Actions -->
-      <div class="quick-actions-section">
-        <h3 class="section-title">Quick Actions</h3>
-        <div class="quick-actions-grid">
-          <button class="quick-action-card" (click)="onQuickAction('What is the latest news about AI?')">
-            <div class="action-icon">
-              <mat-icon>trending_up</mat-icon>
-            </div>
-            <div class="action-content">
-              <h4>Latest AI News</h4>
-              <p>Stay updated with the latest developments</p>
-            </div>
-          </button>
-          
-          <button class="quick-action-card" (click)="onQuickAction('How to learn TypeScript?')">
-            <div class="action-icon">
-              <mat-icon>folder</mat-icon>
-            </div>
-            <div class="action-content">
-              <h4>Learn TypeScript</h4>
-              <p>Master TypeScript programming</p>
-            </div>
-          </button>
-          
-          <button class="quick-action-card" (click)="onQuickAction('What is the weather today?')">
-            <div class="action-icon">
-              <mat-icon>explore</mat-icon>
-            </div>
-            <div class="action-content">
-              <h4>Weather Today</h4>
-              <p>Check current weather conditions</p>
-            </div>
-          </button>
-          
-          <button class="quick-action-card" (click)="onQuickAction('Best restaurants near me')">
-            <div class="action-icon">
-              <mat-icon>home</mat-icon>
-            </div>
-            <div class="action-content">
-              <h4>Find Restaurants</h4>
-              <p>Discover great places to eat</p>
-            </div>
-          </button>
-        </div>
-      </div>
+      <app-quick-actions-grid (actionClick)="onQuickAction($event)"></app-quick-actions-grid>
 
       <!-- Features Section -->
-      <div class="features-section">
-        <h3 class="section-title">Features</h3>
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">
-              <mat-icon>search</mat-icon>
-            </div>
-            <h4>Smart Search</h4>
-            <p>Get accurate answers with AI-powered search</p>
-          </div>
-          
-          <div class="feature-card">
-            <div class="feature-icon">
-              <mat-icon>chat</mat-icon>
-            </div>
-            <h4>Conversational</h4>
-            <p>Ask follow-up questions naturally</p>
-          </div>
-          
-          <div class="feature-card">
-            <div class="feature-icon">
-              <mat-icon>verified</mat-icon>
-            </div>
-            <h4>Verified Sources</h4>
-            <p>All answers come with reliable references</p>
-          </div>
-          
-          <div class="feature-card">
-            <div class="feature-icon">
-              <mat-icon>speed</mat-icon>
-            </div>
-            <h4>Lightning Fast</h4>
-            <p>Get instant answers in seconds</p>
-          </div>
-        </div>
-      </div>
+      <app-features-showcase></app-features-showcase>
     </div>
   </div>
 
   <!-- Chat Layout (Subsequent Searches) -->
   <div class="chat-layout" *ngIf="hasActiveSessions">
-    <!-- Navigation Menu -->
-    <div class="search-nav-menu">
-      <div class="nav-menu-content">
-        <div class="nav-menu-left">
-          <!-- Left side empty for now -->
-        </div>
-        
-        <div class="nav-menu-right">
-          <button class="nav-menu-btn" (click)="onShareResults()">
-            <mat-icon>share</mat-icon>
-            <span>Share</span>
-          </button>
-          <button class="nav-menu-btn" (click)="onBookmarkResults()">
-            <mat-icon>bookmark_border</mat-icon>
-            <span>Bookmark</span>
-          </button>
-          <button class="nav-menu-btn" (click)="onExportResults()">
-            <mat-icon>download</mat-icon>
-            <span>Export</span>
-          </button>
-        </div>
-      </div>
-    </div>
+    <!-- Action Bar with Share/Export/Bookmark -->
+    <app-action-bar
+      variant="minimal"
+      position="right"
+      [showShare]="true"
+      [showBookmark]="true"
+      [showExport]="true"
+      (share)="onShareResults()"
+      (bookmark)="onBookmarkResults()"
+      (export)="onExportResults()">
+    </app-action-bar>
 
     <!-- Main Content Area -->
     <div class="chat-content">

@@ -1,0 +1,10 @@
+<div class="quick-actions-section">
+  <h3 class="section-title">Quick Actions</h3>
+  <div class="quick-actions-grid">
+    <app-quick-action-card
+      *ngFor="let action of quickActions; trackBy: trackByAction"
+      [action]="action"
+      (actionClick)="onActionClick($event)">
+    </app-quick-action-card>
+  </div>
+</div>
