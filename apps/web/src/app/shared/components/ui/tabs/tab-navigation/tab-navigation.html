@@ -1,0 +1,14 @@
+<div class="tab-navigation" [class]="'tab-navigation--' + variant + ' tab-navigation--' + size">
+  <button 
+    *ngFor="let tab of tabs; trackBy: trackByTab"
+    class="tab-button"
+    [class.tab-button--active]="isActive(tab.id)"
+    [class.tab-button--disabled]="tab.disabled"
+    (click)="onTabClick(tab)"
+    [disabled]="tab.disabled">
+    
+    <mat-icon *ngIf="tab.icon" class="tab-icon">{{ tab.icon }}</mat-icon>
+    <span class="tab-label">{{ tab.label }}</span>
+    <span *ngIf="tab.badge" class="tab-badge">{{ tab.badge }}</span>
+  </button>
+</div>

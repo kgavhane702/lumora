@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FeatureCardComponent, Feature } from '../../../shared/components/ui/feature-card/feature-card';
+import { FeatureCardComponent, Feature } from '../../../shared/components/ui/cards/feature-card/feature-card';
 
 @Component({
   selector: 'app-features-showcase',

@@ -1,0 +1,155 @@
+.tab-navigation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  
+  &:hover:not(.tab-button--disabled) {
+    background: rgba(59, 130, 246, 0.05);
+    color: #3b82f6;
+  }
+  
+  &--active {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.05);
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #3b82f6;
+    }
+  }
+  
+  &--disabled {
+    color: #d1d5db;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.tab-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.tab-label {
+  white-space: nowrap;
+}
+
+.tab-badge {
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 16px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Variants */
+.tab-navigation--pills {
+  border-bottom: none;
+  gap: 8px;
+  
+  .tab-button {
+    border-radius: 6px;
+    
+    &--active::after {
+      display: none;
+    }
+    
+    &--active {
+      background: #3b82f6;
+      color: white;
+    }
+  }
+}
+
+.tab-navigation--underline {
+  border-bottom: 1px solid #e5e7eb;
+  
+  .tab-button {
+    border-radius: 0;
+    padding: 12px 0;
+    margin: 0 16px;
+    
+    &:first-child {
+      margin-left: 0;
+    }
+    
+    &--active::after {
+      height: 2px;
+      bottom: -1px;
+    }
+  }
+}
+
+/* Sizes */
+.tab-navigation--small {
+  .tab-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .tab-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.tab-navigation--large {
+  .tab-button {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+  
+  .tab-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .tab-navigation {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+  .tab-button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}

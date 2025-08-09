@@ -4,11 +4,14 @@ import { SearchResult, Reference } from '../../../shared/interfaces/search-resul
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TabContainer } from '../../../shared/components/ui/tabs/tab-container/tab-container';
+import { TabPanel } from '../../../shared/components/ui/tabs/tab-panel/tab-panel';
+import { Tab, TabChangeEvent } from '../../../shared/interfaces/tab';
 
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, TabContainer, TabPanel],
   templateUrl: './search-results.html',
   styleUrls: ['./search-results.scss']
 })
@@ -21,7 +24,7 @@ export class SearchResults {
   @Output() followUpClick = new EventEmitter<string>();
   @Output() continueSearch = new EventEmitter<SearchResult>();
 
-  activeTab: 'answer' | 'sources' = 'answer';
+  activeTab: string = 'answer';
 
   trackByResult(index: number, result: SearchResult): string {
     return result.id || index.toString();
@@ -31,8 +34,29 @@ export class SearchResults {
     return reference.url || index.toString();
   }
 
-  switchTab(tab: 'answer' | 'sources') {
-    this.activeTab = tab;
+  getTabsForResult(result: SearchResult): Tab[] {
+    const tabs: Tab[] = [
+      {
+        id: 'answer',
+        label: 'Answer',
+        icon: 'chat'
+      }
+    ];
+
+    if (result.references && result.references.length > 0) {
+      tabs.push({
+        id: 'sources',
+        label: 'Sources',
+        icon: 'link',
+        badge: result.references.length.toString()
+      });
+    }
+
+    return tabs;
+  }
+
+  onTabChange(event: TabChangeEvent) {
+    this.activeTab = event.activeTab;
   }
 
   formatAnswer(answer: string): string {

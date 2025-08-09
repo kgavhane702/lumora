@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { QuickActionCardComponent, QuickAction } from '../../../shared/components/ui/quick-action-card/quick-action-card';
+import { QuickActionCardComponent, QuickAction } from '../../../shared/components/ui/cards/quick-action-card/quick-action-card';
 
 @Component({
   selector: 'app-quick-actions-grid',

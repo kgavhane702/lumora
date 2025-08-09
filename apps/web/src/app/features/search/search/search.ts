@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, QueryList, ViewChildren, ElementRef, 
 import { CommonModule } from '@angular/common';
 import { SearchBar } from '../../../components/search/search-bar/search-bar';
 import { SearchResults } from '../../../components/search/search-results/search-results';
-import { ActionBarComponent } from '../../../shared/components/ui/action-bar/action-bar';
+import { ActionBarComponent } from '../../../shared/components/ui/buttons/action-bar/action-bar';
 import { BrandHeaderComponent } from '../../../shared/components/ui/brand-header/brand-header';
 import { QuickActionsGridComponent } from '../../../components/home/quick-actions-grid/quick-actions-grid';
 import { FeaturesShowcaseComponent } from '../../../components/home/features-showcase/features-showcase';

@@ -45,28 +45,14 @@
       <!-- AI Answer Header -->
       <!-- Removed empty header div to eliminate blank space -->
 
-      <!-- Tab Navigation -->
-      <div class="tab-navigation" *ngIf="result.references && result.references.length > 0">
-        <button 
-          class="tab-button" 
-          [class.active]="activeTab === 'answer'"
-          (click)="switchTab('answer')">
-          <mat-icon>chat</mat-icon>
-          <span>Answer</span>
-        </button>
-        <button 
-          class="tab-button" 
-          [class.active]="activeTab === 'sources'"
-          (click)="switchTab('sources')">
-          <mat-icon>link</mat-icon>
-          <span>Sources ({{ result.references.length }})</span>
-        </button>
-      </div>
-
-      <!-- Tab Content -->
-      <div class="tab-content">
-        <!-- Answer Tab -->
-        <div class="tab-panel" [class.active]="activeTab === 'answer'">
+      <!-- Tab System -->
+      <app-tab-container
+        *ngIf="result.references && result.references.length > 0; else answerOnly"
+        [tabs]="getTabsForResult(result)"
+        [activeTab]="activeTab"
+        (tabChange)="onTabChange($event)">
+        
+        <app-tab-panel tabId="answer" [activeTab]="activeTab">
           <!-- Top Sources (Limited to 4) -->
           <div class="top-sources-container" *ngIf="result.references && result.references.length > 0">
             <div class="sources-grid">
@@ -116,10 +102,9 @@
               </button>
             </div>
           </div>
-        </div>
+        </app-tab-panel>
 
-        <!-- Sources Tab -->
-        <div class="tab-panel" [class.active]="activeTab === 'sources'">
+        <app-tab-panel tabId="sources" [activeTab]="activeTab">
           <div class="sources-tab-content">
             <div class="sources-header">
               <h4 class="sources-title">
@@ -150,8 +135,37 @@
               </div>
             </div>
           </div>
+        </app-tab-panel>
+      </app-tab-container>
+
+      <!-- Answer Only Template (no sources) -->
+      <ng-template #answerOnly>
+        <div class="answer-only-content">
+          <!-- AI Answer Content -->
+          <div class="ai-answer-content">
+            <div class="answer-text" [innerHTML]="formatAnswer(result.answer)"></div>
+          </div>
+
+          <!-- Follow-up Questions -->
+          <div class="follow-up-section" *ngIf="result.followUpQuestions && result.followUpQuestions.length > 0">
+            <div class="follow-up-header">
+              <h4 class="follow-up-title">
+                <mat-icon>chat</mat-icon>
+                Related questions
+              </h4>
+            </div>
+            <div class="follow-up-list">
+              <button 
+                class="follow-up-question" 
+                *ngFor="let question of result.followUpQuestions"
+                (click)="onFollowUpClick(question)">
+                <mat-icon>arrow_forward</mat-icon>
+                <span>{{ question }}</span>
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      </ng-template>
 
       <!-- Search Metadata -->
       <div class="search-metadata" *ngIf="result.searchTime">
