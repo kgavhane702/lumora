@@ -6,12 +6,13 @@
   <h3 class="empty-state-title">{{ title }}</h3>
   <p class="empty-state-message">{{ message }}</p>
   
-  <button 
-    *ngIf="showAction && actionText" 
-    mat-raised-button 
-    color="primary"
-    class="empty-state-action"
-    (click)="onActionClick()">
-    {{ actionText }}
-  </button>
+  @if (showAction && actionText) {
+    <button 
+      mat-raised-button 
+      color="primary"
+      class="empty-state-action"
+      (click)="onActionClick()">
+      {{ actionText }}
+    </button>
+  }
 </div>

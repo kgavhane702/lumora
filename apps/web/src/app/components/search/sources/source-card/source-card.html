@@ -12,13 +12,17 @@
     <div class="source-title">{{ source.title }}</div>
     
     <!-- Show snippet in detailed variant -->
-    <div class="source-snippet" *ngIf="variant === 'detailed' && source.snippet">
-      {{ source.snippet }}
-    </div>
+    @if (variant === 'detailed' && source.snippet) {
+      <div class="source-snippet">
+        {{ source.snippet }}
+      </div>
+    }
   </div>
   
   <!-- Show index number if provided -->
-  <div class="source-number" *ngIf="index !== undefined">
-    {{ index + 1 }}
-  </div>
+  @if (index !== undefined) {
+    <div class="source-number">
+      {{ index + 1 }}
+    </div>
+  }
 </div>
