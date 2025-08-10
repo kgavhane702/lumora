@@ -40,8 +40,58 @@ export class AppComponent implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
   isMobile = false;
   isSearchResultsPage = false;
-  isAuthenticated = false;
-  user: User | null = null;
+  isAuthenticated = true; // Set to true for testing
+  user: User | null = {
+    id: '1',
+    name: 'kgavhane7095788',
+    email: 'kgavhane7095788@example.com',
+    avatar: '',
+    preferences: {
+      theme: 'light',
+      language: 'en',
+      notifications: true,
+      emailNotifications: true,
+      pushNotifications: false,
+      autoSave: true,
+      searchHistory: true,
+      chatHistory: true
+    },
+    settings: {
+      searchMode: 'web',
+      defaultModel: 'gpt-4',
+      temperature: 0.7,
+      maxTokens: 1000,
+      includeReferences: true,
+      focus: 'detailed',
+      language: 'en'
+    },
+    subscription: {
+      plan: 'free',
+      features: ['basic_search', 'chat'],
+      expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+      isActive: true,
+      usage: {
+        searches: 50,
+        chats: 20,
+        uploads: 5,
+        exports: 2
+      },
+      limits: {
+        searches: 100,
+        chats: 50,
+        uploads: 10,
+        exports: 5,
+        storage: 100
+      }
+    },
+    roles: ['user'],
+    permissions: ['search', 'chat'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastLoginAt: new Date(),
+    isActive: true,
+    isVerified: true
+  };
   
   @ViewChild('drawer') drawer!: MatSidenav;
   
@@ -95,7 +145,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.authService.getAuthState().subscribe(state => {
         this.isAuthenticated = state.isAuthenticated;
-        this.user = state.user;
+        // this.user = state.user; // Commented out to keep the mock user
         
         if (this.isAuthenticated && this.user) {
           this.notificationService.showSuccess(`Welcome back, ${this.user.name}!`);

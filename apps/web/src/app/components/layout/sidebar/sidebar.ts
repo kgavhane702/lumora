@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 
 interface ChatSession {
   id: string;
@@ -21,7 +23,7 @@ interface User {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule, MatTooltipModule],
+  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule, MatTooltipModule, MatMenuModule, MatDividerModule],
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.scss']
 })
@@ -102,5 +104,46 @@ export class SidebarComponent implements OnInit {
     this.hoverTimeout = setTimeout(() => {
       this.isRedSidebarVisible = false;
     }, 300);
+  }
+
+  // Handle menu actions
+  onMenuAction(action: string) {
+    console.log(`Menu action: ${action}`);
+    
+    switch (action) {
+      case 'account':
+        console.log('Opening account settings...');
+        break;
+      case 'preferences':
+        console.log('Opening preferences...');
+        break;
+      case 'personalization':
+        console.log('Opening personalization...');
+        break;
+      case 'tasks':
+        console.log('Opening tasks...');
+        break;
+      case 'notifications':
+        console.log('Opening notifications...');
+        break;
+      case 'connectors':
+        console.log('Opening connectors...');
+        break;
+      case 'pro-perks':
+        console.log('Opening pro perks...');
+        break;
+      case 'all-settings':
+        console.log('Opening all settings...');
+        break;
+      case 'view-plans':
+        console.log('Opening view plans...');
+        break;
+      case 'current-profile':
+        console.log('Current profile selected...');
+        break;
+      case 'incognito':
+        console.log('Switching to incognito mode...');
+        break;
+    }
   }
 }

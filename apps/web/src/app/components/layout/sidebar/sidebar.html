@@ -31,73 +31,128 @@
       </button>
     </div>
 
-    <!-- Main Navigation -->
-    <nav class="sidebar-nav">
-      <!-- Main Menu -->
-      <div class="nav-section">
-        <a routerLink="/search" routerLinkActive="active" class="nav-item"
-           (mouseenter)="onIconHover()"
-           (mouseleave)="onIconLeave()">
-          <mat-icon>search</mat-icon>
-          <span class="menu-label">Search</span>
-        </a>
-        <a routerLink="/chat" routerLinkActive="active" class="nav-item"
-           (mouseenter)="onIconHover()"
-           (mouseleave)="onIconLeave()">
-          <mat-icon>chat</mat-icon>
-          <span class="menu-label">Chat</span>
-        </a>
-        <a routerLink="/home" routerLinkActive="active" class="nav-item"
-           (mouseenter)="onIconHover()"
-           (mouseleave)="onIconLeave()">
-          <mat-icon>home</mat-icon>
-          <span class="menu-label">Home</span>
-        </a>
-      </div>
+         <!-- Main Navigation -->
+     <nav class="sidebar-nav">
+       <!-- Main Menu -->
+       <div class="nav-section">
+         <a routerLink="/search" routerLinkActive="active" class="nav-item"
+            (mouseenter)="onIconHover()"
+            (mouseleave)="onIconLeave()">
+           <mat-icon>search</mat-icon>
+           <span class="menu-label">Home</span>
+         </a>
+       </div>
 
-      <!-- Tools Section -->
-      <div class="nav-section">
-        <a routerLink="/settings" routerLinkActive="active" class="nav-item"
-           (mouseenter)="onIconHover()"
-           (mouseleave)="onIconLeave()">
-          <mat-icon>settings</mat-icon>
-          <span class="menu-label">Settings</span>
-        </a>
-        <a routerLink="/help" routerLinkActive="active" class="nav-item"
-           (mouseenter)="onIconHover()"
-           (mouseleave)="onIconLeave()">
-          <mat-icon>help</mat-icon>
-          <span class="menu-label">Help</span>
-        </a>
-      </div>
+       <!-- Tools Section -->
+       <div class="nav-section">
+         <a routerLink="/settings" routerLinkActive="active" class="nav-item"
+            (mouseenter)="onIconHover()"
+            (mouseleave)="onIconLeave()">
+           <mat-icon>settings</mat-icon>
+           <span class="menu-label">Settings</span>
+         </a>
+         <a routerLink="/help" routerLinkActive="active" class="nav-item"
+            (mouseenter)="onIconHover()"
+            (mouseleave)="onIconLeave()">
+           <mat-icon>help</mat-icon>
+           <span class="menu-label">Help</span>
+         </a>
+       </div>
 
-      <!-- Upgrade Section -->
-      <div class="nav-section upgrade-section">
-        <button 
-          class="nav-button upgrade"
-          (mouseenter)="onIconHover()"
-          (mouseleave)="onIconLeave()"
-          matTooltip="Upgrade to Lumora Pro"
-          matTooltipPosition="right"
-          matTooltipClass="sidebar-tooltip">
-          <mat-icon>star</mat-icon>
-        </button>
-      </div>
-    </nav>
+       <!-- Upgrade Section -->
+       <div class="nav-section upgrade-section">
+         <button 
+           class="nav-button upgrade"
+           (mouseenter)="onIconHover()"
+           (mouseleave)="onIconLeave()"
+           matTooltip="Upgrade to Lumora Pro"
+           matTooltipPosition="right"
+           matTooltipClass="sidebar-tooltip">
+           <mat-icon>star</mat-icon>
+         </button>
+       </div>
+     </nav>
 
-    <!-- User Section -->
-    @if (user) {
-      <div class="user-section">
-        <div class="user-info"
-             (mouseenter)="onIconHover()"
-             (mouseleave)="onIconLeave()">
-          <div class="user-avatar">
-            <mat-icon>person</mat-icon>
-          </div>
-          <span class="menu-label">{{ user.name }}</span>
-        </div>
-      </div>
-    }
+         <!-- User Section -->
+     @if (user) {
+       <div class="user-section">
+                   <button 
+            class="user-menu-trigger"
+            [matMenuTriggerFor]="userMenu"
+            (mouseenter)="onIconHover()"
+            (mouseleave)="onIconLeave()">
+            <div class="user-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+            <span class="menu-label">Account</span>
+          </button>
+         
+         <mat-menu #userMenu="matMenu" class="user-dropdown-menu">
+           <!-- Account Settings Section -->
+           <div class="menu-section">
+             <button mat-menu-item (click)="onMenuAction('account')">
+               <mat-icon>person</mat-icon>
+               <span>Account</span>
+             </button>
+             <button mat-menu-item (click)="onMenuAction('preferences')">
+               <mat-icon>tune</mat-icon>
+               <span>Preferences</span>
+             </button>
+             <button mat-menu-item (click)="onMenuAction('personalization')">
+               <mat-icon>toggle_on</mat-icon>
+               <span>Personalization</span>
+             </button>
+             <button mat-menu-item (click)="onMenuAction('tasks')">
+               <mat-icon>task_alt</mat-icon>
+               <span>Tasks</span>
+               <div class="notification-dot"></div>
+             </button>
+             <button mat-menu-item (click)="onMenuAction('notifications')">
+               <mat-icon>notifications</mat-icon>
+               <span>Notifications</span>
+             </button>
+             <button mat-menu-item (click)="onMenuAction('connectors')">
+               <mat-icon>hub</mat-icon>
+               <span>Connectors</span>
+             </button>
+             <button mat-menu-item (click)="onMenuAction('pro-perks')">
+               <mat-icon>favorite</mat-icon>
+               <span>Pro Perks</span>
+             </button>
+             <button mat-menu-item (click)="onMenuAction('all-settings')">
+               <mat-icon>settings</mat-icon>
+               <span>All settings</span>
+             </button>
+           </div>
+           
+           <mat-divider></mat-divider>
+           
+           <!-- Plans Section -->
+           <div class="menu-section">
+             <button mat-menu-item (click)="onMenuAction('view-plans')">
+               <mat-icon>description</mat-icon>
+               <span>View plans</span>
+             </button>
+           </div>
+           
+           <mat-divider></mat-divider>
+           
+           <!-- Profile Section -->
+           <div class="menu-section">
+             <button mat-menu-item class="active-profile" (click)="onMenuAction('current-profile')">
+               <mat-icon>person</mat-icon>
+               <span>{{ user.name }}</span>
+               <mat-icon class="check-icon">check</mat-icon>
+             </button>
+             <button mat-menu-item (click)="onMenuAction('incognito')">
+               <mat-icon>incognito</mat-icon>
+               <span>Incognito</span>
+               <mat-icon class="info-icon">help_outline</mat-icon>
+             </button>
+           </div>
+         </mat-menu>
+       </div>
+     }
   </div>
 
   <!-- Hover Sidebar - Sibling to sidebar-content -->
