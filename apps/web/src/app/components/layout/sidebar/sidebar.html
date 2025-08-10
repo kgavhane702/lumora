@@ -22,6 +22,8 @@
       <button 
         class="nav-button new-chat" 
         (click)="onNewChat()"
+        (mouseenter)="onIconHover()"
+        (mouseleave)="onIconLeave()"
         matTooltip="Start a new conversation"
         matTooltipPosition="right"
         matTooltipClass="sidebar-tooltip">
@@ -33,15 +35,21 @@
     <nav class="sidebar-nav">
       <!-- Main Menu -->
       <div class="nav-section">
-        <a routerLink="/search" routerLinkActive="active" class="nav-item">
+        <a routerLink="/search" routerLinkActive="active" class="nav-item"
+           (mouseenter)="onIconHover()"
+           (mouseleave)="onIconLeave()">
           <mat-icon>search</mat-icon>
           <span class="menu-label">Search</span>
         </a>
-        <a routerLink="/chat" routerLinkActive="active" class="nav-item">
+        <a routerLink="/chat" routerLinkActive="active" class="nav-item"
+           (mouseenter)="onIconHover()"
+           (mouseleave)="onIconLeave()">
           <mat-icon>chat</mat-icon>
           <span class="menu-label">Chat</span>
         </a>
-        <a routerLink="/home" routerLinkActive="active" class="nav-item">
+        <a routerLink="/home" routerLinkActive="active" class="nav-item"
+           (mouseenter)="onIconHover()"
+           (mouseleave)="onIconLeave()">
           <mat-icon>home</mat-icon>
           <span class="menu-label">Home</span>
         </a>
@@ -49,11 +57,15 @@
 
       <!-- Tools Section -->
       <div class="nav-section">
-        <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+        <a routerLink="/settings" routerLinkActive="active" class="nav-item"
+           (mouseenter)="onIconHover()"
+           (mouseleave)="onIconLeave()">
           <mat-icon>settings</mat-icon>
           <span class="menu-label">Settings</span>
         </a>
-        <a routerLink="/help" routerLinkActive="active" class="nav-item">
+        <a routerLink="/help" routerLinkActive="active" class="nav-item"
+           (mouseenter)="onIconHover()"
+           (mouseleave)="onIconLeave()">
           <mat-icon>help</mat-icon>
           <span class="menu-label">Help</span>
         </a>
@@ -63,6 +75,8 @@
       <div class="nav-section upgrade-section">
         <button 
           class="nav-button upgrade"
+          (mouseenter)="onIconHover()"
+          (mouseleave)="onIconLeave()"
           matTooltip="Upgrade to Lumora Pro"
           matTooltipPosition="right"
           matTooltipClass="sidebar-tooltip">
@@ -74,7 +88,9 @@
     <!-- User Section -->
     @if (user) {
       <div class="user-section">
-        <div class="user-info">
+        <div class="user-info"
+             (mouseenter)="onIconHover()"
+             (mouseleave)="onIconLeave()">
           <div class="user-avatar">
             <mat-icon>person</mat-icon>
           </div>
@@ -83,4 +99,16 @@
       </div>
     }
   </div>
+
+  <!-- Hover Sidebar - Sibling to sidebar-content -->
+  @if (isRedSidebarVisible) {
+    <div class="red-sidebar"
+         (mouseenter)="onRedSidebarHover()"
+         (mouseleave)="onRedSidebarLeave()">
+      <div class="red-sidebar-content">
+        <h3>Hover Sidebar</h3>
+        <p>This sidebar appears on hover</p>
+      </div>
+    </div>
+  }
 </aside>

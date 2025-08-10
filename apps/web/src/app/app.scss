@@ -104,6 +104,7 @@ body {
   overflow-x: hidden;
   transition: margin-left 0.3s ease;
   position: relative;
+  margin-left: 0; /* No margin needed since sidebar is transparent */
   
   @media (max-width: 767px) {
     margin-left: 0;
@@ -135,7 +136,7 @@ body {
   }
   
   .main-content {
-    margin-left: 80px; /* Add margin to account for sidebar */
+    margin-left: 0; /* No margin needed since sidebar is transparent */
   }
   
   /* Show mobile menu button on tablets and smaller screens */
