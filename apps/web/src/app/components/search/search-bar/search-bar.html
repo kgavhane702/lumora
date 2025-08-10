@@ -55,11 +55,12 @@
           mat-icon-button
           class="search-button"
           [class.searching]="isSearching"
+          [class.has-query]="searchQuery.trim().length > 0"
           (click)="isSearching ? onStopSearch() : onSearch(searchQuery)"
           [disabled]="!searchQuery.trim() && !isSearching"
           type="button"
           matTooltip="Search">
-          <mat-icon [color]="isSearching ? 'warn' : 'primary'">
+          <mat-icon [color]="isSearching ? 'warn' : (searchQuery.trim().length > 0 ? 'primary' : '')">
             {{ isSearching ? 'stop_circle' : 'send' }}
           </mat-icon>
         </button>
@@ -67,17 +68,18 @@
     </div>
 
     <!-- File Attachment Component - Only show when files are attached -->
-    <app-file-attachment
-      *ngIf="attachedFiles.length > 0"
-      [attachedFiles]="attachedFiles"
-      [maxFiles]="5"
-      [maxFileSize]="10 * 1024 * 1024"
-      [acceptedTypes]="acceptedFileTypes"
-      [showUploadProgress]="true"
-      (fileUpload)="onFileUpload($event)"
-      (fileRemove)="onFileRemove($event)"
-      (fileError)="onFileError($event)">
-    </app-file-attachment>
+    @if (attachedFiles.length > 0) {
+      <app-file-attachment
+        [attachedFiles]="attachedFiles"
+        [maxFiles]="5"
+        [maxFileSize]="10 * 1024 * 1024"
+        [acceptedTypes]="acceptedFileTypes"
+        [showUploadProgress]="true"
+        (fileUpload)="onFileUpload($event)"
+        (fileRemove)="onFileRemove($event)"
+        (fileError)="onFileError($event)">
+      </app-file-attachment>
+    }
 
     <!-- Search Suggestions Component - After file attachments -->
     <app-search-suggestions

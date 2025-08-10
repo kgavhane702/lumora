@@ -27,13 +27,14 @@
   <!-- Main Content Area -->
   <mat-sidenav-content class="app-sidenav-content">
     
-    <!-- Header Component - Only on Search Results Page -->
+      <!-- Header Component - Only on Search Results Page -->
+  @if (isSearchResultsPage) {
     <app-header
-      *ngIf="isSearchResultsPage"
       [isSearchResultsPage]="isSearchResultsPage"
       (shareResults)="onShareResults()"
       (bookmarkResults)="onBookmarkResults()">
     </app-header>
+  }
 
     <!-- Main Content -->
     <main class="main-content">

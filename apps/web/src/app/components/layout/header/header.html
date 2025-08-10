@@ -1,16 +1,18 @@
-<header class="search-results-header" *ngIf="isSearchResultsPage">
-  <div class="header-content">
-    <div class="header-left">
-      <!-- Removed extra hamburger menu button -->
+@if (isSearchResultsPage) {
+  <header class="search-results-header">
+    <div class="header-content">
+      <div class="header-left">
+        <!-- Removed extra hamburger menu button -->
+      </div>
+      
+      <div class="header-right">
+        <button class="header-action-btn" (click)="onShare()">
+          <mat-icon>share</mat-icon>
+        </button>
+        <button class="header-action-btn" (click)="onBookmark()">
+          <mat-icon>bookmark_border</mat-icon>
+        </button>
+      </div>
     </div>
-    
-    <div class="header-right">
-      <button class="header-action-btn" (click)="onShare()">
-        <mat-icon>share</mat-icon>
-      </button>
-      <button class="header-action-btn" (click)="onBookmark()">
-        <mat-icon>bookmark_border</mat-icon>
-      </button>
-    </div>
-  </div>
-</header>
+  </header>
+}

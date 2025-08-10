@@ -1,11 +1,13 @@
-<div class="drag-overlay" *ngIf="isVisible">
-  <div class="overlay-content">
-    <div class="overlay-icon">
-      <mat-icon>attach_file</mat-icon>
-    </div>
-    <div class="overlay-text">
-      <h3 class="overlay-title">{{ message }}</h3>
-      <p class="overlay-subtitle">{{ subtitle }}</p>
+@if (isVisible) {
+  <div class="drag-overlay">
+    <div class="overlay-content">
+      <div class="overlay-icon">
+        <mat-icon>attach_file</mat-icon>
+      </div>
+      <div class="overlay-text">
+        <h3 class="overlay-title">{{ message }}</h3>
+        <p class="overlay-subtitle">{{ subtitle }}</p>
+      </div>
     </div>
   </div>
-</div>
+}

@@ -1,108 +1,115 @@
 <div class="search-page" [class.has-sessions]="hasActiveSessions">
   <!-- Initial Search Layout (First Search) -->
-  <div class="initial-search-layout" *ngIf="isFirstSearch">
-    <div class="search-container">
-      <!-- Header -->
-      <app-brand-header></app-brand-header>
+  @if (isFirstSearch) {
+    <div class="initial-search-layout">
+      <div class="search-container">
+        <!-- Header -->
+        <app-brand-header></app-brand-header>
 
-      <!-- Initial Search Bar -->
-      <div class="search-bar-container">
-        <app-search-bar
-          #searchBar
-          [placeholder]="'Ask anything...'"
-          [autoFocus]="true"
-          [isSearching]="isSearching"
-          (search)="onSearch($event)"
-          (stopSearch)="onStopSearch()"
-          (fileUpload)="onFileUpload($event)">
-        </app-search-bar>
+        <!-- Initial Search Bar -->
+        <div class="search-bar-container">
+          <app-search-bar
+            #searchBar
+            [placeholder]="'Ask anything...'"
+            [autoFocus]="true"
+            [isSearching]="isSearching"
+            (search)="onSearch($event)"
+            (stopSearch)="onStopSearch()"
+            (fileUpload)="onFileUpload($event)">
+          </app-search-bar>
+        </div>
+
+        <!-- Quick Actions -->
+        <app-quick-actions-grid (actionClick)="onQuickAction($event)"></app-quick-actions-grid>
+
+        <!-- Features Section -->
+        <app-features-showcase></app-features-showcase>
       </div>
-
-      <!-- Quick Actions -->
-      <app-quick-actions-grid (actionClick)="onQuickAction($event)"></app-quick-actions-grid>
-
-      <!-- Features Section -->
-      <app-features-showcase></app-features-showcase>
     </div>
-  </div>
+  }
 
   <!-- Chat Layout (Subsequent Searches) -->
-  <div class="chat-layout" *ngIf="hasActiveSessions">
-    <!-- Action Bar with Share/Export/Bookmark -->
-    <app-action-bar
-      variant="minimal"
-      position="right"
-      [showShare]="true"
-      [showBookmark]="true"
-      [showExport]="true"
-      (share)="onShareResults()"
-      (bookmark)="onBookmarkResults()"
-      (export)="onExportResults()">
-    </app-action-bar>
+  @if (hasActiveSessions) {
+    <div class="chat-layout">
+      <!-- Action Bar with Share/Export/Bookmark -->
+      <app-action-bar
+        variant="minimal"
+        position="right"
+        [showShare]="true"
+        [showBookmark]="true"
+        [showExport]="true"
+        (share)="onShareResults()"
+        (bookmark)="onBookmarkResults()"
+        (export)="onExportResults()">
+      </app-action-bar>
 
-    <!-- Main Content Area -->
-    <div class="chat-content">
-      <!-- Results Container -->
-      <div class="results-container">
-        <div class="sessions-container">
-          <div
-            class="session-item"
-            *ngFor="let session of searchSessions; let i = index; trackBy: trackBySession"
-            #currentSessionElem=""
-            [attr.data-last]="i === searchSessions.length - 1 ? true : null">
-            
-            <div class="session-header">
-              <div class="session-title">
-                <h2 class="query-title">{{ session.query }}</h2>
-                <div class="session-actions">
-                  <button class="action-btn" title="Edit query">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button class="action-btn" title="Copy query">
-                    <mat-icon>content_copy</mat-icon>
-                  </button>
+      <!-- Main Content Area -->
+      <div class="chat-content">
+        <!-- Results Container -->
+        <div class="results-container">
+          <div class="sessions-container">
+            @for (session of searchSessions; track trackBySession($index, session); let i = $index) {
+              <div
+                class="session-item"
+                #currentSessionElem=""
+                [attr.data-last]="i === searchSessions.length - 1 ? true : null">
+                
+                <div class="session-header">
+                  <div class="session-title">
+                    <h2 class="query-title">{{ session.query }}</h2>
+                    <div class="session-actions">
+                      <button class="action-btn" title="Edit query">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button class="action-btn" title="Copy query">
+                        <mat-icon>content_copy</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="session-results">
+                  <app-search-results 
+                    [results]="session.results"
+                    [isLoading]="session.isLoading"
+                    (resultClick)="onResultClick($event)"
+                    (referenceClick)="onReferenceClick($event)"
+                    (followUpClick)="onFollowUpClick($event)"
+                    (continueSearch)="onContinueSearch($event)">
+                  </app-search-results>
                 </div>
               </div>
-            </div>
-            <div class="session-results">
-              <app-search-results 
-                [results]="session.results"
-                [isLoading]="session.isLoading"
-                (resultClick)="onResultClick($event)"
-                (referenceClick)="onReferenceClick($event)"
-                (followUpClick)="onFollowUpClick($event)"
-                (continueSearch)="onContinueSearch($event)">
-              </app-search-results>
-            </div>
+            }
           </div>
         </div>
-      </div>
 
-      <!-- Search Bar Container -->
-      <div class="search-bar-container">
-        <app-search-bar 
-          #searchBarChat
-          [placeholder]="'Ask a follow-up question...'"
-          [autoFocus]="false"
-          [isSearching]="isSearching"
-          [showAutoSuggestions]="false"
-          (search)="onSearch($event)"
-          (stopSearch)="onStopSearch()">
-        </app-search-bar>
+        <!-- Search Bar Container -->
+        <div class="search-bar-container">
+          <app-search-bar 
+            #searchBarChat
+            [placeholder]="'Ask a follow-up question...'"
+            [autoFocus]="false"
+            [isSearching]="isSearching"
+            [showAutoSuggestions]="false"
+            (search)="onSearch($event)"
+            (stopSearch)="onStopSearch()">
+          </app-search-bar>
+        </div>
       </div>
     </div>
-  </div>
+  }
 </div>
 
 <!-- Drag Overlay for Search Page -->
-<div class="drag-overlay" *ngIf="showDragOverlay" (click)="showDragOverlay = false">
-  <div class="overlay-content" (click)="$event.stopPropagation()">
-    <div class="overlay-icon">
-      <mat-icon>attach_file</mat-icon>
-    </div>
-    <div class="overlay-text">
-      <h3 class="overlay-title">Drop your files here</h3>
-      <p class="overlay-subtitle">Drag and drop files to attach them to your message</p>
+@if (showDragOverlay) {
+  <div class="drag-overlay" (click)="showDragOverlay = false">
+    <div class="overlay-content" (click)="$event.stopPropagation()">
+      <div class="overlay-icon">
+        <mat-icon>attach_file</mat-icon>
+      </div>
+      <div class="overlay-text">
+        <h3 class="overlay-title">Drop your files here</h3>
+        <p class="overlay-subtitle">Drag and drop files to attach them to your message</p>
+      </div>
     </div>
   </div>
-</div>
+}

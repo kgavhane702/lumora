@@ -1,9 +1,10 @@
 <div class="features-section">
   <h3 class="section-title">Features</h3>
   <div class="features-grid">
-    <app-feature-card
-      *ngFor="let feature of features; trackBy: trackByFeature"
-      [feature]="feature">
-    </app-feature-card>
+    @for (feature of features; track trackByFeature($index, feature)) {
+      <app-feature-card
+        [feature]="feature">
+      </app-feature-card>
+    }
   </div>
 </div>

@@ -1,8 +1,10 @@
 <aside class="sidebar" [class.mobile-open]="isMobileOpen">
   <!-- Mobile Close Button - Outside Right Edge -->
-  <button class="mobile-close-btn" (click)="onMobileClose()" *ngIf="isMobileOpen">
-    <mat-icon>close</mat-icon>
-  </button>
+  @if (isMobileOpen) {
+    <button class="mobile-close-btn" (click)="onMobileClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
 
   <!-- Sidebar Content -->
   <div class="sidebar-content">
@@ -70,13 +72,15 @@
     </nav>
 
     <!-- User Section -->
-    <div class="user-section" *ngIf="user">
-      <div class="user-info">
-        <div class="user-avatar">
-          <mat-icon>person</mat-icon>
+    @if (user) {
+      <div class="user-section">
+        <div class="user-info">
+          <div class="user-avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <span class="menu-label">{{ user.name }}</span>
         </div>
-        <span class="menu-label">{{ user.name }}</span>
       </div>
-    </div>
+    }
   </div>
 </aside>

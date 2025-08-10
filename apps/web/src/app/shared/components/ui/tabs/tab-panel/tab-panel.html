@@ -1,3 +1,5 @@
-<div class="tab-panel-content" *ngIf="shouldRender">
-  <ng-content></ng-content>
-</div>
+@if (shouldRender) {
+  <div class="tab-panel-content">
+    <ng-content></ng-content>
+  </div>
+}

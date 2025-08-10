@@ -110,6 +110,20 @@
     }
   }
   
+  /* Enhanced styling when search query is not empty */
+  &.has-query {
+    color: #3b82f6 !important; /* Blue text color */
+    
+    &:hover {
+      background: rgba(59, 130, 246, 0.1); /* Light blue background only on hover */
+      transform: scale(1.05); /* Slight scale effect */
+    }
+    
+    mat-icon {
+      color: #3b82f6 !important; /* Ensure icon is blue */
+    }
+  }
+  
   &.searching {
     background: rgba(239, 68, 68, 0.1);
     

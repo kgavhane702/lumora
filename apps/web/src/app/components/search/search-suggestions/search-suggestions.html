@@ -1,19 +1,22 @@
-<div class="search-suggestions" *ngIf="showSuggestions && suggestions.length > 0">
-  <div 
-    class="suggestion-item" 
-    *ngFor="let suggestion of suggestions; trackBy: trackBySuggestion; let i = index"
-    [class.selected]="i === selectedIndex"
-    (click)="onSuggestionClick(suggestion)"
-    (mouseenter)="onSuggestionHover(i)">
-    
-    <div class="suggestion-icon">
-      <mat-icon>{{ getIconName() }}</mat-icon>
-    </div>
-    
-    <div class="suggestion-text">{{ suggestion }}</div>
-    
-    <div class="suggestion-go">
-      <mat-icon>north_west</mat-icon>
-    </div>
+@if (showSuggestions && suggestions.length > 0) {
+  <div class="search-suggestions">
+    @for (suggestion of suggestions; track trackBySuggestion($index, suggestion); let i = $index) {
+      <div 
+        class="suggestion-item" 
+        [class.selected]="i === selectedIndex"
+        (click)="onSuggestionClick(suggestion)"
+        (mouseenter)="onSuggestionHover(i)">
+        
+        <div class="suggestion-icon">
+          <mat-icon>{{ getIconName() }}</mat-icon>
+        </div>
+        
+        <div class="suggestion-text">{{ suggestion }}</div>
+        
+        <div class="suggestion-go">
+          <mat-icon>north_west</mat-icon>
+        </div>
+      </div>
+    }
   </div>
-</div> 
+} 
