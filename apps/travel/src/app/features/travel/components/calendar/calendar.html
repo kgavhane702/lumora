@@ -1,50 +1,71 @@
-<!-- Calendar View -->
+<!-- Calendar Grid View using Angular Material -->
 <div class="calendar-container">
   <div class="calendar-header">
-    <h2>Trip Calendar View</h2>
-    <p>Visual timeline of your {{ getTotalDays() }}-day Goa adventure</p>
+    <h2>Trip Calendar</h2>
+    <!-- Debug Info -->
+    <div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 4px; font-size: 12px;">
+      <strong>Debug Info:</strong><br>
+      Current Trip: {{ currentTrip ? 'Loaded' : 'Not loaded' }}<br>
+      Total Days: {{ getTotalDays() }}<br>
+      Itinerary Length: {{ currentTrip?.itinerary?.length || 0 }}
+    </div>
   </div>
   
-  <div class="calendar-grid">
-    @for (day of currentTrip?.itinerary; track day.day) {
-      <div class="calendar-day">
-        <div class="day-header">
-          <div class="day-number">Day {{ day.day }}</div>
-          <div class="day-date">{{ day.date | date:'MMM dd' }}</div>
-          <div class="day-location">{{ day.location }}</div>
-        </div>
-        
-        <div class="day-timeline">
-          @for (item of getDayTimelineItems(day); track item.trackId) {
-            <div class="timeline-item" [class]="'timeline-' + item.type">
-              <div class="timeline-time">{{ item.time }}</div>
-              <div class="timeline-content">
-                <div class="timeline-icon">
-                  @if (item.type === 'transportation') {
-                    <mat-icon>{{ getTransportIcon(item.data.type) }}</mat-icon>
-                  } @else if (item.type === 'accommodation') {
-                    <mat-icon>hotel</mat-icon>
-                  } @else {
-                    <mat-icon>{{ getActivityIcon(item.data.type) }}</mat-icon>
-                  }
-                </div>
-                <div class="timeline-details">
-                  @if (item.type === 'transportation') {
-                    <div class="timeline-title">{{ item.data.provider }}</div>
-                    <div class="timeline-subtitle">{{ item.data.from }} → {{ item.data.to }}</div>
-                  } @else if (item.type === 'accommodation') {
-                    <div class="timeline-title">{{ item.data.name }}</div>
-                    <div class="timeline-subtitle">{{ item.data.address }}</div>
-                  } @else {
-                    <div class="timeline-title">{{ item.data.title }}</div>
-                    <div class="timeline-subtitle">{{ item.data.location }}</div>
-                  }
-                </div>
+  <div class="calendar-table" *ngIf="currentTrip?.itinerary?.length">
+    <!-- Header Row with Day Columns -->
+    <div class="calendar-header-row">
+      <div class="time-header-cell">Time</div>
+      <div class="day-header-cell" *ngFor="let day of getValidItineraryDays(); track day?.day">
+        <div class="day-number">Day {{ day.day }}</div>
+        <div class="day-date">{{ day.date | date:'MMM dd' }}</div>
+        <div class="day-location">{{ day.location }}</div>
+      </div>
+    </div>
+    
+    <!-- Time Rows -->
+    <div class="calendar-row" *ngFor="let timeSlot of timeSlots; track timeSlot">
+      <!-- Time Column -->
+      <div class="time-cell">
+        <span class="time-label" [class.all-day]="timeSlot === 'All Day'">{{ timeSlot }}</span>
+      </div>
+      
+      <!-- Day Columns -->
+      <div class="day-cell" *ngFor="let day of getValidItineraryDays(); track day?.day">
+        <div class="event-container">
+          <!-- All Day Events -->
+          <div *ngIf="timeSlot === 'All Day'">
+            <mat-chip 
+              *ngFor="let event of getAllDayEvents(day)"
+              [color]="getEventColor(event)"
+              selected
+              class="event-chip all-day-chip">
+              <mat-icon matChipAvatar>{{ getEventIcon(event) }}</mat-icon>
+              {{ event.title }}
+            </mat-chip>
+          </div>
+          
+          <!-- Time-based Events -->
+          <div *ngIf="timeSlot !== 'All Day'">
+            <mat-chip 
+              *ngFor="let event of getEventsForTimeSlot(day, timeSlot)"
+              [color]="getEventColor(event)"
+              selected
+              class="event-chip">
+              <mat-icon matChipAvatar>{{ getEventIcon(event) }}</mat-icon>
+              <div class="event-content">
+                <div class="event-title">{{ event.title }}</div>
+                <div class="event-time">{{ event.startTime }} - {{ event.endTime }}</div>
               </div>
-            </div>
-          }
+            </mat-chip>
+          </div>
         </div>
       </div>
-    }
+    </div>
+  </div>
+  
+  <!-- No Data Message -->
+  <div *ngIf="!currentTrip?.itinerary?.length" style="text-align: center; padding: 40px; color: #666;">
+    <h3>No trip data available</h3>
+    <p>Please select a trip to view the calendar.</p>
   </div>
 </div>
