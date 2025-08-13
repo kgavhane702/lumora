@@ -100,6 +100,12 @@
     cursor: pointer;
     transition: all 0.2s ease;
     min-width: 80px;
+    user-select: none;
+
+    &:hover {
+      background: #f0f8ff;
+      transform: translateY(-1px);
+    }
 
     &.active {
       background: #e6f7ff;
@@ -529,6 +535,226 @@
         .meta-item {
           font-size: 12px;
           padding: 4px 8px;
+        }
+      }
+    }
+  }
+}
+
+/* Calendar View Styles */
+.calendar-container {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  margin: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .calendar-header {
+    text-align: center;
+    margin-bottom: 32px;
+
+    h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      font-size: 16px;
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  .calendar-grid {
+    display: grid;
+    gap: 24px;
+  }
+
+  .calendar-day {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    .day-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .day-number {
+        font-size: 18px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 8px 12px;
+        border-radius: 8px;
+        min-width: 60px;
+        text-align: center;
+      }
+
+      .day-date {
+        font-size: 16px;
+        font-weight: 600;
+        flex: 1;
+      }
+
+      .day-location {
+        font-size: 14px;
+        opacity: 0.9;
+        text-align: right;
+      }
+    }
+
+    .day-timeline {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 4px solid;
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      &.timeline-transportation {
+        background: #e3f2fd;
+        border-left-color: #1976d2;
+      }
+
+      &.timeline-accommodation {
+        background: #f3e5f5;
+        border-left-color: #7b1fa2;
+      }
+
+      &.timeline-activity {
+        background: #e8f5e8;
+        border-left-color: #388e3c;
+      }
+
+      .timeline-time {
+        font-size: 12px;
+        font-weight: 600;
+        color: #666;
+        background: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        min-width: 60px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .timeline-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+
+        .timeline-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: white;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            color: #1976d2;
+          }
+        }
+
+        .timeline-details {
+          flex: 1;
+
+          .timeline-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+          }
+
+          .timeline-subtitle {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Responsive Calendar */
+@media (max-width: 768px) {
+  .calendar-container {
+    margin: 8px;
+    padding: 16px;
+
+    .calendar-header {
+      margin-bottom: 24px;
+
+      h2 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+
+    .calendar-day {
+      .day-header {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+
+        .day-location {
+          text-align: center;
+        }
+      }
+
+      .day-timeline {
+        padding: 16px;
+        gap: 12px;
+      }
+
+      .timeline-item {
+        gap: 12px;
+        padding: 10px;
+
+        .timeline-content {
+          gap: 10px;
+
+          .timeline-icon {
+            width: 36px;
+            height: 36px;
+
+            mat-icon {
+              font-size: 18px;
+              width: 18px;
+              height: 18px;
+            }
+          }
         }
       }
     }

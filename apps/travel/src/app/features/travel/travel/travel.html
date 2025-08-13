@@ -9,164 +9,231 @@
       <h1 class="trip-title">5N Goa</h1>
     </div>
     <div class="nav-tabs">
-      <button class="tab active">ITINERARY</button>
-      <button class="tab">POLICIES</button>
-      <button class="tab">SUMMARY</button>
+      <button class="tab" 
+              [class.active]="isTabActive('itinerary')"
+              (click)="setTab('itinerary')">ITINERARY</button>
+      <button class="tab" 
+              [class.active]="isTabActive('calendar')"
+              (click)="setTab('calendar')">CALENDAR</button>
     </div>
   </div>
 
-  <!-- Itinerary Summary Bar -->
-  <div class="summary-bar">
-    <div class="summary-item active">
-      <span class="count">6</span>
-      <span class="label">DAY PLAN</span>
+  <!-- Tab Content -->
+  @if (isTabActive('itinerary')) {
+    <!-- Itinerary Summary Bar -->
+    <div class="summary-bar">
+      <div class="summary-item" 
+           [class.active]="isFilterActive('all')"
+           (click)="setFilter('all')">
+        <span class="count">{{ getTotalDays() }}</span>
+        <span class="label">DAY PLAN</span>
+      </div>
+      <div class="summary-item" 
+           [class.active]="isFilterActive('transfers')"
+           (click)="setFilter('transfers')">
+        <span class="count">{{ getTotalTransfers() }}</span>
+        <span class="label">TRANSFERS</span>
+      </div>
+      <div class="summary-item" 
+           [class.active]="isFilterActive('hotels')"
+           (click)="setFilter('hotels')">
+        <span class="count">{{ getTotalHotels() }}</span>
+        <span class="label">HOTELS</span>
+      </div>
+      <div class="summary-item" 
+           [class.active]="isFilterActive('activities')"
+           (click)="setFilter('activities')">
+        <span class="count">{{ getTotalActivities() }}</span>
+        <span class="label">ACTIVITIES</span>
+      </div>
+      <div class="summary-item" 
+           [class.active]="isFilterActive('meals')"
+           (click)="setFilter('meals')">
+        <span class="count">{{ getTotalMeals() }}</span>
+        <span class="label">MEALS</span>
+      </div>
     </div>
-    <div class="summary-item">
-      <span class="count">{{ getTotalTransfers() }}</span>
-      <span class="label">TRANSFERS</span>
-    </div>
-    <div class="summary-item">
-      <span class="count">{{ getTotalHotels() }}</span>
-      <span class="label">HOTELS</span>
-    </div>
-    <div class="summary-item">
-      <span class="count">{{ getTotalActivities() }}</span>
-      <span class="label">ACTIVITIES</span>
-    </div>
-    <div class="summary-item">
-      <span class="count">{{ getTotalMeals() }}</span>
-      <span class="label">MEALS</span>
-    </div>
-  </div>
 
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <mat-accordion class="itinerary-accordion" multi>
+        @for (day of currentTrip?.itinerary; track day.day) {
+          <mat-expansion-panel>
+                       <mat-expansion-panel-header>
+               <mat-panel-title>
+                 <div class="day-header-content">
+                   <div class="day-badge">Day {{ day.day }}</div>
+                   <div class="day-location">{{ day.location }}</div>
+                 </div>
+               </mat-panel-title>
+                            <mat-panel-description>
+                  <div class="day-includes">
+                    INCLUDED: {{ getDayIncludes(day) }}
+                  </div>
+                </mat-panel-description>
+             </mat-expansion-panel-header>
 
+                         <!-- True Chronological Timeline with Type Labels -->
+              <div class="content-section">
+                @for (item of getDayTimelineItems(day); track item.trackId) {
+                  <!-- Transportation Item -->
+                  @if (item.type === 'transportation') {
+                    <div class="item-card transfer-card">
+                      <div class="card-left">
+                        <div class="transport-icon">
+                          <mat-icon>{{ getTransportIcon(item.data.type) }}</mat-icon>
+                        </div>
+                      </div>
+                      <div class="card-content">
+                        <div class="type-label transportation-label">
+                          <mat-icon>directions_car</mat-icon>
+                          Transportation
+                        </div>
+                        <h4 class="card-title">{{ item.data.provider }}</h4>
+                        <p class="card-description">{{ item.data.from }} to {{ item.data.to }}</p>
+                        <div class="card-meta">
+                          <span class="meta-item">
+                            <mat-icon>schedule</mat-icon>
+                            {{ item.data.departureTime }} - {{ item.data.arrivalTime }}
+                          </span>
+                          <span class="meta-item">
+                            <mat-icon>timer</mat-icon>
+                            {{ item.data.duration }} min
+                          </span>
+                          @if (item.data.cost) {
+                            <span class="meta-item">
+                              <mat-icon>attach_money</mat-icon>
+                              ₹{{ item.data.cost.amount | number:'1.0-0' }}
+                            </span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
 
-  <!-- Main Content Area -->
-  <div class="main-content">
-    <mat-accordion class="itinerary-accordion" multi>
-      @for (day of currentTrip?.itinerary; track day.day) {
-        <mat-expansion-panel>
-                     <mat-expansion-panel-header>
-             <mat-panel-title>
-               <div class="day-header-content">
-                 <div class="day-badge">Day {{ day.day }}</div>
-                 <div class="day-location">{{ day.location }}</div>
-               </div>
-             </mat-panel-title>
-                          <mat-panel-description>
-                <div class="day-includes">
-                  INCLUDED: {{ getDayIncludes(day) }}
-                </div>
-              </mat-panel-description>
-           </mat-expansion-panel-header>
+                  <!-- Accommodation Item -->
+                  @if (item.type === 'accommodation') {
+                    <div class="item-card accommodation-card">
+                      <div class="card-left">
+                        <img [src]="item.data.images?.[0]" [alt]="item.data.name" class="accommodation-image">
+                      </div>
+                      <div class="card-content">
+                        <div class="type-label accommodation-label">
+                          <mat-icon>hotel</mat-icon>
+                          Accommodation
+                        </div>
+                        <h4 class="card-title">{{ item.data.name }}</h4>
+                        <p class="card-description">{{ item.data.address }}</p>
+                        <div class="card-meta">
+                          @if (item.data.checkIn) {
+                            <span class="meta-item">
+                              <mat-icon>login</mat-icon>
+                              Check‑in {{ item.data.checkIn }}
+                            </span>
+                          }
+                          @if (item.data.checkOut) {
+                            <span class="meta-item">
+                              <mat-icon>logout</mat-icon>
+                              Check‑out {{ item.data.checkOut }}
+                            </span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
 
-                       <!-- True Chronological Timeline with Type Labels -->
-            <div class="content-section">
+                  <!-- Activity Item -->
+                  @if (item.type === 'activity') {
+                    <div class="item-card activity-card">
+                      <div class="card-left">
+                        <div class="activity-icon">
+                          <mat-icon>{{ getActivityIcon(item.data.type) }}</mat-icon>
+                        </div>
+                      </div>
+                      <div class="card-content">
+                        <div class="type-label activity-label">
+                          <mat-icon>explore</mat-icon>
+                          Activity
+                        </div>
+                        <h4 class="card-title">{{ item.data.title }}</h4>
+                        <p class="card-description">{{ item.data.description }}</p>
+                        <div class="card-meta">
+                          <span class="meta-item">
+                            <mat-icon>schedule</mat-icon>
+                            {{ item.data.startTime }} - {{ item.data.endTime }}
+                          </span>
+                          <span class="meta-item">
+                            <mat-icon>location_on</mat-icon>
+                            {{ item.data.location }}
+                          </span>
+                          @if (item.data.cost) {
+                            <span class="meta-item">
+                              <mat-icon>attach_money</mat-icon>
+                              ₹{{ item.data.cost.amount | number:'1.0-0' }}
+                            </span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+    </div>
+  }
+
+  @if (isTabActive('calendar')) {
+    <!-- Calendar View -->
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <h2>Trip Calendar View</h2>
+        <p>Visual timeline of your {{ getTotalDays() }}-day Goa adventure</p>
+      </div>
+      
+      <div class="calendar-grid">
+        @for (day of currentTrip?.itinerary; track day.day) {
+          <div class="calendar-day">
+            <div class="day-header">
+              <div class="day-number">Day {{ day.day }}</div>
+              <div class="day-date">{{ day.date | date:'MMM dd' }}</div>
+              <div class="day-location">{{ day.location }}</div>
+            </div>
+            
+            <div class="day-timeline">
               @for (item of getDayTimelineItems(day); track item.trackId) {
-                <!-- Transportation Item -->
-                @if (item.type === 'transportation') {
-                  <div class="item-card transfer-card">
-                    <div class="card-left">
-                      <div class="transport-icon">
+                <div class="timeline-item" [class]="'timeline-' + item.type">
+                  <div class="timeline-time">{{ item.time }}</div>
+                  <div class="timeline-content">
+                    <div class="timeline-icon">
+                      @if (item.type === 'transportation') {
                         <mat-icon>{{ getTransportIcon(item.data.type) }}</mat-icon>
-                      </div>
-                    </div>
-                    <div class="card-content">
-                      <div class="type-label transportation-label">
-                        <mat-icon>directions_car</mat-icon>
-                        Transportation
-                      </div>
-                      <h4 class="card-title">{{ item.data.provider }}</h4>
-                      <p class="card-description">{{ item.data.from }} to {{ item.data.to }}</p>
-                      <div class="card-meta">
-                        <span class="meta-item">
-                          <mat-icon>schedule</mat-icon>
-                          {{ item.data.departureTime }} - {{ item.data.arrivalTime }}
-                        </span>
-                        <span class="meta-item">
-                          <mat-icon>timer</mat-icon>
-                          {{ item.data.duration }} min
-                        </span>
-                        @if (item.data.cost) {
-                          <span class="meta-item">
-                            <mat-icon>attach_money</mat-icon>
-                            ₹{{ item.data.cost.amount | number:'1.0-0' }}
-                          </span>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                <!-- Accommodation Item -->
-                @if (item.type === 'accommodation') {
-                  <div class="item-card accommodation-card">
-                    <div class="card-left">
-                      <img [src]="item.data.images?.[0]" [alt]="item.data.name" class="accommodation-image">
-                    </div>
-                    <div class="card-content">
-                      <div class="type-label accommodation-label">
+                      } @else if (item.type === 'accommodation') {
                         <mat-icon>hotel</mat-icon>
-                        Accommodation
-                      </div>
-                      <h4 class="card-title">{{ item.data.name }}</h4>
-                      <p class="card-description">{{ item.data.address }}</p>
-                      <div class="card-meta">
-                        @if (item.data.checkIn) {
-                          <span class="meta-item">
-                            <mat-icon>login</mat-icon>
-                            Check‑in {{ item.data.checkIn }}
-                          </span>
-                        }
-                        @if (item.data.checkOut) {
-                          <span class="meta-item">
-                            <mat-icon>logout</mat-icon>
-                            Check‑out {{ item.data.checkOut }}
-                          </span>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                <!-- Activity Item -->
-                @if (item.type === 'activity') {
-                  <div class="item-card activity-card">
-                    <div class="card-left">
-                      <div class="activity-icon">
+                      } @else {
                         <mat-icon>{{ getActivityIcon(item.data.type) }}</mat-icon>
-                      </div>
+                      }
                     </div>
-                    <div class="card-content">
-                      <div class="type-label activity-label">
-                        <mat-icon>explore</mat-icon>
-                        Activity
-                      </div>
-                      <h4 class="card-title">{{ item.data.title }}</h4>
-                      <p class="card-description">{{ item.data.description }}</p>
-                      <div class="card-meta">
-                        <span class="meta-item">
-                          <mat-icon>schedule</mat-icon>
-                          {{ item.data.startTime }} - {{ item.data.endTime }}
-                        </span>
-                        <span class="meta-item">
-                          <mat-icon>location_on</mat-icon>
-                          {{ item.data.location }}
-                        </span>
-                        @if (item.data.cost) {
-                          <span class="meta-item">
-                            <mat-icon>attach_money</mat-icon>
-                            ₹{{ item.data.cost.amount | number:'1.0-0' }}
-                          </span>
-                        }
-                      </div>
+                    <div class="timeline-details">
+                      @if (item.type === 'transportation') {
+                        <div class="timeline-title">{{ item.data.provider }}</div>
+                        <div class="timeline-subtitle">{{ item.data.from }} → {{ item.data.to }}</div>
+                      } @else if (item.type === 'accommodation') {
+                        <div class="timeline-title">{{ item.data.name }}</div>
+                        <div class="timeline-subtitle">{{ item.data.address }}</div>
+                      } @else {
+                        <div class="timeline-title">{{ item.data.title }}</div>
+                        <div class="timeline-subtitle">{{ item.data.location }}</div>
+                      }
                     </div>
                   </div>
-                }
+                </div>
               }
             </div>
-        </mat-expansion-panel>
-      }
-    </mat-accordion>
-  </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
 </div>

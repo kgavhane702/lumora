@@ -15,6 +15,8 @@ import { Trip, Activity, ItineraryDay, Transportation } from '../interfaces/trip
 export class Travel implements OnInit {
 
   currentTrip?: Trip;
+  activeFilter: string = 'all'; // Track which filter is active
+  activeTab: string = 'itinerary'; // Track which tab is active
 
   ngOnInit(): void {
     this.loadSampleTrip();
@@ -41,6 +43,26 @@ export class Travel implements OnInit {
   getTotalMeals(): number {
     return this.currentTrip?.itinerary.reduce((total, day) => 
       total + (day.activities?.filter(activity => activity.type === 'food').length || 0), 0) || 0;
+  }
+
+  getTotalDays(): number {
+    return this.currentTrip?.itinerary.length || 0;
+  }
+
+  setFilter(filter: string): void {
+    this.activeFilter = filter;
+  }
+
+  isFilterActive(filter: string): boolean {
+    return this.activeFilter === filter;
+  }
+
+  setTab(tab: string): void {
+    this.activeTab = tab;
+  }
+
+  isTabActive(tab: string): boolean {
+    return this.activeTab === tab;
   }
 
   getDayIncludes(day: ItineraryDay): string {
@@ -938,11 +960,31 @@ export class Travel implements OnInit {
     }
 
     // Sort by time
-    return items.sort((a, b) => {
+    const sortedItems = items.sort((a, b) => {
       const timeA = this.parseTime(a.time);
       const timeB = this.parseTime(b.time);
       return timeA - timeB;
     });
+
+    // Apply filter if not showing all
+    if (this.activeFilter !== 'all') {
+      return sortedItems.filter(item => {
+        switch (this.activeFilter) {
+          case 'transfers':
+            return item.type === 'transportation';
+          case 'hotels':
+            return item.type === 'accommodation';
+          case 'activities':
+            return item.type === 'activity';
+          case 'meals':
+            return item.type === 'activity' && item.data.type === 'food';
+          default:
+            return true;
+        }
+      });
+    }
+
+    return sortedItems;
   }
 
   getDayTransportationItems(day: ItineraryDay): any[] {
