@@ -8,6 +8,30 @@
       </div>
       <h1 class="trip-title">5N Goa</h1>
     </div>
+    <div class="nav-right">
+      <div class="budget-info">
+        <div class="budget-total">
+          <span class="budget-label">Budget</span>
+          <span class="budget-amount">{{ formatCurrency(currentTrip?.budget?.amount || 0) }}</span>
+        </div>
+        <div class="budget-spent">
+          <span class="budget-label">Spent</span>
+          <span class="budget-amount">{{ formatCurrency(getTotalTripCost()) }}</span>
+        </div>
+        <div class="budget-remaining">
+          <span class="budget-label">Remaining</span>
+          <span class="budget-amount" [class.positive]="getBudgetRemaining() >= 0" [class.negative]="getBudgetRemaining() < 0">
+            {{ formatCurrency(getBudgetRemaining()) }}
+          </span>
+        </div>
+        <div class="budget-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getBudgetPercentage()"></div>
+          </div>
+          <span class="progress-text">{{ getBudgetPercentage() | number:'1.0-1' }}% used</span>
+        </div>
+      </div>
+    </div>
     <div class="nav-tabs">
       <button class="tab" 
               [class.active]="isTabActive('itinerary')"
@@ -61,10 +85,19 @@
           <mat-expansion-panel>
                        <mat-expansion-panel-header>
                <mat-panel-title>
-                 <div class="day-header-content">
-                   <div class="day-badge">Day {{ day.day }}</div>
-                   <div class="day-location">{{ day.location }}</div>
-                 </div>
+                                 <div class="day-header-content">
+                  <div class="day-badge">Day {{ day.day }}</div>
+                  <div class="day-location">{{ day.title }}</div>
+                  <div class="day-weather" *ngIf="day.weather">
+                    <span class="weather-icon">{{ day.weather.icon }}</span>
+                    <span class="weather-temp">{{ day.weather.temperature }}°C</span>
+                  </div>
+                  <div class="day-date">{{ day.date | date:'MMM dd' }}</div>
+                  <div class="day-cost">
+                    <span class="cost-label">Day Cost</span>
+                    <span class="cost-amount">{{ formatCurrency(getDayCost(day)) }}</span>
+                  </div>
+                </div>
                </mat-panel-title>
                             <mat-panel-description>
                   <div class="day-includes">
@@ -101,9 +134,9 @@
                             {{ item.data.duration }} min
                           </span>
                           @if (item.data.cost) {
-                            <span class="meta-item">
+                            <span class="meta-item cost-item">
                               <mat-icon>attach_money</mat-icon>
-                              ₹{{ item.data.cost.amount | number:'1.0-0' }}
+                              {{ formatCurrency(item.data.cost.amount) }}
                             </span>
                           }
                         </div>
@@ -137,6 +170,12 @@
                               Check‑out {{ item.data.checkOut }}
                             </span>
                           }
+                          @if (item.data.cost) {
+                            <span class="meta-item cost-item">
+                              <mat-icon>attach_money</mat-icon>
+                              {{ formatCurrency(item.data.cost.amount) }}
+                            </span>
+                          }
                         </div>
                       </div>
                     </div>
@@ -167,9 +206,9 @@
                             {{ item.data.location }}
                           </span>
                           @if (item.data.cost) {
-                            <span class="meta-item">
+                            <span class="meta-item cost-item">
                               <mat-icon>attach_money</mat-icon>
-                              ₹{{ item.data.cost.amount | number:'1.0-0' }}
+                              {{ formatCurrency(item.data.cost.amount) }}
                             </span>
                           }
                         </div>

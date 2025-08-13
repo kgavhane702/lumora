@@ -49,6 +49,92 @@ export class Travel implements OnInit {
     return this.currentTrip?.itinerary.length || 0;
   }
 
+  getTotalTripCost(): number {
+    if (!this.currentTrip) return 0;
+    
+    let total = 0;
+    
+    // Add accommodation costs
+    this.currentTrip.itinerary.forEach(day => {
+      if (day.accommodation?.cost) {
+        total += day.accommodation.cost.amount;
+      }
+    });
+    
+    // Add transportation costs
+    this.currentTrip.itinerary.forEach(day => {
+      day.transportation?.forEach(transport => {
+        if (transport.cost) {
+          total += transport.cost.amount;
+        }
+      });
+    });
+    
+    // Add activity costs
+    this.currentTrip.itinerary.forEach(day => {
+      day.activities?.forEach(activity => {
+        if (activity.cost) {
+          total += activity.cost.amount;
+        }
+      });
+    });
+    
+    return total;
+  }
+
+  getDayCost(day: ItineraryDay): number {
+    let total = 0;
+    
+    // Add accommodation cost
+    if (day.accommodation?.cost) {
+      total += day.accommodation.cost.amount;
+    }
+    
+    // Add transportation costs
+    day.transportation?.forEach(transport => {
+      if (transport.cost) {
+        total += transport.cost.amount;
+      }
+    });
+    
+    // Add activity costs
+    day.activities?.forEach(activity => {
+      if (activity.cost) {
+        total += activity.cost.amount;
+      }
+    });
+    
+    return total;
+  }
+
+  getBudgetRemaining(): number {
+    const totalCost = this.getTotalTripCost();
+    const budget = this.currentTrip?.budget?.amount || 0;
+    return budget - totalCost;
+  }
+
+  getBudgetPercentage(): number {
+    const totalCost = this.getTotalTripCost();
+    const budget = this.currentTrip?.budget?.amount || 0;
+    return budget > 0 ? (totalCost / budget) * 100 : 0;
+  }
+
+  getWeatherIcon(condition: string): string {
+    switch (condition.toLowerCase()) {
+      case 'sunny': return '☀️';
+      case 'partly cloudy': return '⛅';
+      case 'cloudy': return '☁️';
+      case 'rainy': return '🌧️';
+      case 'stormy': return '⛈️';
+      case 'foggy': return '🌫️';
+      default: return '🌤️';
+    }
+  }
+
+  formatCurrency(amount: number): string {
+    return `₹${amount.toLocaleString('en-IN')}`;
+  }
+
   setFilter(filter: string): void {
     this.activeFilter = filter;
   }
