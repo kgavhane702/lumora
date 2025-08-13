@@ -1,0 +1,226 @@
+<div class="itinerary-timeline">
+  <!-- Timeline Header -->
+  <div class="timeline-header">
+    <div class="header-left">
+      <h2 class="timeline-title">Itinerary</h2>
+      <span class="trip-duration">{{ itineraryDays.length }} days</span>
+    </div>
+    <div class="header-right">
+      <div class="trip-summary">
+        <div class="summary-item">
+          <mat-icon>flight</mat-icon>
+          <span>Flights ({{ getFlightCount() }})</span>
+        </div>
+        <div class="summary-item">
+          <mat-icon>hotel</mat-icon>
+          <span>Lodging ({{ getLodgingCount() }})</span>
+        </div>
+        <div class="summary-item">
+          <mat-icon>directions_car</mat-icon>
+          <span>Transfers ({{ getTransferCount() }})</span>
+        </div>
+      </div>
+      <div class="budget-display">
+        <span class="budget-label">Total Budget</span>
+        <span class="budget-amount">₹{{ getTotalBudget() | number:'1.0-0' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline Content -->
+  <div class="timeline-content">
+    <div class="timeline-container">
+      <!-- Day Groups -->
+      @for (day of itineraryDays; track trackByDay($index, day)) {
+        <div class="day-group">
+          <!-- Day Header -->
+          <div class="day-header" (click)="toggleDay(day.day)" [class.expanded]="expandedDays.has(day.day)">
+            <div class="day-info">
+              <div class="day-icon">
+                <mat-icon>{{ getDayIcon(day.day) }}</mat-icon>
+              </div>
+              <div class="day-details">
+                <div class="day-title">{{ day.title }}</div>
+                <div class="day-meta">
+                  <span class="day-date">{{ day.date | date:'EEEE, MMM d' }}</span>
+                  <span class="day-location">{{ day.location }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="day-actions">
+              <div class="day-budget">
+                <span class="budget-amount">₹{{ getDayBudget(day) | number:'1.0-0' }}</span>
+              </div>
+              @if (day.weather) {
+                <div class="day-weather">
+                  <span class="weather-icon">{{ day.weather.icon }}</span>
+                  <span class="weather-temp">{{ day.weather.temperature }}°C</span>
+                </div>
+              }
+              <button class="expand-btn" [class.expanded]="expandedDays.has(day.day)">
+                <mat-icon>{{ expandedDays.has(day.day) ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Day Activities -->
+          <div class="day-activities" [class.expanded]="expandedDays.has(day.day)">
+            
+            <!-- Flight Cards -->
+            @for (transport of day.transportation; track trackByTransport($index, transport)) {
+              @if (transport.type === 'flight') {
+                <app-flight-card 
+                  [transport]="transport" 
+                  [date]="day.date"
+                  (editFlight)="onEditFlight($event)"
+                  (checkIn)="onEditFlight($event)">
+                </app-flight-card>
+              }
+            }
+
+            <!-- Accommodation Card -->
+            @if (day.accommodation) {
+              <app-accommodation-card 
+                [accommodation]="day.accommodation"
+                (editAccommodation)="onEditAccommodation($event)">
+              </app-accommodation-card>
+            }
+
+            <!-- Transfer Cards -->
+            @for (transport of day.transportation; track trackByTransport($index, transport)) {
+              @if (transport.type !== 'flight') {
+                <app-transfer-card 
+                  [transport]="transport"
+                  (editTransfer)="onEditTransfer($event)">
+                </app-transfer-card>
+              }
+            }
+
+            <!-- Activity Cards -->
+            @for (activity of day.activities; track trackByActivity($index, activity)) {
+              @if (activity.type === 'sightseeing') {
+                <app-sightseeing-card 
+                  [activity]="activity"
+                  (editActivity)="onEditActivity($event)"
+                  (viewActivity)="onViewActivity($event)"
+                  (bookActivity)="onBookActivity($event)">
+                </app-sightseeing-card>
+              } @else {
+                <!-- Generic Activity Card for other types -->
+                <div class="activity-card" [class]="activity.type">
+                  <div class="activity-header">
+                    <div class="activity-icon" [class]="activity.type">
+                      <mat-icon>{{ getActivityIcon(activity.type) }}</mat-icon>
+                    </div>
+                    <div class="activity-info">
+                      <h3>{{ activity.title }}</h3>
+                      <p class="activity-description">{{ activity.description }}</p>
+                      <div class="activity-meta">
+                        <span class="activity-time">
+                          <mat-icon>schedule</mat-icon>
+                          {{ activity.startTime }} - {{ activity.endTime }}
+                        </span>
+                        <span class="activity-location">
+                          <mat-icon>location_on</mat-icon>
+                          {{ activity.location }}
+                        </span>
+                        <span class="activity-duration">
+                          <mat-icon>timer</mat-icon>
+                          {{ activity.duration }} min
+                        </span>
+                      </div>
+                    </div>
+                    <div class="activity-status">
+                      <span class="status-badge" [class]="activity.status">{{ activity.status | titlecase }}</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Activity Images -->
+                  @if (activity.images?.length) {
+                    <div class="activity-images">
+                      <div class="image-grid">
+                        @for (image of activity.images?.slice(0, 3) || []; track image) {
+                          <div class="image-item">
+                            <img [src]="image" [alt]="activity.title" />
+                          </div>
+                        }
+                        @if (activity.images && activity.images.length > 3) {
+                          <div class="image-overlay">
+                            <span>+{{ activity.images.length - 3 }}</span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+                  
+                  <!-- Activity Actions -->
+                  <div class="activity-actions">
+                    <button class="action-btn" (click)="onEditActivity(activity)">
+                      <mat-icon>edit</mat-icon>
+                      Edit
+                    </button>
+                    <button class="action-btn" (click)="onViewActivity(activity)">
+                      <mat-icon>visibility</mat-icon>
+                      View
+                    </button>
+                    @if (activity.status === 'planned') {
+                      <button class="action-btn book-btn" (click)="onBookActivity(activity)">
+                        <mat-icon>book_online</mat-icon>
+                        Book
+                      </button>
+                    }
+                  </div>
+                  
+                  <!-- Activity Confirmation Panel -->
+                  @if (activity.bookingReference) {
+                    <div class="confirmation-panel activity-panel">
+                      <div class="confirmation-header">
+                        <mat-icon class="paperclip-icon">attach_file</mat-icon>
+                      </div>
+                      <div class="confirmation-content">
+                        <div class="confirmation-number">
+                          <span class="label">CONFIRMATION #</span>
+                          <span class="number">{{ activity.bookingReference }}</span>
+                          <mat-icon class="copy-icon">content_copy</mat-icon>
+                        </div>
+                        @if (activity.cost) {
+                          <div class="activity-cost">
+                            <span class="cost-amount">₹{{ activity.cost.amount | number:'1.0-0' }}</span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Add Section -->
+  <div class="add-section">
+    <button class="add-btn" (click)="onAddActivity()">
+      <mat-icon>add</mat-icon>
+      Add a place
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  @if (!itineraryDays.length) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <mat-icon>explore</mat-icon>
+      </div>
+      <h3>No itinerary yet</h3>
+      <p>Start planning your trip by adding activities and accommodations</p>
+      <button class="primary-btn" (click)="onAddActivity()">
+        <mat-icon>add</mat-icon>
+        Create Your First Activity
+      </button>
+    </div>
+  }
+</div>

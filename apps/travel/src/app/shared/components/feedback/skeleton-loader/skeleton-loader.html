@@ -1,0 +1,71 @@
+<div class="skeleton-container" [attr.data-type]="type">
+  @for (item of [].constructor(count); track $index) {
+    <div class="skeleton-item">
+      
+      @switch (type) {
+        @case ('search-result') {
+          <div>
+            @if (showHeader) {
+              <div class="skeleton-header">
+                <div class="skeleton-model"></div>
+                @if (showActions) {
+                  <div class="skeleton-actions">
+                    <div class="skeleton-action"></div>
+                    <div class="skeleton-action"></div>
+                  </div>
+                }
+              </div>
+            }
+            
+            <div class="skeleton-content">
+              @for (line of [].constructor(lines); track $index) {
+                <div class="skeleton-line" [class.short]="$index === lines - 1"></div>
+              }
+            </div>
+            
+            @if (showReferences) {
+              <div class="skeleton-references">
+                @for (ref of [1, 2]; track $index) {
+                  <div class="skeleton-reference">
+                    <div class="skeleton-ref-title"></div>
+                    <div class="skeleton-ref-url"></div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+        
+        @case ('card') {
+          <div class="skeleton-card">
+            <div class="skeleton-card-header"></div>
+            <div class="skeleton-card-content">
+              @for (line of [].constructor(2); track $index) {
+                <div class="skeleton-line"></div>
+              }
+            </div>
+          </div>
+        }
+        
+        @case ('list-item') {
+          <div class="skeleton-list-item">
+            <div class="skeleton-avatar"></div>
+            <div class="skeleton-list-content">
+              <div class="skeleton-line skeleton-title"></div>
+              <div class="skeleton-line skeleton-subtitle"></div>
+            </div>
+          </div>
+        }
+        
+        @case ('custom') {
+          <div class="skeleton-custom">
+            @for (line of [].constructor(lines); track $index) {
+              <div class="skeleton-line"></div>
+            }
+          </div>
+        }
+      }
+      
+    </div>
+  }
+</div>

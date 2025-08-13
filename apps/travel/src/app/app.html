@@ -1,0 +1,50 @@
+<!-- Material Layout Container -->
+<mat-sidenav-container class="app-sidenav-container">
+  
+  <!-- Sidebar Navigation -->
+  <mat-sidenav 
+    #drawer 
+    class="app-sidenav" 
+    fixedInViewport
+    [attr.role]="'navigation'"
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="isMobileMenuOpen"
+    [disableClose]="false"
+    [autoFocus]="false"
+    (openedChange)="onSidenavOpenedChange($event)">
+    
+    <!-- Use existing sidebar component -->
+    <app-sidebar
+      [isMobileOpen]="isMobileMenuOpen"
+      [user]="user"
+      [chatSessions]="chatSessions"
+      (newChat)="onNewChat()"
+      (chatSelect)="onChatSelect($event)"
+      (mobileClose)="closeMobileMenu()">
+    </app-sidebar>
+  </mat-sidenav>
+
+  <!-- Main Content Area -->
+  <mat-sidenav-content class="app-sidenav-content">
+    
+      <!-- Header Component - Only on Search Results Page -->
+  @if (isSearchResultsPage) {
+    <app-header
+      [isSearchResultsPage]="isSearchResultsPage"
+      (shareResults)="onShareResults()"
+      (bookmarkResults)="onBookmarkResults()">
+    </app-header>
+  }
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Mobile Menu Button - Global for all pages -->
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

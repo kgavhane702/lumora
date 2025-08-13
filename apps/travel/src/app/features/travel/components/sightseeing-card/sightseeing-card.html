@@ -1,0 +1,85 @@
+<div class="sightseeing-card">
+  <div class="activity-header">
+    <div class="activity-icon sightseeing">
+      <mat-icon>explore</mat-icon>
+    </div>
+    <div class="activity-info">
+      <h3>{{ activity.title }}</h3>
+      <p class="activity-description">{{ activity.description }}</p>
+      <div class="activity-meta">
+        <span class="activity-time">
+          <mat-icon>schedule</mat-icon>
+          {{ activity.startTime }} - {{ activity.endTime }}
+        </span>
+        <span class="activity-location">
+          <mat-icon>location_on</mat-icon>
+          {{ activity.location }}
+        </span>
+        <span class="activity-duration">
+          <mat-icon>timer</mat-icon>
+          {{ activity.duration }} min
+        </span>
+      </div>
+    </div>
+    <div class="activity-status">
+      <span class="status-badge" [class]="activity.status">{{ activity.status | titlecase }}</span>
+    </div>
+  </div>
+  
+  <!-- Activity Images -->
+  @if (activity.images?.length) {
+    <div class="activity-images">
+      <div class="image-grid">
+        @for (image of activity.images?.slice(0, 3) || []; track image) {
+          <div class="image-item">
+            <img [src]="image" [alt]="activity.title" />
+          </div>
+        }
+        @if (activity.images && activity.images.length > 3) {
+          <div class="image-overlay">
+            <span>+{{ activity.images.length - 3 }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+  
+  <!-- Activity Actions -->
+  <div class="activity-actions">
+    <button class="action-btn" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+    <button class="action-btn" (click)="onView()">
+      <mat-icon>visibility</mat-icon>
+      View
+    </button>
+    @if (activity.status === 'planned') {
+      <button class="action-btn book-btn" (click)="onBook()">
+        <mat-icon>book_online</mat-icon>
+        Book
+      </button>
+    }
+  </div>
+  
+  <!-- Activity Confirmation Panel -->
+  @if (activity.bookingReference) {
+    <div class="confirmation-panel activity-panel">
+      <div class="confirmation-header">
+        <mat-icon class="paperclip-icon">attach_file</mat-icon>
+      </div>
+      <div class="confirmation-content">
+        <div class="confirmation-number">
+          <span class="label">CONFIRMATION #</span>
+          <span class="number">{{ activity.bookingReference }}</span>
+          <mat-icon class="copy-icon" (click)="copyToClipboard(activity.bookingReference)">content_copy</mat-icon>
+        </div>
+        @if (activity.cost) {
+          <div class="activity-cost">
+            <span class="cost-amount">₹{{ activity.cost.amount | number:'1.0-0' }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

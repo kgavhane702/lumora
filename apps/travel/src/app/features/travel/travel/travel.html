@@ -1,0 +1,169 @@
+<div class="travel-container">
+  <!-- Top Navigation Bar -->
+  <div class="top-nav">
+    <div class="nav-left">
+      <div class="trip-badges">
+        <span class="badge teal">5N/6D</span>
+        <span class="badge black">Flexi Package ∞</span>
+      </div>
+      <h1 class="trip-title">5N Goa</h1>
+    </div>
+    <div class="nav-tabs">
+      <button class="tab active">ITINERARY</button>
+      <button class="tab">POLICIES</button>
+      <button class="tab">SUMMARY</button>
+    </div>
+  </div>
+
+  <!-- Itinerary Summary Bar -->
+  <div class="summary-bar">
+    <div class="summary-item active">
+      <span class="count">6</span>
+      <span class="label">DAY PLAN</span>
+    </div>
+    <div class="summary-item">
+      <span class="count">{{ getTotalTransfers() }}</span>
+      <span class="label">TRANSFERS</span>
+    </div>
+    <div class="summary-item">
+      <span class="count">{{ getTotalHotels() }}</span>
+      <span class="label">HOTELS</span>
+    </div>
+    <div class="summary-item">
+      <span class="count">{{ getTotalActivities() }}</span>
+      <span class="label">ACTIVITIES</span>
+    </div>
+    <div class="summary-item">
+      <span class="count">{{ getTotalMeals() }}</span>
+      <span class="label">MEALS</span>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Timeline Sidebar -->
+    <div class="timeline-sidebar">
+      <h3 class="sidebar-title">Day Plan</h3>
+      <div class="day-list">
+        @for (day of currentTrip?.itinerary; track day.day) {
+          <div class="day-item" 
+               [class.active]="selectedDay === day.day"
+               (click)="scrollToDay(day.day)">
+            <div class="day-dot"></div>
+            <div class="day-info">
+              <div class="day-date">{{ day.date | date:'dd MMM' }}, {{ day.date | date:'EEE' }}</div>
+              <div class="day-title">{{ day.title }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Day Content: render all days stacked with anchors -->
+    <div class="day-content">
+      @for (day of currentTrip?.itinerary; track day.day) {
+        <section class="day-section" [attr.id]="'day-' + day.day" [attr.data-day]="day.day">
+          <!-- Day Header -->
+          <div class="day-header">
+            <div class="day-badge">Day {{ day.day }}</div>
+            <div class="day-location">{{ day.location }}</div>
+            <div class="day-includes">
+              INCLUDED: {{ getDayIncludes(day) }}
+            </div>
+          </div>
+
+          <!-- Unified timeline items in chronological order -->
+          @for (item of getDayTimelineItems(day); track item.trackId) {
+            @if (item.kind === 'transport') {
+              <div class="section">
+                <div class="item-card transfer-card">
+                  <div class="card-left">
+                    <div class="transport-icon">
+                      <mat-icon>{{ getTransportIcon(item.transport.type) }}</mat-icon>
+                    </div>
+                  </div>
+                  <div class="card-content">
+                    <h4 class="card-title">{{ item.transport.provider }}</h4>
+                    <p class="card-description">{{ item.transport.from }} to {{ item.transport.to }}</p>
+                    <div class="card-meta">
+                      <span class="meta-item">
+                        <mat-icon>schedule</mat-icon>
+                        {{ item.transport.departureTime }} - {{ item.transport.arrivalTime }}
+                      </span>
+                      <span class="meta-item">
+                        <mat-icon>timer</mat-icon>
+                        {{ item.transport.duration }} min
+                      </span>
+                      @if (item.transport.cost) {
+                        <span class="meta-item">
+                          <mat-icon>attach_money</mat-icon>
+                          ₹{{ item.transport.cost.amount | number:'1.0-0' }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            } @else if (item.kind === 'accommodation') {
+              <div class="section">
+                <div class="item-card accommodation-card">
+                  <div class="card-left">
+                    <img [src]="day.accommodation?.images?.[0]" [alt]="day.accommodation?.name" class="accommodation-image">
+                  </div>
+                  <div class="card-content">
+                    <h4 class="card-title">{{ day.accommodation?.name }}</h4>
+                    <p class="card-description">{{ day.accommodation?.address }}</p>
+                    <div class="card-meta">
+                      @if (day.accommodation?.checkIn) {
+                        <span class="meta-item">
+                          <mat-icon>login</mat-icon>
+                          Check‑in {{ day.accommodation?.checkIn }}
+                        </span>
+                      }
+                      @if (day.accommodation?.checkOut) {
+                        <span class="meta-item">
+                          <mat-icon>logout</mat-icon>
+                          Check‑out {{ day.accommodation?.checkOut }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="section">
+                <div class="item-card activity-card">
+                  <div class="card-left">
+                    <div class="activity-icon">
+                      <mat-icon>{{ getActivityIcon(item.activity.type) }}</mat-icon>
+                    </div>
+                  </div>
+                  <div class="card-content">
+                    <h4 class="card-title">{{ item.activity.title }}</h4>
+                    <p class="card-description">{{ item.activity.description }}</p>
+                    <div class="card-meta">
+                      <span class="meta-item">
+                        <mat-icon>schedule</mat-icon>
+                        {{ item.activity.startTime }} - {{ item.activity.endTime }}
+                      </span>
+                      <span class="meta-item">
+                        <mat-icon>location_on</mat-icon>
+                        {{ item.activity.location }}
+                      </span>
+                      @if (item.activity.cost) {
+                        <span class="meta-item">
+                          <mat-icon>attach_money</mat-icon>
+                          ₹{{ item.activity.cost.amount | number:'1.0-0' }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          }
+        </section>
+      }
+    </div>
+  </div>
+</div>

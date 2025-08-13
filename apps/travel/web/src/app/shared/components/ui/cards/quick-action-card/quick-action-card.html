@@ -1,0 +1,14 @@
+<button 
+  class="quick-action-card" 
+  [class.disabled]="disabled"
+  (click)="onActionClick()">
+  
+  <div class="action-icon">
+    <mat-icon>{{ action.icon }}</mat-icon>
+  </div>
+  
+  <div class="action-content">
+    <h4>{{ action.title }}</h4>
+    <p>{{ action.description }}</p>
+  </div>
+</button>

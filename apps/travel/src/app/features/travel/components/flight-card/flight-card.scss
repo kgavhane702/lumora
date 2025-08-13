@@ -1,0 +1,340 @@
+.flight-card {
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-radius: 12px;
+  border: 1px solid #3b82f6;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .flight-header {
+    padding: 16px;
+
+    .flight-route {
+      margin-bottom: 12px;
+
+      .route-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+
+        .route-codes {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #1e40af;
+        }
+
+        .route-status {
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 0.625rem;
+          font-weight: 600;
+          text-transform: uppercase;
+
+          &.booked {
+            background: #dbeafe;
+            color: #1e40af;
+          }
+
+          &.confirmed {
+            background: #dcfce7;
+            color: #166534;
+          }
+
+          &.completed {
+            background: #f3f4f6;
+            color: #374151;
+          }
+        }
+      }
+
+      .airline-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+
+        .airline-name {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #1e40af;
+        }
+
+        .flight-number {
+          padding: 2px 6px;
+          background: #3b82f6;
+          color: white;
+          border-radius: 4px;
+          font-size: 0.625rem;
+          font-weight: 600;
+        }
+      }
+
+      .flight-time {
+        font-size: 0.75rem;
+        color: #64748b;
+      }
+    }
+
+    .flight-details {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+
+      .departure-info,
+      .arrival-info {
+        flex: 1;
+
+        .time-location {
+          margin-bottom: 4px;
+
+          .time {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-right: 6px;
+          }
+
+          .location {
+            font-size: 0.875rem;
+            color: #475569;
+            font-weight: 500;
+          }
+        }
+
+        .terminal-gate {
+          display: flex;
+          gap: 8px;
+          font-size: 0.625rem;
+          color: #64748b;
+
+          .terminal,
+          .gate {
+            padding: 1px 4px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 3px;
+          }
+        }
+      }
+
+      .flight-line {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        margin: 0 12px;
+
+        .line-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #3b82f6;
+          border: 2px solid white;
+          box-shadow: 0 0 0 1px #3b82f6;
+        }
+
+        .flight-line-connector {
+          flex: 1;
+          height: 1px;
+          background: linear-gradient(90deg, #3b82f6, #60a5fa);
+          margin: 0 6px;
+          position: relative;
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            right: -3px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid #60a5fa;
+            border-top: 2px solid transparent;
+            border-bottom: 2px solid transparent;
+          }
+        }
+      }
+    }
+
+    .flight-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .check-in-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .status-text {
+          font-size: 0.75rem;
+          color: #64748b;
+        }
+
+        .check-in-link {
+          background: none;
+          border: none;
+          color: #3b82f6;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 0.75rem;
+          cursor: pointer;
+          padding: 0;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .live-status {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.625rem;
+        color: #059669;
+
+        .status-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #10b981;
+          animation: pulse 2s infinite;
+        }
+      }
+
+      .edit-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 12px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        color: #64748b;
+        font-size: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+
+        &:hover {
+          background: #f8fafc;
+          border-color: #cbd5e1;
+          color: #475569;
+        }
+      }
+    }
+  }
+
+  .confirmation-panel.flight-panel {
+    background: linear-gradient(135deg, #1e40af, #1d4ed8);
+    color: white;
+    padding: 12px 16px;
+
+    .confirmation-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 6px;
+
+      .paperclip-icon {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    .confirmation-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .confirmation-number {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .label {
+          font-size: 0.625rem;
+          opacity: 0.8;
+        }
+
+        .number {
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+
+        .copy-icon {
+          font-size: 12px;
+          width: 12px;
+          height: 12px;
+          opacity: 0.8;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+
+      .flight-cost {
+        .cost-amount {
+          font-size: 0.875rem;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .flight-card {
+    .flight-header {
+      padding: 12px;
+
+      .flight-route {
+        .route-info {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+        }
+      }
+
+      .flight-details {
+        flex-direction: column;
+        gap: 8px;
+
+        .flight-line {
+          margin: 4px 0;
+        }
+      }
+
+      .flight-actions {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+      }
+    }
+  }
+}

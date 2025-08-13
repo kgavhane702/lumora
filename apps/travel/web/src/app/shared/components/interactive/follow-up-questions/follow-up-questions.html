@@ -1,0 +1,21 @@
+@if (questions.length > 0) {
+  <div class="follow-up-section" [attr.data-variant]="variant">
+    <div class="follow-up-header">
+      <h4 class="follow-up-title">
+        <mat-icon>{{ icon }}</mat-icon>
+        {{ title }}
+      </h4>
+    </div>
+    
+    <div class="follow-up-list">
+      @for (question of visibleQuestions; track question) {
+        <button 
+          class="follow-up-question" 
+          (click)="onQuestionClick(question)">
+          <mat-icon>arrow_forward</mat-icon>
+          <span>{{ question }}</span>
+        </button>
+      }
+    </div>
+  </div>
+}

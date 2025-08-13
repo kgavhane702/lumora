@@ -1,0 +1,11 @@
+<div class="quick-actions-section">
+  <h3 class="section-title">Quick Actions</h3>
+  <div class="quick-actions-grid">
+    @for (action of quickActions; track trackByAction($index, action)) {
+      <app-quick-action-card
+        [action]="action"
+        (actionClick)="onActionClick($event)">
+      </app-quick-action-card>
+    }
+  </div>
+</div>

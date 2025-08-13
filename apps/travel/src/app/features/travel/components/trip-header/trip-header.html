@@ -1,0 +1,98 @@
+<div class="trip-header">
+  <!-- Background Image with Overlay -->
+  <div class="header-background" [style.background-image]="'url(' + (trip?.coverImage || defaultCoverImage) + ')'">
+    <div class="overlay"></div>
+  </div>
+
+  <!-- Header Content -->
+  <div class="header-content">
+    <!-- Trip Info -->
+    <div class="trip-info">
+      <div class="trip-title">
+        <h1>{{ trip?.title || 'My Amazing Trip' }}</h1>
+        <div class="trip-status" [class]="trip?.status">
+          <span class="status-dot"></span>
+          {{ trip?.status | titlecase }}
+        </div>
+      </div>
+      
+      <div class="trip-details">
+        <div class="destination">
+          <mat-icon>location_on</mat-icon>
+          <span>{{ trip?.destination || 'Destination' }}</span>
+        </div>
+        
+        <div class="dates">
+          <mat-icon>calendar_today</mat-icon>
+          <span>
+            {{ trip?.startDate | date:'MMM d' }} - {{ trip?.endDate | date:'MMM d, y' }}
+          </span>
+        </div>
+        
+        <div class="duration">
+          <mat-icon>schedule</mat-icon>
+          <span>{{ getTripDuration() }} days</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trip Stats -->
+    <div class="trip-stats">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <mat-icon>event</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ trip?.itinerary?.length || 0 }}</div>
+          <div class="stat-label">Days</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <mat-icon>explore</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ getTotalActivities() }}</div>
+          <div class="stat-label">Activities</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <mat-icon>attach_money</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ getTotalCost() | currency:trip?.budget?.currency || 'USD' }}</div>
+          <div class="stat-label">Budget</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <mat-icon>group</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ trip?.travelers?.length || 1 }}</div>
+          <div class="stat-label">Travelers</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="header-actions">
+      <button class="action-btn primary" (click)="onEditTrip()">
+        <mat-icon>edit</mat-icon>
+        Edit Trip
+      </button>
+      <button class="action-btn secondary" (click)="onShareTrip()">
+        <mat-icon>share</mat-icon>
+        Share
+      </button>
+      <button class="action-btn secondary" (click)="onExportTrip()">
+        <mat-icon>download</mat-icon>
+        Export
+      </button>
+    </div>
+  </div>
+</div>

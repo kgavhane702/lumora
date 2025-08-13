@@ -1,0 +1,13 @@
+<div class="tab-container">
+  <app-tab-navigation
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+    [variant]="variant"
+    [size]="size"
+    (tabChange)="onTabChange($event)">
+  </app-tab-navigation>
+  
+  <div class="tab-content">
+    <ng-content></ng-content>
+  </div>
+</div>

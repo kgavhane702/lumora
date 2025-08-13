@@ -1,0 +1,69 @@
+<div class="accommodation-card">
+  <div class="accommodation-header">
+    <div class="accommodation-icon">
+      <mat-icon>hotel</mat-icon>
+    </div>
+    <div class="accommodation-info">
+      <h3>{{ accommodation.name }}</h3>
+      <p class="accommodation-address">{{ accommodation.address }}</p>
+      <div class="accommodation-details">
+        <div class="check-times">
+          <span class="check-in">Check-in: {{ accommodation.checkIn }}</span>
+          <span class="check-out">Check-out: {{ accommodation.checkOut }}</span>
+        </div>
+        @if (accommodation.roomType) {
+          <div class="room-info">
+            <span class="room-type">{{ accommodation.roomType }}</span>
+          </div>
+        }
+      </div>
+      @if (accommodation.amenities) {
+        <div class="accommodation-amenities">
+          @for (amenity of accommodation.amenities; track amenity) {
+            <span class="amenity-tag">{{ amenity }}</span>
+          }
+        </div>
+      }
+    </div>
+    <div class="accommodation-status">
+      <span class="status-badge" [class]="accommodation.confirmationNumber ? 'booked' : 'planned'">
+        {{ accommodation.confirmationNumber ? 'Booked' : 'Planned' }}
+      </span>
+    </div>
+  </div>
+  
+  <!-- Hotel Images -->
+  @if (accommodation.images?.length) {
+    <div class="accommodation-images">
+      <div class="image-grid">
+        @for (image of accommodation.images?.slice(0, 3) || []; track image) {
+          <div class="image-item">
+            <img [src]="image" [alt]="accommodation.name" />
+          </div>
+        }
+        @if (accommodation.images && accommodation.images.length > 3) {
+          <div class="image-overlay">
+            <span>+{{ accommodation.images.length - 3 }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+  
+  <!-- Accommodation Confirmation Panel -->
+  <div class="confirmation-panel accommodation-panel">
+    <div class="confirmation-header">
+      <mat-icon class="paperclip-icon">attach_file</mat-icon>
+    </div>
+    <div class="confirmation-content">
+      <div class="confirmation-number">
+        <span class="label">CONFIRMATION #</span>
+        <span class="number">{{ accommodation.confirmationNumber || 'PENDING' }}</span>
+        <mat-icon class="copy-icon" (click)="copyToClipboard(accommodation.confirmationNumber || '')">content_copy</mat-icon>
+      </div>
+      <div class="accommodation-cost">
+        <span class="cost-amount">₹{{ accommodation.cost?.amount | number:'1.0-0' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

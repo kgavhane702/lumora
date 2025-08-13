@@ -1,0 +1,28 @@
+<div class="source-card" [attr.data-variant]="variant" (click)="onClick()">
+  <div class="source-icon">
+    <div class="source-domain-icon">
+      {{ getDomainIcon(source.domain || getDomainFromUrl(source.url)) }}
+    </div>
+  </div>
+  
+  <div class="source-content">
+    <div class="source-domain">
+      {{ source.domain || getDomainFromUrl(source.url) }}
+    </div>
+    <div class="source-title">{{ source.title }}</div>
+    
+    <!-- Show snippet in detailed variant -->
+    @if (variant === 'detailed' && source.snippet) {
+      <div class="source-snippet">
+        {{ source.snippet }}
+      </div>
+    }
+  </div>
+  
+  <!-- Show index number if provided -->
+  @if (index !== undefined) {
+    <div class="source-number">
+      {{ index + 1 }}
+    </div>
+  }
+</div>

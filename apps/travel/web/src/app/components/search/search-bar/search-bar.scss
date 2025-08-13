@@ -1,0 +1,266 @@
+.search-bar-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.search-bar {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0; // No gap for unified look
+  
+  &:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  &.focused {
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  &.searching {
+    border-color: rgba(59, 130, 246, 0.6);
+    background: #ffffff;
+  }
+}
+
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0; // Reduced padding
+  margin-top: 2px; // Minimal margin for seamless look
+}
+
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px; // Reduced from 16px
+  
+  .search-icon,
+  .grid-icon,
+  .help-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: rgba(59, 130, 246, 0.1);
+    }
+    
+    &.active {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+    }
+  }
+}
+
+.action-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px; // Reduced from 8px
+}
+
+.file-upload-btn,
+.voice-btn,
+.search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(59, 130, 246, 0.1);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.search-button {
+  /* Submit button specific styles */
+  &:not(:disabled) {
+    background: rgba(147, 197, 253, 0.1); /* Light blue background */
+    
+    &:hover {
+      background: rgba(59, 130, 246, 0.15); /* Slightly darker blue on hover */
+    }
+  }
+  
+  /* Enhanced styling when search query is not empty */
+  &.has-query {
+    color: #3b82f6 !important; /* Blue text color */
+    
+    &:hover {
+      background: rgba(59, 130, 246, 0.1); /* Light blue background only on hover */
+      transform: scale(1.05); /* Slight scale effect */
+    }
+    
+    mat-icon {
+      color: #3b82f6 !important; /* Ensure icon is blue */
+    }
+  }
+  
+  &.searching {
+    background: rgba(239, 68, 68, 0.1);
+    
+    &:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+    
+    /* Ensure stop icon is fully visible */
+    mat-icon {
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
+      min-height: 20px !important;
+      font-size: 20px;
+      overflow: visible !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  
+  /* Ensure all search button icons are properly sized */
+  mat-icon {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    font-size: 20px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.voice-btn {
+  &.recording {
+    background: rgba(239, 68, 68, 0.1);
+    animation: pulse 1.5s infinite;
+  }
+}
+
+@keyframes pulse {
+ 0%, 100% {
+   opacity: 1;
+ }
+ 50% {
+   opacity: 0.7;
+ }
+}
+
+/* File attachment styles inside search bar - only show when files exist */
+app-file-attachment {
+  margin-top: 4px; // Reduced margin
+  padding-top: 4px; // Reduced padding
+  
+  // Hide when no files
+  &:empty {
+    display: none;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Fixed positioning for search bar in chat layout */
+  .search-page .chat-layout .search-bar-container {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 1rem !important;
+    border-top: 1px solid rgba(229, 231, 235, 0.3) !important;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .search-bar {
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 0;
+  }
+  
+  .action-bar {
+    margin-top: 4px;
+    padding: 2px 0;
+  }
+  
+  .nav-icons, .action-icons {
+    gap: 6px;
+  }
+  
+  .search-icon, .grid-icon, .help-icon,
+  .file-upload-btn, .voice-btn {
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+  }
+  
+  .search-button {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    min-width: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Fixed positioning for search bar in chat layout */
+  .search-page .chat-layout .search-bar-container {
+    padding: 0.75rem !important;
+  }
+  
+  .search-bar {
+    padding: 6px 10px;
+  }
+  
+  .action-bar {
+    margin-top: 3px;
+    padding: 1px 0;
+  }
+  
+  .nav-icons, .action-icons {
+    gap: 4px;
+  }
+  
+  .search-icon, .grid-icon, .help-icon,
+  .file-upload-btn, .voice-btn {
+    width: 24px;
+    height: 24px;
+    padding: 3px;
+  }
+  
+  .search-button {
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    min-width: 28px;
+  }
+}

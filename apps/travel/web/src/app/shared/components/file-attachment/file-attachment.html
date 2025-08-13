@@ -1,0 +1,56 @@
+<div class="file-attachment-container">
+  <!-- Compact File List - Only show when files are attached -->
+  @if (attachedFiles.length > 0) {
+    <div class="attached-files">
+      <div class="file-list">
+        @for (file of attachedFiles; track trackByFile($index, file)) {
+          <div class="file-item" 
+               [class.uploading]="file.uploadStatus === 'uploading'"
+               [class.completed]="file.uploadStatus === 'completed'"
+               [class.error]="file.uploadStatus === 'error'">
+            
+            <!-- File Icon -->
+            <div class="file-icon">
+              <mat-icon>{{ getFileIcon(file.type) }}</mat-icon>
+            </div>
+            
+            <!-- File Name and Size -->
+            <div class="file-info">
+              <div class="file-name-size">
+                <span class="file-name">{{ file.name }}</span>
+                <span class="file-size">({{ formatFileSize(file.size) }})</span>
+              </div>
+              
+              <!-- Upload Progress Bar Below - Only show when uploading -->
+              @if (showUploadProgress && file.uploadProgress !== undefined && file.uploadStatus === 'uploading') {
+                <div class="upload-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" 
+                         [style.width.%]="file.uploadProgress">
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Remove Button -->
+            <button class="remove-btn" 
+                    (click)="onRemoveFile(file)"
+                    [disabled]="file.uploadStatus === 'uploading'"
+                    title="Remove file">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Hidden File Input -->
+  <input #fileInput 
+         type="file" 
+         [accept]="acceptedTypes"
+         multiple
+         (change)="onFileSelected($event)"
+         style="display: none;">
+</div>

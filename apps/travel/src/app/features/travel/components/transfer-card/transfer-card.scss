@@ -1,0 +1,367 @@
+.transfer-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  // Different colors for different transport types
+  &.car {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-color: #f59e0b;
+    
+    .transfer-icon {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+  }
+
+  &.bus {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-color: #3b82f6;
+    
+    .transfer-icon {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+  }
+
+  &.train {
+    background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+    border-color: #8b5cf6;
+    
+    .transfer-icon {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+  }
+
+  &.boat {
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    border-color: #06b6d4;
+    
+    .transfer-icon {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
+  }
+
+  &.bike {
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+    border-color: #ec4899;
+    
+    .transfer-icon {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+    }
+  }
+
+  &.walking {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-color: #22c55e;
+    
+    .transfer-icon {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+    }
+  }
+
+  .transfer-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    .transfer-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      flex-shrink: 0;
+
+      mat-icon {
+        color: white;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .transfer-info {
+      flex: 1;
+      min-width: 0;
+
+      .transfer-provider {
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .transfer-route {
+        font-size: 12px;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .route-arrow {
+          color: #9ca3af;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .transfer-status {
+      .status-badge {
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        &.booked {
+          background: #dcfce7;
+          color: #166534;
+        }
+
+        &.planned {
+          background: #fef3c7;
+          color: #92400e;
+        }
+
+        &.confirmed {
+          background: #dbeafe;
+          color: #1e40af;
+        }
+
+        &.cancelled {
+          background: #fee2e2;
+          color: #991b1b;
+        }
+      }
+    }
+  }
+
+  .transfer-details {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #6b7280;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        color: #9ca3af;
+      }
+
+      .detail-value {
+        font-weight: 500;
+        color: #374151;
+      }
+    }
+  }
+
+  .transfer-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.8);
+      color: #374151;
+
+      &:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: translateY(-1px);
+      }
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  .confirmation-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 100%;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-left: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 12px 12px 0;
+
+    .confirmation-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 8px 0;
+
+      .paperclip-icon {
+        color: #6b7280;
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .confirmation-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      text-align: center;
+
+      .confirmation-number {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        margin-bottom: 8px;
+
+        .label {
+          font-size: 8px;
+          color: #9ca3af;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .number {
+          font-size: 10px;
+          font-weight: 600;
+          color: #374151;
+          font-family: 'Courier New', monospace;
+        }
+
+        .copy-icon {
+          font-size: 12px;
+          width: 12px;
+          height: 12px;
+          color: #6b7280;
+          cursor: pointer;
+          margin-top: 2px;
+
+          &:hover {
+            color: #3b82f6;
+          }
+        }
+      }
+
+      .transfer-cost {
+        .cost-amount {
+          font-size: 11px;
+          font-weight: 600;
+          color: #059669;
+        }
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    padding: 12px;
+
+    .transfer-header {
+      .transfer-icon {
+        width: 32px;
+        height: 32px;
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .transfer-info {
+        .transfer-provider {
+          font-size: 13px;
+        }
+
+        .transfer-route {
+          font-size: 11px;
+        }
+      }
+    }
+
+    .transfer-details {
+      gap: 12px;
+
+      .detail-item {
+        font-size: 11px;
+
+        mat-icon {
+          font-size: 12px;
+          width: 12px;
+          height: 12px;
+        }
+      }
+    }
+
+    .confirmation-panel {
+      width: 50px;
+
+      .confirmation-content {
+        .confirmation-number {
+          .label {
+            font-size: 7px;
+          }
+
+          .number {
+            font-size: 9px;
+          }
+
+          .copy-icon {
+            font-size: 10px;
+            width: 10px;
+            height: 10px;
+          }
+        }
+
+        .transfer-cost {
+          .cost-amount {
+            font-size: 10px;
+          }
+        }
+      }
+    }
+  }
+}

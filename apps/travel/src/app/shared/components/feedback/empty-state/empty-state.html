@@ -1,0 +1,18 @@
+<div class="empty-state" [attr.data-type]="type">
+  <div class="empty-state-icon">
+    <mat-icon>{{ defaultIcon }}</mat-icon>
+  </div>
+  
+  <h3 class="empty-state-title">{{ title }}</h3>
+  <p class="empty-state-message">{{ message }}</p>
+  
+  @if (showAction && actionText) {
+    <button 
+      mat-raised-button 
+      color="primary"
+      class="empty-state-action"
+      (click)="onActionClick()">
+      {{ actionText }}
+    </button>
+  }
+</div>

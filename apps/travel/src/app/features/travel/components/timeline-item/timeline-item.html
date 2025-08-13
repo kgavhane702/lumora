@@ -1,0 +1,100 @@
+<div class="timeline-item" [class]="activity.type">
+  <!-- Timeline Connector -->
+  <div class="timeline-connector">
+    <div class="connector-line"></div>
+    <div class="connector-dot" [class]="activity.status"></div>
+  </div>
+
+  <!-- Activity Card -->
+  <div class="activity-card">
+    <!-- Activity Header -->
+    <div class="activity-header">
+      <div class="activity-icon">
+        <mat-icon [class]="getActivityIcon()">{{ getActivityIcon() }}</mat-icon>
+      </div>
+      
+      <div class="activity-info">
+        <h3 class="activity-title">{{ activity.title }}</h3>
+        <div class="activity-meta">
+          <span class="activity-time">
+            <mat-icon>schedule</mat-icon>
+            {{ activity.startTime }} - {{ activity.endTime }}
+          </span>
+          <span class="activity-location">
+            <mat-icon>location_on</mat-icon>
+            {{ activity.location }}
+          </span>
+        </div>
+      </div>
+
+      <div class="activity-status" [class]="activity.status">
+        <span class="status-badge">{{ activity.status | titlecase }}</span>
+      </div>
+    </div>
+
+    <!-- Activity Content -->
+    <div class="activity-content" *ngIf="activity.description">
+      <p class="activity-description">{{ activity.description }}</p>
+    </div>
+
+    <!-- Activity Details -->
+    <div class="activity-details">
+      <!-- Cost -->
+      <div class="detail-item" *ngIf="activity.cost">
+        <mat-icon>attach_money</mat-icon>
+        <span>{{ activity.cost.amount | currency:activity.cost.currency }}</span>
+      </div>
+
+      <!-- Duration -->
+      <div class="detail-item">
+        <mat-icon>timer</mat-icon>
+        <span>{{ activity.duration }} min</span>
+      </div>
+
+      <!-- Priority -->
+      <div class="detail-item priority" [class]="activity.priority">
+        <mat-icon>priority_high</mat-icon>
+        <span>{{ activity.priority | titlecase }}</span>
+      </div>
+
+      <!-- Booking Reference -->
+      <div class="detail-item" *ngIf="activity.bookingReference">
+        <mat-icon>receipt</mat-icon>
+        <span>{{ activity.bookingReference }}</span>
+      </div>
+    </div>
+
+    <!-- Activity Tags -->
+    <div class="activity-tags" *ngIf="activity.tags?.length">
+      <span class="tag" *ngFor="let tag of activity.tags">{{ tag }}</span>
+    </div>
+
+    <!-- Activity Images -->
+    <div class="activity-images" *ngIf="activity.images?.length">
+      <div class="image-grid">
+        <div class="image-item" *ngFor="let image of activity.images?.slice(0, 3) || []">
+          <img [src]="image" [alt]="activity.title" />
+        </div>
+        <div class="image-overlay" *ngIf="activity.images && activity.images.length > 3">
+          <span>+{{ (activity.images.length || 0) - 3 }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Actions -->
+    <div class="activity-actions">
+      <button class="action-btn" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button class="action-btn" (click)="onView()">
+        <mat-icon>visibility</mat-icon>
+        View
+      </button>
+      <button class="action-btn" (click)="onBook()" *ngIf="activity.status === 'planned'">
+        <mat-icon>book_online</mat-icon>
+        Book
+      </button>
+    </div>
+  </div>
+</div>

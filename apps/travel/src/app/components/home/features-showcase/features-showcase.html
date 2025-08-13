@@ -1,0 +1,10 @@
+<div class="features-section">
+  <h3 class="section-title">Features</h3>
+  <div class="features-grid">
+    @for (feature of features; track trackByFeature($index, feature)) {
+      <app-feature-card
+        [feature]="feature">
+      </app-feature-card>
+    }
+  </div>
+</div>

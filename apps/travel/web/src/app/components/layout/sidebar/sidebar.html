@@ -1,0 +1,86 @@
+<aside class="sidebar" [class.mobile-open]="isMobileOpen">
+  <!-- Mobile Close Button - Outside Right Edge -->
+  @if (isMobileOpen) {
+    <button class="mobile-close-btn" (click)="onMobileClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+
+  <!-- Sidebar Content -->
+  <div class="sidebar-content">
+    <!-- Header -->
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <mat-icon>star</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Chat Button -->
+    <div class="new-chat-section">
+      <button 
+        class="nav-button new-chat" 
+        (click)="onNewChat()"
+        matTooltip="Start a new conversation"
+        matTooltipPosition="right"
+        matTooltipClass="sidebar-tooltip">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="sidebar-nav">
+      <!-- Main Menu -->
+      <div class="nav-section">
+        <a routerLink="/search" routerLinkActive="active" class="nav-item">
+          <mat-icon>search</mat-icon>
+          <span class="menu-label">Search</span>
+        </a>
+        <a routerLink="/chat" routerLinkActive="active" class="nav-item">
+          <mat-icon>chat</mat-icon>
+          <span class="menu-label">Chat</span>
+        </a>
+        <a routerLink="/home" routerLinkActive="active" class="nav-item">
+          <mat-icon>home</mat-icon>
+          <span class="menu-label">Home</span>
+        </a>
+      </div>
+
+      <!-- Tools Section -->
+      <div class="nav-section">
+        <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+          <mat-icon>settings</mat-icon>
+          <span class="menu-label">Settings</span>
+        </a>
+        <a routerLink="/help" routerLinkActive="active" class="nav-item">
+          <mat-icon>help</mat-icon>
+          <span class="menu-label">Help</span>
+        </a>
+      </div>
+
+      <!-- Upgrade Section -->
+      <div class="nav-section upgrade-section">
+        <button 
+          class="nav-button upgrade"
+          matTooltip="Upgrade to Lumora Pro"
+          matTooltipPosition="right"
+          matTooltipClass="sidebar-tooltip">
+          <mat-icon>star</mat-icon>
+        </button>
+      </div>
+    </nav>
+
+    <!-- User Section -->
+    @if (user) {
+      <div class="user-section">
+        <div class="user-info">
+          <div class="user-avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <span class="menu-label">{{ user.name }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</aside>

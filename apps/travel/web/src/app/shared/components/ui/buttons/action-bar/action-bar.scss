@@ -1,0 +1,188 @@
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  min-height: 60px;
+  gap: 1rem;
+
+  &--minimal {
+    padding: 1rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-bottom: none;
+    background: transparent;
+  }
+
+  &--elevated {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+  }
+}
+
+.action-bar__title {
+  flex: 1;
+  min-width: 0; // Allow text truncation
+}
+
+.action-bar__title-text {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.action-bar__subtitle {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.2;
+}
+
+.action-bar__left,
+.action-bar__center,
+.action-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-bar__left {
+  justify-content: flex-start;
+}
+
+.action-bar__center {
+  justify-content: center;
+}
+
+.action-bar__right {
+  justify-content: flex-end;
+}
+
+.action-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &--left {
+    justify-content: flex-start;
+  }
+
+  &--center {
+    justify-content: center;
+  }
+
+  &--right {
+    justify-content: flex-end;
+  }
+}
+
+.action-bar__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  min-width: 44px;
+  height: 44px;
+  box-shadow: none;
+
+  &:hover:not(.action-bar__button--disabled) {
+    background: none;
+    color: #3b82f6;
+    transform: none;
+    box-shadow: none;
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+}
+
+.action-bar__button-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .action-bar {
+    padding: 1rem;
+  }
+  
+  .action-bar__button {
+    padding: 0.5rem 0.75rem;
+    
+    .action-bar__button-label {
+      display: none; // Hide text on smaller screens
+    }
+    
+    mat-icon {
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .action-bar {
+    padding: 0.75rem 1rem;
+  }
+  
+  .action-bar__left,
+  .action-bar__center,
+  .action-bar__right {
+    gap: 0.25rem;
+  }
+  
+  .action-bar__button {
+    padding: 0.5rem;
+    min-width: 40px;
+    height: 40px;
+    justify-content: center;
+    
+    mat-icon {
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .action-bar {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .action-bar__button {
+    min-width: 36px;
+    height: 36px;
+    
+    mat-icon {
+      width: 16px;
+      height: 16px;
+      font-size: 16px;
+    }
+  }
+}

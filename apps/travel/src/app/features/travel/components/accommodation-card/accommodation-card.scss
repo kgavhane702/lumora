@@ -1,0 +1,259 @@
+.accommodation-card {
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-radius: 12px;
+  border: 1px solid #f59e0b;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .accommodation-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+
+    .accommodation-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: #f59e0b;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(245, 158, 11, 0.3);
+
+      mat-icon {
+        color: white;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .accommodation-info {
+      flex: 1;
+
+      h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #92400e;
+        margin: 0 0 6px 0;
+      }
+
+      .accommodation-address {
+        font-size: 0.75rem;
+        color: #a16207;
+        margin: 0 0 8px 0;
+      }
+
+      .accommodation-details {
+        margin-bottom: 8px;
+
+        .check-times {
+          display: flex;
+          gap: 12px;
+          margin-bottom: 6px;
+
+          .check-in,
+          .check-out {
+            font-size: 0.625rem;
+            color: #92400e;
+            font-weight: 500;
+          }
+        }
+
+        .room-info {
+          .room-type {
+            display: inline-block;
+            padding: 3px 6px;
+            background: rgba(245, 158, 11, 0.2);
+            color: #92400e;
+            border-radius: 4px;
+            font-size: 0.625rem;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .accommodation-amenities {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+
+        .amenity-tag {
+          padding: 3px 6px;
+          background: rgba(245, 158, 11, 0.2);
+          color: #92400e;
+          border-radius: 4px;
+          font-size: 0.625rem;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .accommodation-status {
+      .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.625rem;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        &.booked {
+          background: rgba(16, 185, 129, 0.2);
+          color: #166534;
+        }
+
+        &.planned {
+          background: rgba(245, 158, 11, 0.2);
+          color: #92400e;
+        }
+      }
+    }
+  }
+
+  .accommodation-images {
+    padding: 0 16px 16px;
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      position: relative;
+
+      .image-item {
+        aspect-ratio: 4/3;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.2s ease;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+
+      .image-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border-radius: 6px;
+      }
+    }
+  }
+
+  .confirmation-panel.accommodation-panel {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 10px 16px;
+
+    .confirmation-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 6px;
+
+      .paperclip-icon {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    .confirmation-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .confirmation-number {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .label {
+          font-size: 0.625rem;
+          opacity: 0.8;
+        }
+
+        .number {
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+
+        .copy-icon {
+          font-size: 12px;
+          width: 12px;
+          height: 12px;
+          opacity: 0.8;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+
+      .accommodation-cost {
+        .cost-amount {
+          font-size: 0.875rem;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .accommodation-card {
+    .accommodation-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      .accommodation-info {
+        width: 100%;
+
+        .accommodation-details {
+          .check-times {
+            flex-direction: column;
+            gap: 2px;
+          }
+        }
+      }
+
+      .accommodation-status {
+        align-self: flex-end;
+      }
+    }
+
+    .accommodation-images {
+      padding: 0 12px 12px;
+
+      .image-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+}

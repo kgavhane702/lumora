@@ -1,0 +1,176 @@
+<div class="search-results-container">
+  <!-- Loading State -->
+  @if (isLoading && results.length === 0) {
+    <app-loading-spinner 
+      message="Searching for answers..."
+      subMessage="This may take a few seconds"
+      variant="dots">
+    </app-loading-spinner>
+
+    <!-- Skeleton Loading for Results -->
+    <app-skeleton-loader 
+      type="search-result"
+      [count]="3"
+      [showHeader]="true"
+      [showActions]="true"
+      [showReferences]="true">
+    </app-skeleton-loader>
+  }
+
+  <!-- AI Answer Results with Tabs -->
+  @if (!isLoading && results.length > 0) {
+    <div class="ai-results-list">
+      @for (result of results; track trackByResult($index, result)) {
+        <div class="ai-result-item">
+      
+      <!-- AI Answer Header -->
+      <!-- Removed empty header div to eliminate blank space -->
+
+          <!-- Tab System -->
+          @if (result.references && result.references.length > 0) {
+            <app-tab-container
+              [tabs]="getTabsForResult(result)"
+              [activeTab]="activeTab"
+              (tabChange)="onTabChange($event)">
+              
+              <app-tab-panel tabId="answer" [activeTab]="activeTab">
+                <!-- Top Sources (Limited to 4) -->
+                @if (result.references && result.references.length > 0) {
+                  <div class="top-sources-container">
+                    <div class="sources-grid">
+                      @for (reference of result.references.slice(0, 4); track trackByReference($index, reference)) {
+                        <app-source-card
+                          [source]="reference"
+                          variant="compact"
+                          (sourceClick)="onReferenceClick($event)">
+                        </app-source-card>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <!-- AI Answer Content -->
+                <div class="ai-answer-content">
+                  <div class="answer-text" [innerHTML]="formatAnswer(result.answer)"></div>
+                  
+                  <!-- Sources Summary -->
+                  @if (result.references && result.references.length > 0) {
+                    <div class="sources-summary">
+                      <app-sources-badge 
+                        [count]="result.references.length"
+                        variant="default">
+                      </app-sources-badge>
+                    </div>
+                  }
+                </div>
+
+                <!-- Follow-up Questions -->
+                <app-follow-up-questions
+                  [questions]="result.followUpQuestions || []"
+                  title="Related questions"
+                  icon="chat"
+                  variant="list"
+                  (questionClick)="onFollowUpClick($event)">
+                </app-follow-up-questions>
+        </app-tab-panel>
+
+        <app-tab-panel tabId="sources" [activeTab]="activeTab">
+          <div class="sources-tab-content">
+            <div class="sources-header">
+              <h4 class="sources-title">
+                <mat-icon>link</mat-icon>
+                All Sources ({{ result.references.length }})
+              </h4>
+            </div>
+            
+            <div class="sources-list">
+              @for (reference of result.references; track trackByReference($index, reference)) {
+                <div 
+                  class="source-item" 
+                  (click)="onReferenceClick(reference)">
+                  <div class="source-number">{{ $index + 1 }}</div>
+                  <div class="source-content">
+                    <div class="source-title">{{ reference.title }}</div>
+                    <div class="source-url">{{ reference.url }}</div>
+                    @if (reference.snippet) {
+                      <div class="source-snippet">{{ reference.snippet }}</div>
+                    }
+                    <div class="source-meta">
+                      <span class="source-domain">{{ reference.domain || getDomainFromUrl(reference.url) }}</span>
+                      @if (reference.publishedDate) {
+                        <span class="source-date">{{ reference.publishedDate | date:'MMM d, y' }}</span>
+                      }
+                      <span class="source-relevance">Relevance: {{ reference.relevance }}%</span>
+                    </div>
+                  </div>
+                  <div class="source-action">
+                    <mat-icon>open_in_new</mat-icon>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </app-tab-panel>
+            </app-tab-container>
+          } @else {
+            <!-- Answer Only Content (no sources) -->
+            <div class="answer-only-content">
+              <!-- AI Answer Content -->
+              <div class="ai-answer-content">
+                <div class="answer-text" [innerHTML]="formatAnswer(result.answer)"></div>
+              </div>
+
+              <!-- Follow-up Questions -->
+              <app-follow-up-questions
+                [questions]="result.followUpQuestions || []"
+                title="Related questions"
+                icon="chat"
+                variant="list"
+                (questionClick)="onFollowUpClick($event)">
+              </app-follow-up-questions>
+            </div>
+          }
+
+          <!-- Search Metadata -->
+          @if (result.searchTime) {
+            <div class="search-metadata">
+              <div class="metadata-left">
+                <div class="metadata-item">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ result.searchTime }}s</span>
+                </div>
+                @if (result.tokenUsage) {
+                  <div class="metadata-item">
+                    <mat-icon>memory</mat-icon>
+                    <span>{{ result.tokenUsage.total }} tokens</span>
+                  </div>
+                }
+              </div>
+              <div class="ai-answer-actions">
+                <button class="action-btn" (click)="onCopyAnswer(result)" title="Copy answer">
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+                <button class="action-btn" (click)="onShareAnswer(result)" title="Share answer">
+                  <mat-icon>share</mat-icon>
+                </button>
+                <button class="action-btn" (click)="onContinueSearch(result)" title="Continue searching">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- No Results -->
+  @if (!isLoading && results.length === 0) {
+    <app-empty-state 
+      type="search"
+      icon="search"
+      title="No results found"
+      message="Try adjusting your search terms or ask a different question.">
+    </app-empty-state>
+  }
+</div>

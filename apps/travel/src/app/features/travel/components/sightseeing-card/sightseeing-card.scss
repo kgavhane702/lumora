@@ -1,0 +1,302 @@
+.sightseeing-card {
+  margin-bottom: 16px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #3b82f6;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .activity-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+
+    .activity-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+
+      &.sightseeing {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      }
+
+      mat-icon {
+        color: white;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .activity-info {
+      flex: 1;
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0 0 6px 0;
+      }
+
+      .activity-description {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin: 0 0 8px 0;
+        line-height: 1.4;
+      }
+
+      .activity-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+
+        .activity-time,
+        .activity-location,
+        .activity-duration {
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          font-size: 0.625rem;
+          color: #64748b;
+
+          mat-icon {
+            font-size: 12px;
+            width: 12px;
+            height: 12px;
+            color: #94a3b8;
+          }
+        }
+      }
+    }
+
+    .activity-status {
+      .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.625rem;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        &.planned {
+          background: rgba(245, 158, 11, 0.1);
+          color: #92400e;
+        }
+
+        &.booked {
+          background: rgba(59, 130, 246, 0.1);
+          color: #1e40af;
+        }
+
+        &.confirmed {
+          background: rgba(16, 185, 129, 0.1);
+          color: #166534;
+        }
+
+        &.completed {
+          background: rgba(107, 114, 128, 0.1);
+          color: #374151;
+        }
+      }
+    }
+  }
+
+  .activity-images {
+    padding: 0 14px 14px;
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      position: relative;
+
+      .image-item {
+        aspect-ratio: 4/3;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.2s ease;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+
+      .image-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border-radius: 6px;
+      }
+    }
+  }
+
+  .activity-actions {
+    display: flex;
+    gap: 6px;
+    padding: 0 14px 14px;
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      color: #64748b;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+
+      &:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+        color: #475569;
+      }
+
+      &.book-btn {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        color: white;
+
+        &:hover {
+          background: #2563eb;
+          border-color: #2563eb;
+        }
+      }
+    }
+  }
+
+  .confirmation-panel.activity-panel {
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    padding: 8px 14px;
+
+    .confirmation-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 3px;
+
+      .paperclip-icon {
+        color: #64748b;
+        font-size: 12px;
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    .confirmation-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .confirmation-number {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .label {
+          font-size: 0.5rem;
+          color: #64748b;
+          text-transform: uppercase;
+        }
+
+        .number {
+          font-size: 0.625rem;
+          font-weight: 600;
+          color: #374151;
+        }
+
+        .copy-icon {
+          font-size: 10px;
+          width: 10px;
+          height: 10px;
+          color: #64748b;
+          cursor: pointer;
+
+          &:hover {
+            color: #475569;
+          }
+        }
+      }
+
+      .activity-cost {
+        .cost-amount {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #059669;
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .sightseeing-card {
+    .activity-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      .activity-info {
+        width: 100%;
+
+        .activity-meta {
+          flex-direction: column;
+          gap: 6px;
+        }
+      }
+
+      .activity-status {
+        align-self: flex-end;
+      }
+    }
+
+    .activity-images {
+      padding: 0 12px 12px;
+
+      .image-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .activity-actions {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+}

@@ -1,0 +1,102 @@
+<div class="search-bar-container">
+  <!-- Search Bar Container -->
+  <div class="search-bar" 
+       [class.searching]="isSearching" 
+       [class.focused]="isFocused">
+    <!-- Search Input Component -->
+    <app-search-input
+      [placeholder]="placeholder"
+      [maxLength]="maxLength"
+      [autoFocus]="autoFocus"
+      [disabled]="isSearching"
+      [searchQuery]="searchQuery"
+      (inputChange)="onInputChange($event)"
+      (search)="onSearch($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()">
+    </app-search-input>
+
+    <!-- Action Bar Below - All Other Icons -->
+    <div class="action-bar">
+      <!-- Navigation Icons -->
+      <div class="nav-icons">
+        <div class="search-icon" [class.active]="searchQuery">
+          <mat-icon>search</mat-icon>
+        </div>
+        <div class="grid-icon">
+          <mat-icon>apps</mat-icon>
+        </div>
+        <div class="help-icon">
+          <mat-icon>help</mat-icon>
+        </div>
+      </div>
+
+      <!-- Action Icons -->
+      <div class="action-icons">
+        <button 
+          mat-icon-button
+          class="file-upload-btn"
+          (click)="openFileUpload()"
+          type="button">
+          <mat-icon>attach_file</mat-icon>
+        </button>
+        
+        <button 
+          mat-icon-button
+          class="voice-btn"
+          (click)="startVoiceInput()"
+          [class.recording]="isRecording"
+          type="button">
+          <mat-icon>mic</mat-icon>
+        </button>
+        
+        <!-- Search/Submit Button -->
+        <button 
+          mat-icon-button
+          class="search-button"
+          [class.searching]="isSearching"
+          [class.has-query]="searchQuery.trim().length > 0"
+          (click)="isSearching ? onStopSearch() : onSearch(searchQuery)"
+          [disabled]="!searchQuery.trim() && !isSearching"
+          type="button"
+          matTooltip="Search">
+          <mat-icon [color]="isSearching ? 'warn' : (searchQuery.trim().length > 0 ? 'primary' : '')">
+            {{ isSearching ? 'stop_circle' : 'send' }}
+          </mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- File Attachment Component - Only show when files are attached -->
+    @if (attachedFiles.length > 0) {
+      <app-file-attachment
+        [attachedFiles]="attachedFiles"
+        [maxFiles]="5"
+        [maxFileSize]="10 * 1024 * 1024"
+        [acceptedTypes]="acceptedFileTypes"
+        [showUploadProgress]="true"
+        (fileUpload)="onFileUpload($event)"
+        (fileRemove)="onFileRemove($event)"
+        (fileError)="onFileError($event)">
+      </app-file-attachment>
+    }
+
+    <!-- Search Suggestions Component - After file attachments -->
+    <app-search-suggestions
+      [suggestions]="suggestions"
+      [selectedIndex]="selectedSuggestionIndex"
+      [showSuggestions]="showSuggestions"
+      [searchQuery]="searchQuery"
+      (suggestionSelect)="selectSuggestion($event)"
+      (suggestionHover)="onSuggestionHover($event)">
+    </app-search-suggestions>
+  </div>
+
+  <!-- Hidden File Input -->
+  <input #fileInput 
+         type="file" 
+         [accept]="acceptedFileTypes"
+         multiple
+         (change)="onFileSelected($event)"
+         style="display: none;">
+</div>

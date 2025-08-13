@@ -1,0 +1,21 @@
+<div class="action-bar" [class]="'action-bar--' + variant">
+  <!-- Left Side (Empty for now) -->
+  <div class="action-bar__left">
+    <ng-content select="[slot=left]"></ng-content>
+  </div>
+  
+  <!-- Right Side Action Buttons -->
+  <div class="action-bar__actions" [class]="'action-bar__actions--' + position">
+    @for (action of actions; track trackByAction($index, action)) {
+      <button 
+        class="action-bar__button"
+        [class.action-bar__button--disabled]="action.disabled"
+        [disabled]="action.disabled"
+        (click)="onActionClick(action)">
+        
+        <mat-icon>{{ action.icon }}</mat-icon>
+        <span class="action-bar__button-label">{{ action.label }}</span>
+      </button>
+    }
+  </div>
+</div>

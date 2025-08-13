@@ -1,0 +1,81 @@
+<div class="transfer-card" [class]="transport.type">
+  <!-- Transfer Header -->
+  <div class="transfer-header">
+    <div class="transfer-icon">
+      <mat-icon>{{ getTransportIcon() }}</mat-icon>
+    </div>
+    
+    <div class="transfer-info">
+      <div class="transfer-provider">{{ transport.provider }}</div>
+      <div class="transfer-route">
+        <span>{{ transport.from }}</span>
+        <span class="route-arrow">→</span>
+        <span>{{ transport.to }}</span>
+      </div>
+    </div>
+
+    <div class="transfer-status">
+      <span class="status-badge" [class]="transport.status">{{ transport.status | titlecase }}</span>
+    </div>
+  </div>
+
+  <!-- Transfer Details -->
+  <div class="transfer-details">
+    <div class="detail-item">
+      <mat-icon>schedule</mat-icon>
+      <span class="detail-value">{{ transport.departureTime }} - {{ transport.arrivalTime }}</span>
+    </div>
+    
+    <div class="detail-item">
+      <mat-icon>timer</mat-icon>
+      <span class="detail-value">{{ transport.duration }} min</span>
+    </div>
+    
+    @if (transport.cost) {
+      <div class="detail-item">
+        <mat-icon>attach_money</mat-icon>
+        <span class="detail-value">{{ transport.cost.amount | currency:transport.cost.currency }}</span>
+      </div>
+    }
+    
+    @if (transport.details?.platform) {
+      <div class="detail-item">
+        <mat-icon>place</mat-icon>
+        <span class="detail-value">{{ transport.details?.platform }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Transfer Actions -->
+  <div class="transfer-actions">
+    <button class="action-btn" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+    <button class="action-btn" (click)="copyToClipboard()">
+      <mat-icon>content_copy</mat-icon>
+      Copy
+    </button>
+  </div>
+
+  <!-- Confirmation Panel -->
+  @if (transport.bookingReference) {
+    <div class="confirmation-panel">
+      <div class="confirmation-header">
+        <mat-icon class="paperclip-icon">attach_file</mat-icon>
+      </div>
+      <div class="confirmation-content">
+        <div class="confirmation-number">
+          <span class="label">REF</span>
+          <span class="number">{{ transport.bookingReference }}</span>
+          <mat-icon class="copy-icon" (click)="copyToClipboard()">content_copy</mat-icon>
+        </div>
+        @if (transport.cost) {
+          <div class="transfer-cost">
+            <span class="cost-amount">₹{{ transport.cost.amount | number:'1.0-0' }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

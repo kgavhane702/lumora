@@ -1,0 +1,433 @@
+.timeline-item {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  position: relative;
+
+  // Activity type specific colors
+  &.sightseeing {
+    .activity-icon {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    }
+  }
+
+  &.food {
+    .activity-icon {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+  }
+
+  &.shopping {
+    .activity-icon {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+  }
+
+  &.entertainment {
+    .activity-icon {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+    }
+  }
+
+  &.relaxation {
+    .activity-icon {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+  }
+
+  &.transport {
+    .activity-icon {
+      background: linear-gradient(135deg, #6b7280, #4b5563);
+    }
+  }
+
+  &.accommodation {
+    .activity-icon {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+    }
+  }
+
+  .timeline-connector {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+
+    .connector-line {
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(to bottom, #e5e7eb, #d1d5db);
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .connector-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #e5e7eb;
+      position: relative;
+      z-index: 2;
+      margin-top: 32px;
+
+      &.planned {
+        border-color: #f59e0b;
+        background: #fef3c7;
+      }
+
+      &.booked {
+        border-color: #3b82f6;
+        background: #dbeafe;
+      }
+
+      &.confirmed {
+        border-color: #10b981;
+        background: #d1fae5;
+      }
+
+      &.completed {
+        border-color: #6b7280;
+        background: #f3f4f6;
+      }
+    }
+  }
+
+  .activity-card {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f3f4f6;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      border-color: #e5e7eb;
+    }
+
+    .activity-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+
+      .activity-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        flex-shrink: 0;
+
+        mat-icon {
+          color: white;
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .activity-info {
+        flex: 1;
+
+        .activity-title {
+          font-size: 1.25rem;
+          font-weight: 600;
+          color: #1f2937;
+          margin: 0 0 8px 0;
+          line-height: 1.3;
+        }
+
+        .activity-meta {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+
+          .activity-time,
+          .activity-location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.875rem;
+            color: #6b7280;
+
+            mat-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+            }
+          }
+        }
+      }
+
+      .activity-status {
+        .status-badge {
+          padding: 4px 12px;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+
+          &.planned {
+            background: #fef3c7;
+            color: #92400e;
+          }
+
+          &.booked {
+            background: #dbeafe;
+            color: #1e40af;
+          }
+
+          &.confirmed {
+            background: #d1fae5;
+            color: #065f46;
+          }
+
+          &.completed {
+            background: #f3f4f6;
+            color: #374151;
+          }
+        }
+      }
+    }
+
+    .activity-content {
+      margin-bottom: 16px;
+
+      .activity-description {
+        color: #4b5563;
+        line-height: 1.6;
+        margin: 0;
+      }
+    }
+
+    .activity-details {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.875rem;
+        color: #6b7280;
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+
+        &.priority {
+          &.high {
+            color: #dc2626;
+          }
+
+          &.medium {
+            color: #f59e0b;
+          }
+
+          &.low {
+            color: #10b981;
+          }
+        }
+      }
+    }
+
+    .activity-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+
+      .tag {
+        padding: 4px 12px;
+        background: #f3f4f6;
+        color: #374151;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+    }
+
+    .activity-images {
+      margin-bottom: 16px;
+
+      .image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 8px;
+        position: relative;
+
+        .image-item {
+          aspect-ratio: 1;
+          border-radius: 8px;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .image-overlay {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background: rgba(0, 0, 0, 0.6);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 600;
+          font-size: 0.875rem;
+        }
+      }
+    }
+
+    .activity-actions {
+      display: flex;
+      gap: 8px;
+
+      .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border: 1px solid #e5e7eb;
+        background: white;
+        color: #374151;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+
+        &:hover {
+          background: #f9fafb;
+          border-color: #d1d5db;
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .timeline-item {
+    gap: 16px;
+
+    .timeline-connector {
+      .connector-dot {
+        width: 12px;
+        height: 12px;
+        margin-top: 24px;
+      }
+    }
+
+    .activity-card {
+      padding: 16px;
+
+      .activity-header {
+        gap: 12px;
+
+        .activity-icon {
+          width: 40px;
+          height: 40px;
+
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        .activity-info {
+          .activity-title {
+            font-size: 1.125rem;
+          }
+
+          .activity-meta {
+            gap: 12px;
+            flex-direction: column;
+
+            .activity-time,
+            .activity-location {
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+
+      .activity-details {
+        gap: 12px;
+
+        .detail-item {
+          font-size: 0.8rem;
+        }
+      }
+
+      .activity-actions {
+        flex-wrap: wrap;
+
+        .action-btn {
+          flex: 1;
+          justify-content: center;
+          padding: 10px 12px;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-item {
+    flex-direction: column;
+    gap: 12px;
+
+    .timeline-connector {
+      .connector-line {
+        display: none;
+      }
+
+      .connector-dot {
+        margin-top: 0;
+      }
+    }
+
+    .activity-card {
+      .activity-header {
+        .activity-status {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+        }
+      }
+    }
+  }
+}

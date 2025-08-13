@@ -1,0 +1,93 @@
+<div class="flight-card">
+  <div class="flight-header">
+    <div class="flight-route">
+      <div class="route-info">
+        <span class="route-codes">{{ transport.from }} ⇌ {{ transport.to }}</span>
+        <span class="route-status" [class]="transport.status">{{ transport.status | titlecase }}</span>
+      </div>
+      <div class="airline-info">
+        <span class="airline-name">{{ transport.provider }}</span>
+        @if (transport.details?.flightNumber) {
+          <span class="flight-number">{{ transport.details?.flightNumber }}</span>
+        }
+      </div>
+      <div class="flight-time">
+        <span class="date-time">{{ date | date:'EEE, MMM d' }} • {{ transport.duration }}min</span>
+      </div>
+    </div>
+    
+    <div class="flight-details">
+      <div class="departure-info">
+        <div class="time-location">
+          <span class="time">{{ transport.departureTime }}</span>
+          <span class="location">{{ transport.from }}</span>
+        </div>
+        @if (transport.details?.terminal) {
+          <div class="terminal-gate">
+            <span class="terminal">Terminal {{ transport.details?.terminal }}</span>
+            @if (transport.details?.gate) {
+              <span class="gate">Gate {{ transport.details?.gate }}</span>
+            }
+          </div>
+        }
+      </div>
+      
+      <div class="flight-line">
+        <div class="line-dot departure"></div>
+        <div class="flight-line-connector"></div>
+        <div class="line-dot arrival"></div>
+      </div>
+      
+      <div class="arrival-info">
+        <div class="time-location">
+          <span class="time">{{ transport.arrivalTime }}</span>
+          <span class="location">{{ transport.to }}</span>
+        </div>
+        @if (transport.details?.arrivalTerminal) {
+          <div class="terminal-gate">
+            <span class="terminal">Terminal {{ transport.details?.arrivalTerminal }}</span>
+            @if (transport.details?.arrivalGate) {
+              <span class="gate">Gate {{ transport.details?.arrivalGate }}</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+    
+    <div class="flight-actions">
+      @if (transport.status === 'booked') {
+        <div class="check-in-status">
+          <span class="status-text">Haven't checked in yet? </span>
+          <button class="check-in-link" (click)="onCheckIn()">Check in</button>
+        </div>
+      }
+      @if (transport.status === 'confirmed') {
+        <div class="live-status">
+          <span class="status-dot"></span>
+          <span class="status-text">Updating live status</span>
+        </div>
+      }
+      <button class="edit-btn" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+    </div>
+  </div>
+  
+  <!-- Flight Confirmation Panel -->
+  <div class="confirmation-panel flight-panel">
+    <div class="confirmation-header">
+      <mat-icon class="paperclip-icon">attach_file</mat-icon>
+    </div>
+    <div class="confirmation-content">
+      <div class="confirmation-number">
+        <span class="label">CONFIRMATION #</span>
+        <span class="number">{{ transport.bookingReference || 'PENDING' }}</span>
+        <mat-icon class="copy-icon" (click)="copyToClipboard(transport.bookingReference || '')">content_copy</mat-icon>
+      </div>
+      <div class="flight-cost">
+        <span class="cost-amount">₹{{ transport.cost?.amount | number:'1.0-0' }}</span>
+      </div>
+    </div>
+  </div>
+</div>
