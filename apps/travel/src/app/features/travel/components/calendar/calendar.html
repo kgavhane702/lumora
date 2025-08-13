@@ -1,0 +1,50 @@
+<!-- Calendar View -->
+<div class="calendar-container">
+  <div class="calendar-header">
+    <h2>Trip Calendar View</h2>
+    <p>Visual timeline of your {{ getTotalDays() }}-day Goa adventure</p>
+  </div>
+  
+  <div class="calendar-grid">
+    @for (day of currentTrip?.itinerary; track day.day) {
+      <div class="calendar-day">
+        <div class="day-header">
+          <div class="day-number">Day {{ day.day }}</div>
+          <div class="day-date">{{ day.date | date:'MMM dd' }}</div>
+          <div class="day-location">{{ day.location }}</div>
+        </div>
+        
+        <div class="day-timeline">
+          @for (item of getDayTimelineItems(day); track item.trackId) {
+            <div class="timeline-item" [class]="'timeline-' + item.type">
+              <div class="timeline-time">{{ item.time }}</div>
+              <div class="timeline-content">
+                <div class="timeline-icon">
+                  @if (item.type === 'transportation') {
+                    <mat-icon>{{ getTransportIcon(item.data.type) }}</mat-icon>
+                  } @else if (item.type === 'accommodation') {
+                    <mat-icon>hotel</mat-icon>
+                  } @else {
+                    <mat-icon>{{ getActivityIcon(item.data.type) }}</mat-icon>
+                  }
+                </div>
+                <div class="timeline-details">
+                  @if (item.type === 'transportation') {
+                    <div class="timeline-title">{{ item.data.provider }}</div>
+                    <div class="timeline-subtitle">{{ item.data.from }} → {{ item.data.to }}</div>
+                  } @else if (item.type === 'accommodation') {
+                    <div class="timeline-title">{{ item.data.name }}</div>
+                    <div class="timeline-subtitle">{{ item.data.address }}</div>
+                  } @else {
+                    <div class="timeline-title">{{ item.data.title }}</div>
+                    <div class="timeline-subtitle">{{ item.data.location }}</div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

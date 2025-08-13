@@ -4,11 +4,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 import { Trip, Activity, ItineraryDay, Transportation } from '../interfaces/trip.interface';
+import { Calendar } from '../components/calendar/calendar';
 
 @Component({
   selector: 'app-travel',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatExpansionModule],
+  imports: [CommonModule, MatIconModule, MatExpansionModule, Calendar],
   templateUrl: './travel.html',
   styleUrls: ['./travel.scss']
 })
@@ -199,6 +200,71 @@ export class Travel implements OnInit {
       case 'accommodation': return 'hotel';
       default: return 'event';
     }
+  }
+
+  getDayTimelineItems(day: ItineraryDay): any[] {
+    const items: any[] = [];
+
+    // Add transportation items
+    if (day.transportation?.length) {
+      day.transportation.forEach(transport => {
+        items.push({
+          type: 'transportation',
+          data: transport,
+          trackId: `transport-${transport.id}`,
+          time: transport.departureTime
+        });
+      });
+    }
+
+    // Add accommodation item
+    if (day.accommodation) {
+      items.push({
+        type: 'accommodation',
+        data: day.accommodation,
+        trackId: `accommodation-${day.accommodation.id}`,
+        time: day.accommodation.checkIn || '00:00'
+      });
+    }
+
+    // Add activity items
+    if (day.activities?.length) {
+      day.activities.forEach(activity => {
+        items.push({
+          type: 'activity',
+          data: activity,
+          trackId: `activity-${activity.id}`,
+          time: activity.startTime
+        });
+      });
+    }
+
+    // Sort by time
+    const sortedItems = items.sort((a, b) => {
+      const timeA = this.parseTime(a.time);
+      const timeB = this.parseTime(b.time);
+      return timeA - timeB;
+    });
+
+    // Apply filter if not showing all
+    if (this.activeFilter !== 'all') {
+      return sortedItems.filter(item => {
+        switch (this.activeFilter) {
+          case 'transfers':
+            return item.type === 'transportation';
+          case 'hotels':
+            return item.type === 'accommodation';
+          case 'activities':
+            return item.type === 'activity';
+          case 'meals':
+            return item.type === 'activity' && item.data.type === 'food';
+          default:
+            return true;
+        }
+      });
+    }
+
+    return sortedItems;
   }
 
   private loadSampleTrip(): void {
@@ -1008,70 +1074,7 @@ export class Travel implements OnInit {
     // TODO: Implement itinerary export
   }
 
-  getDayTimelineItems(day: ItineraryDay): any[] {
-    const items: any[] = [];
 
-    // Add transportation items
-    if (day.transportation?.length) {
-      day.transportation.forEach(transport => {
-        items.push({
-          type: 'transportation',
-          data: transport,
-          trackId: `transport-${transport.id}`,
-          time: transport.departureTime
-        });
-      });
-    }
-
-    // Add accommodation item
-    if (day.accommodation) {
-      items.push({
-        type: 'accommodation',
-        data: day.accommodation,
-        trackId: `accommodation-${day.accommodation.id}`,
-        time: day.accommodation.checkIn || '00:00'
-      });
-    }
-
-    // Add activity items
-    if (day.activities?.length) {
-      day.activities.forEach(activity => {
-        items.push({
-          type: 'activity',
-          data: activity,
-          trackId: `activity-${activity.id}`,
-          time: activity.startTime
-        });
-      });
-    }
-
-    // Sort by time
-    const sortedItems = items.sort((a, b) => {
-      const timeA = this.parseTime(a.time);
-      const timeB = this.parseTime(b.time);
-      return timeA - timeB;
-    });
-
-    // Apply filter if not showing all
-    if (this.activeFilter !== 'all') {
-      return sortedItems.filter(item => {
-        switch (this.activeFilter) {
-          case 'transfers':
-            return item.type === 'transportation';
-          case 'hotels':
-            return item.type === 'accommodation';
-          case 'activities':
-            return item.type === 'activity';
-          case 'meals':
-            return item.type === 'activity' && item.data.type === 'food';
-          default:
-            return true;
-        }
-      });
-    }
-
-    return sortedItems;
-  }
 
   getDayTransportationItems(day: ItineraryDay): any[] {
     if (!day.transportation?.length) return [];
