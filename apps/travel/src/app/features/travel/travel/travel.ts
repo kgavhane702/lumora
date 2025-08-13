@@ -1,90 +1,28 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 import { Trip, Activity, ItineraryDay, Transportation } from '../interfaces/trip.interface';
 
 @Component({
   selector: 'app-travel',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, MatExpansionModule],
   templateUrl: './travel.html',
   styleUrls: ['./travel.scss']
 })
-export class Travel implements OnInit, OnDestroy {
+export class Travel implements OnInit {
+
   currentTrip?: Trip;
-  selectedDay: number = 1;
-  private observer?: IntersectionObserver;
 
   ngOnInit(): void {
     this.loadSampleTrip();
-    // Initialize scroll spy after first paint
-    setTimeout(() => this.initScrollSpy(), 0);
   }
 
-  ngOnDestroy(): void {
-    this.observer?.disconnect();
-  }
 
-  private initScrollSpy(): void {
-    if (typeof window === 'undefined') return;
-    const options = { root: null, rootMargin: '0px 0px -60% 0px', threshold: 0.0 } as IntersectionObserverInit;
-    
-    this.observer?.disconnect();
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const dayAttr = (entry.target as HTMLElement).getAttribute('data-day');
-        const dayNum = dayAttr ? parseInt(dayAttr, 10) : NaN;
-        if (!isNaN(dayNum) && entry.isIntersecting) {
-          this.selectedDay = dayNum;
-        }
-      });
-    }, options);
 
-    document.querySelectorAll('section.day-section').forEach(el => this.observer?.observe(el));
-  }
 
-  scrollToDay(day: number): void {
-    const el = document.getElementById(`day-${day}`);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
-  getDayTimelineItems(day: ItineraryDay): Array<
-    { kind: 'transport'; transport: Transportation; time: string; trackId: string } |
-    { kind: 'accommodation'; time: string; trackId: string } |
-    { kind: 'activity'; activity: Activity; time: string; trackId: string }
-  > {
-    const items: any[] = [];
-
-    // Transportations (use departureTime as sort key)
-    (day.transportation || []).forEach(t => {
-      items.push({ kind: 'transport', transport: t, time: t.departureTime || '00:00', trackId: `t-${t.id}` });
-    });
-
-    // Accommodation (use check-in as sort key if exists)
-    if (day.accommodation) {
-      const t = day.accommodation.checkIn || '00:00';
-      items.push({ kind: 'accommodation', time: t, trackId: `a-${day.day}` });
-    }
-
-    // Activities (use startTime as sort key)
-    (day.activities || []).forEach(a => {
-      items.push({ kind: 'activity', activity: a, time: a.startTime || '00:00', trackId: `act-${a.id}` });
-    });
-
-    // Sort by time within the day (HH:mm lexicographic sort ok)
-    items.sort((x, y) => (x.time || '').localeCompare(y.time || ''));
-    return items;
-  }
-
-  get selectedDayData(): ItineraryDay | undefined {
-    return this.currentTrip?.itinerary.find(day => day.day === this.selectedDay);
-  }
-
-  selectDay(day: number): void {
-    this.selectedDay = day;
-  }
 
   getTotalTransfers(): number {
     return this.currentTrip?.itinerary.reduce((total, day) => 
@@ -960,5 +898,96 @@ export class Travel implements OnInit, OnDestroy {
   onExportItinerary(): void {
     console.log('Export itinerary clicked');
     // TODO: Implement itinerary export
+  }
+
+  getDayTimelineItems(day: ItineraryDay): any[] {
+    const items: any[] = [];
+
+    // Add transportation items
+    if (day.transportation?.length) {
+      day.transportation.forEach(transport => {
+        items.push({
+          type: 'transportation',
+          data: transport,
+          trackId: `transport-${transport.id}`,
+          time: transport.departureTime
+        });
+      });
+    }
+
+    // Add accommodation item
+    if (day.accommodation) {
+      items.push({
+        type: 'accommodation',
+        data: day.accommodation,
+        trackId: `accommodation-${day.accommodation.id}`,
+        time: day.accommodation.checkIn || '00:00'
+      });
+    }
+
+    // Add activity items
+    if (day.activities?.length) {
+      day.activities.forEach(activity => {
+        items.push({
+          type: 'activity',
+          data: activity,
+          trackId: `activity-${activity.id}`,
+          time: activity.startTime
+        });
+      });
+    }
+
+    // Sort by time
+    return items.sort((a, b) => {
+      const timeA = this.parseTime(a.time);
+      const timeB = this.parseTime(b.time);
+      return timeA - timeB;
+    });
+  }
+
+  getDayTransportationItems(day: ItineraryDay): any[] {
+    if (!day.transportation?.length) return [];
+    
+    return day.transportation.map(transport => ({
+      type: 'transportation',
+      data: transport,
+      trackId: `transport-${transport.id}`,
+      time: transport.departureTime
+    })).sort((a, b) => {
+      const timeA = this.parseTime(a.time);
+      const timeB = this.parseTime(b.time);
+      return timeA - timeB;
+    });
+  }
+
+  getDayAccommodationItems(day: ItineraryDay): any[] {
+    if (!day.accommodation) return [];
+    
+    return [{
+      type: 'accommodation',
+      data: day.accommodation,
+      trackId: `accommodation-${day.accommodation.id}`,
+      time: day.accommodation.checkIn || '00:00'
+    }];
+  }
+
+  getDayActivityItems(day: ItineraryDay): any[] {
+    if (!day.activities?.length) return [];
+    
+    return day.activities.map(activity => ({
+      type: 'activity',
+      data: activity,
+      trackId: `activity-${activity.id}`,
+      time: activity.startTime
+    })).sort((a, b) => {
+      const timeA = this.parseTime(a.time);
+      const timeB = this.parseTime(b.time);
+      return timeA - timeB;
+    });
+  }
+
+  private parseTime(timeString: string): number {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    return hours * 60 + minutes;
   }
 }
