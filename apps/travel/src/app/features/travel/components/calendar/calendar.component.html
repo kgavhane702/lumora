@@ -1,0 +1,76 @@
+<h1>Trip Calendar</h1>
+
+<div class="calendar" [style.--days]="days.length">
+  <!-- Header -->
+  <div class="cal-header" #calHeader>
+    <div class="time-head">Time</div>
+    <div class="day-head" *ngFor="let d of days">
+      <div class="day-title">{{ d.label }}</div>
+      <div class="day-sub">{{ d.date }}</div>
+      <div class="day-sub">{{ d.place }}</div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="cal-body" #calendarBody>
+    <!-- times -->
+    <div class="times">
+      <div class="time-row" *ngFor="let t of times()">{{ t }}</div>
+    </div>
+
+    <!-- day columns -->
+    <div
+      class="day-col"
+      *ngFor="let d of days"
+      [attr.data-day-key]="d.key"
+      [class.drop-highlight]="preview && preview.dayKey === d.key"
+      [style.padding]="'0 12px'"
+      [style.gridTemplateRows]="'repeat(' + (24*slotsPerHour) + ', var(--slot-h))'"
+    >
+      <!-- events -->
+      <div class="event" *ngFor="let e of laidFor(d.key)" [style.grid-row]="(e.startIdx + 1) + ' / ' + (e.endIdx + 1)">
+        <div
+          class="chip"
+          [class.-danger]="e.danger"
+          (pointerdown)="onChipPointerDownMove($event, d.key, e, chipEl)"
+          [attr.data-event-id]="e.id"
+          [attr.data-day-key]="d.key"
+          [attr.data-start-idx]="e.startIdx"
+          [attr.data-end-idx]="e.endIdx"
+          #chipEl
+        >
+          <div class="title">{{ e.title }}</div>
+          <div class="time">{{ e.start }} – {{ e.end }}</div>
+
+          <!-- resize handles -->
+          <div class="handle top" (pointerdown)="onHandlePointerDown($event, d.key, e, 'top')"></div>
+          <div class="handle bottom" (pointerdown)="onHandlePointerDown($event, d.key, e, 'bottom')"></div>
+        </div>
+      </div>
+
+      <!-- move preview -->
+      <div
+        *ngIf="dayHasPreview(d.key, 'move')"
+        class="drop-preview"
+        [style.grid-row]="(preview!.startIdx + 1) + ' / ' + (preview!.endIdx + 1)"
+      ></div>
+
+      <!-- resize preview -->
+      <div
+        *ngIf="dayHasPreview(d.key, 'resize')"
+        class="resize-preview"
+        [style.grid-row]="(preview!.startIdx + 1) + ' / ' + (preview!.endIdx + 1)"
+      ></div>
+    </div>
+  </div>
+</div>
+
+<!-- floating ghost (strict template-safe null check) -->
+<div
+  *ngIf="drag && drag.ghost && drag.mode === 'move'"
+  class="drag-ghost"
+  [style.width.px]="drag.ghost.w"
+  [style.height.px]="drag.ghost.h"
+  [style.left.px]="drag.ghost.left"
+  [style.top.px]="drag.ghost.top"
+></div>

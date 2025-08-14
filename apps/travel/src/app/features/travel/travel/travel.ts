@@ -5,7 +5,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { Trip, ItineraryDay, Transportation, Activity } from '../interfaces/trip.interface';
-import { CalendarComponent } from '../components/calendar/calendar';
+import { CalendarComponent } from '../components/calendar/calendar.component';
 
 @Component({
   selector: 'app-travel',
