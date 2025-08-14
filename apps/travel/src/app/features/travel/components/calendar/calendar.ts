@@ -1,39 +1,38 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatChipsModule } from '@angular/material/chips';
-import { Trip, ItineraryDay, Transportation, Activity } from '../../interfaces/trip.interface';
+import { MatIconModule } from '@angular/material/icon';
+import { Trip, ItineraryDay } from '../../interfaces/trip.interface';
+import { EventChipComponent, CalendarEvent } from '../event-chip/event-chip';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatGridListModule, MatChipsModule],
+  imports: [CommonModule, MatChipsModule, MatIconModule, EventChipComponent],
   templateUrl: './calendar.html',
-  styleUrl: './calendar.scss'
+  styleUrls: ['./calendar.scss']
 })
-export class Calendar implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   @Input() currentTrip?: Trip;
 
   timeSlots = [
     'All Day',
-    '12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM',
-    '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM',
-    '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM',
-    '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'
+    '12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM',
+    '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'
   ];
 
-  ngOnInit(): void {
-    console.log('Calendar Component Initialized');
-    console.log('Current Trip:', this.currentTrip);
-    console.log('Itinerary:', this.currentTrip?.itinerary);
+  constructor() {}
+
+  ngOnInit() {
+    // Initialize
+  }
+
+  ngOnDestroy() {
+    // Cleanup if needed
   }
 
   getValidItineraryDays(): ItineraryDay[] {
-    if (!this.currentTrip?.itinerary) {
-      return [];
-    }
-    // Filter out any undefined or null values
+    if (!this.currentTrip?.itinerary) return [];
     return this.currentTrip.itinerary.filter(day => day && day.day);
   }
 
@@ -42,18 +41,16 @@ export class Calendar implements OnInit {
   }
 
   formatCurrency(amount: number): string {
-    return `₹${amount.toLocaleString('en-IN')}`;
+    return `₹${amount.toLocaleString()}`;
   }
 
   getTransportIcon(type: string): string {
     switch (type) {
       case 'flight': return 'flight';
-      case 'car': return 'directions_car';
-      case 'bus': return 'directions_bus';
       case 'train': return 'train';
-      case 'boat': return 'directions_boat';
+      case 'bus': return 'directions_bus';
+      case 'car': return 'directions_car';
       case 'bike': return 'pedal_bike';
-      case 'walking': return 'directions_walk';
       default: return 'directions_car';
     }
   }
@@ -61,183 +58,175 @@ export class Calendar implements OnInit {
   getActivityIcon(type: string): string {
     switch (type) {
       case 'sightseeing': return 'explore';
-      case 'food': return 'restaurant';
-      case 'shopping': return 'shopping_bag';
-      case 'entertainment': return 'sports_esports';
+      case 'adventure': return 'hiking';
+      case 'cultural': return 'museum';
       case 'relaxation': return 'spa';
-      case 'accommodation': return 'hotel';
-      default: return 'event';
-    }
-  }
-
-  // Event processing methods
-  getAllDayEvents(day: ItineraryDay): any[] {
-    if (!day) return [];
-    
-    const events: any[] = [];
-    
-    // Add accommodation as all-day event
-    if (day.accommodation) {
-      events.push({
-        type: 'accommodation',
-        title: day.accommodation.name,
-        data: day.accommodation
-      });
-    }
-
-    // Add transportation that spans multiple days (like trains)
-    if (day.transportation?.length) {
-      day.transportation.forEach(transport => {
-        if (transport && transport.type === 'train' || transport.duration > 120) {
-          events.push({
-            type: 'transportation',
-            title: transport.provider,
-            data: transport
-          });
-        }
-      });
-    }
-
-    console.log(`All day events for day ${day.day}:`, events);
-    return events;
-  }
-
-  getEventsForTimeSlot(day: ItineraryDay, timeSlot: string): any[] {
-    if (!day) return [];
-    
-    const events: any[] = [];
-    const targetHour = this.parseTimeSlot(timeSlot);
-
-    // Add transportation events
-    if (day.transportation?.length) {
-      day.transportation.forEach(transport => {
-        if (transport && transport.departureTime) {
-          const startHour = this.parseTime(transport.departureTime);
-          if (startHour === targetHour) {
-            events.push({
-              type: 'transportation',
-              title: transport.provider,
-              startTime: transport.departureTime,
-              endTime: transport.arrivalTime,
-              data: transport
-            });
-          }
-        }
-      });
-    }
-
-    // Add activity events
-    if (day.activities?.length) {
-      day.activities.forEach(activity => {
-        if (activity && activity.startTime) {
-          const startHour = this.parseTime(activity.startTime);
-          if (startHour === targetHour) {
-            events.push({
-              type: 'activity',
-              title: activity.title,
-              startTime: activity.startTime,
-              endTime: activity.endTime,
-              data: activity
-            });
-          }
-        }
-      });
-    }
-
-    if (events.length > 0) {
-      console.log(`Events for day ${day.day} at ${timeSlot}:`, events);
-    }
-    return events;
-  }
-
-  getEventIcon(event: any): string {
-    if (event.type === 'transportation') {
-      return this.getTransportIcon(event.data.type);
-    } else if (event.type === 'accommodation') {
-      return 'hotel';
-    } else {
-      return this.getActivityIcon(event.data.type);
-    }
-  }
-
-  getEventColor(event: any): string {
-    switch (event.type) {
-      case 'transportation':
-        return 'primary';
-      case 'accommodation':
-        return 'accent';
-      case 'activity':
-        return 'warn';
-      case 'food':
-        return 'warn';
-      case 'shopping':
-        return 'accent';
-      case 'entertainment':
-        return 'primary';
-      case 'relaxation':
-        return 'primary';
-      default:
-        return 'primary';
+      case 'shopping': return 'shopping_bag';
+      default: return 'explore';
     }
   }
 
   getDayTimelineItems(day: ItineraryDay): any[] {
+    if (!day) return [];
+    
     const items: any[] = [];
-
-    // Add transportation items
-    if (day.transportation?.length) {
-      day.transportation.forEach(transport => {
-        items.push({
-          type: 'transportation',
-          data: transport,
-          trackId: `transport-${transport.id}`,
-          time: transport.departureTime
-        });
-      });
-    }
-
-    // Add accommodation item
+    
+    // Add accommodation (check-in/check-out)
     if (day.accommodation) {
-      items.push({
-        type: 'accommodation',
-        data: day.accommodation,
-        trackId: `accommodation-${day.accommodation.id}`,
-        time: day.accommodation.checkIn || '00:00'
-      });
-    }
-
-    // Add activity items
-    if (day.activities?.length) {
-      day.activities.forEach(activity => {
+      if (day.accommodation.checkIn) {
         items.push({
-          type: 'activity',
-          data: activity,
-          trackId: `activity-${activity.id}`,
-          time: activity.startTime
+          ...day.accommodation,
+          type: 'accommodation',
+          title: `Check-in: ${day.accommodation.name}`,
+          startTime: day.accommodation.checkIn,
+          endTime: day.accommodation.checkIn,
+          isCheckIn: true
         });
+      }
+      if (day.accommodation.checkOut) {
+        items.push({
+          ...day.accommodation,
+          type: 'accommodation',
+          title: `Check-out: ${day.accommodation.name}`,
+          startTime: day.accommodation.checkOut,
+          endTime: day.accommodation.checkOut,
+          isCheckOut: true
+        });
+      }
+    }
+    
+    // Add transportation
+    if (day.transportation) {
+      day.transportation.forEach(transport => {
+        if (transport.departureTime) {
+          items.push({
+            ...transport,
+            type: 'transportation',
+            title: `${transport.type} to ${transport.to}`,
+            startTime: transport.departureTime,
+            endTime: transport.arrivalTime || transport.departureTime
+          });
+        }
       });
     }
-
+    
+    // Add activities
+    if (day.activities) {
+      day.activities.forEach(activity => {
+        if (activity.startTime) {
+          items.push({
+            ...activity,
+            type: 'activity',
+            title: activity.title,
+            startTime: activity.startTime,
+            endTime: activity.endTime || activity.startTime
+          });
+        }
+      });
+    }
+    
     // Sort by time
-    const sortedItems = items.sort((a, b) => {
-      const timeA = this.parseTime(a.time);
-      const timeB = this.parseTime(b.time);
-      return timeA - timeB;
+    return items.sort((a, b) => this.parseTime(a.startTime) - this.parseTime(b.startTime));
+  }
+
+  parseTime(time: string): number {
+    if (!time) return 0;
+    
+    // Handle 24-hour format (e.g., "17:30", "19:30")
+    const [hours] = time.split(':').map(Number);
+    return hours; // Return just the hour, not minutes
+  }
+
+  getAllDayEvents(day: ItineraryDay): CalendarEvent[] {
+    if (!day) return [];
+    
+    const events: CalendarEvent[] = [];
+    
+    // Add accommodation as all-day event (only if accommodation exists and has check-in/check-out)
+    if (day.accommodation && (day.accommodation.checkIn || day.accommodation.checkOut)) {
+      events.push({
+        title: day.accommodation.name,
+        type: 'accommodation',
+        isAllDay: true
+      });
+    }
+    
+    // Add long-duration activities as all-day events
+    if (day.activities) {
+      day.activities.forEach(activity => {
+        if (activity.duration && activity.duration > 120) { // More than 2 hours
+          events.push({
+            title: activity.title,
+            type: 'activity',
+            isAllDay: true
+          });
+        }
+      });
+    }
+    
+    return events;
+  }
+
+  getEventsForTimeSlot(day: ItineraryDay, timeSlot: string): CalendarEvent[] {
+    if (!day || timeSlot === 'All Day') return [];
+    
+    const events: CalendarEvent[] = [];
+    const timelineItems = this.getDayTimelineItems(day);
+    
+    timelineItems.forEach((item, index) => {
+      if (item.startTime && item.endTime) {
+        const event: CalendarEvent = {
+          title: item.title,
+          type: item.type,
+          startTime: item.startTime,
+          endTime: item.endTime,
+          isAllDay: false,
+          index: index
+        };
+        
+        // Check if event should be shown in this time slot
+        if (this.shouldShowEventInTimeSlot(event, timeSlot)) {
+          events.push(event);
+        }
+      }
     });
-
-    return sortedItems;
+    
+    return events;
   }
 
-  private parseTime(timeString: string): number {
-    const [hours, minutes] = timeString.split(':').map(Number);
-    return hours * 60 + minutes;
+  shouldShowEventInTimeSlot(event: CalendarEvent, timeSlot: string): boolean {
+    if (!event.startTime) return false;
+    
+    const eventStartHour = this.parseTime(event.startTime); // 24-hour format (0-23)
+    const slotHour = this.getTimeSlotHour(timeSlot); // 24-hour format (0-23)
+    
+    // Direct comparison of 24-hour values
+    return eventStartHour === slotHour;
   }
 
-  private parseTimeSlot(timeSlot: string): number {
+  getTimeSlotHour(timeSlot: string): number {
     if (timeSlot === 'All Day') return -1;
     
-    const hour = parseInt(timeSlot.replace(' AM', '').replace(' PM', ''));
-    const isPM = timeSlot.includes('PM');
-    return isPM && hour !== 12 ? (hour + 12) * 60 : hour * 60;
+    const timeMap: { [key: string]: number } = {
+      '12 AM': 0, '1 AM': 1, '2 AM': 2, '3 AM': 3, '4 AM': 4, '5 AM': 5,
+      '6 AM': 6, '7 AM': 7, '8 AM': 8, '9 AM': 9, '10 AM': 10, '11 AM': 11,
+      '12 PM': 12, '1 PM': 13, '2 PM': 14, '3 PM': 15, '4 PM': 16, '5 PM': 17,
+      '6 PM': 18, '7 PM': 19, '8 PM': 20, '9 PM': 21, '10 PM': 22, '11 PM': 23
+    };
+    
+    return timeMap[timeSlot] || 0;
+  }
+
+  // TrackBy functions for performance
+  trackByDay(index: number, day: ItineraryDay): number {
+    return day.day;
+  }
+
+  trackByTimeSlot(index: number, timeSlot: string): string {
+    return timeSlot;
+  }
+
+  trackByEvent(index: number, event: CalendarEvent): string {
+    return event.title + event.type;
   }
 }

@@ -29,7 +29,7 @@ export interface ItineraryDay {
     icon: string;
   };
   activities: Activity[];
-  accommodation?: Accommodation;
+  accommodation?: Accommodation | null; // null when no accommodation events (middle days)
   transportation?: Transportation[];
 }
 
@@ -63,8 +63,8 @@ export interface Accommodation {
   name: string;
   type: 'hotel' | 'hostel' | 'apartment' | 'resort' | 'bnb';
   address: string;
-  checkIn: string;
-  checkOut: string;
+  checkIn: string | null; // null when already checked in from previous day
+  checkOut: string | null; // null when no checkout (e.g., first day or ongoing stay)
   roomType?: string;
   confirmationNumber?: string;
   cost?: {

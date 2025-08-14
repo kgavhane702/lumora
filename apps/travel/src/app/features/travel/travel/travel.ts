@@ -2,14 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
-
-import { Trip, Activity, ItineraryDay, Transportation } from '../interfaces/trip.interface';
-import { Calendar } from '../components/calendar/calendar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import { Trip, ItineraryDay, Transportation, Activity } from '../interfaces/trip.interface';
+import { CalendarComponent } from '../components/calendar/calendar';
 
 @Component({
   selector: 'app-travel',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatExpansionModule, Calendar],
+  imports: [CommonModule, MatIconModule, MatExpansionModule, CalendarComponent],
   templateUrl: './travel.html',
   styleUrls: ['./travel.scss']
 })
@@ -217,14 +218,24 @@ export class Travel implements OnInit {
       });
     }
 
-    // Add accommodation item
-    if (day.accommodation) {
-      items.push({
-        type: 'accommodation',
-        data: day.accommodation,
-        trackId: `accommodation-${day.accommodation.id}`,
-        time: day.accommodation.checkIn || '00:00'
-      });
+    // Add accommodation item (only if accommodation exists and has check-in/check-out)
+    if (day.accommodation && (day.accommodation.checkIn || day.accommodation.checkOut)) {
+      if (day.accommodation.checkIn) {
+        items.push({
+          type: 'accommodation',
+          data: { ...day.accommodation, eventType: 'check-in' },
+          trackId: `accommodation-checkin-${day.accommodation.id}`,
+          time: day.accommodation.checkIn
+        });
+      }
+      if (day.accommodation.checkOut) {
+        items.push({
+          type: 'accommodation',
+          data: { ...day.accommodation, eventType: 'check-out' },
+          trackId: `accommodation-checkout-${day.accommodation.id}`,
+          time: day.accommodation.checkOut
+        });
+      }
     }
 
     // Add activity items
@@ -361,7 +372,7 @@ export class Travel implements OnInit {
             type: 'resort',
             address: 'Candolim Beach Road, North Goa',
             checkIn: '14:00',
-            checkOut: '11:00',
+            checkOut: null, // No checkout on first day
             roomType: 'Deluxe Sea View Room',
             confirmationNumber: 'CBR241215',
             cost: {
@@ -423,6 +434,25 @@ export class Travel implements OnInit {
               bookingReference: 'RSH002',
               details: {
                 platform: 'Fort Parking'
+              }
+            },
+            {
+              id: '5',
+              type: 'car',
+              provider: 'Resort Shuttle',
+              from: 'Fisherman\'s Wharf',
+              to: 'Candolim Beach Resort',
+              departureTime: '18:00',
+              arrivalTime: '18:15',
+              duration: 15,
+              status: 'booked',
+              cost: {
+                currency: 'INR',
+                amount: 0
+              },
+              bookingReference: 'RSH003',
+              details: {
+                platform: 'Restaurant Parking'
               }
             }
           ],
@@ -495,7 +525,8 @@ export class Travel implements OnInit {
                 amount: 500
               }
             }
-          ]
+          ],
+          accommodation: null // No accommodation events on middle days - just returning to hotel
         },
         {
           day: 3,
@@ -616,7 +647,8 @@ export class Travel implements OnInit {
                 amount: 3500
               }
             }
-          ]
+          ],
+          accommodation: null // No accommodation events on middle days - just returning to hotel
         },
         {
           day: 4,
@@ -756,7 +788,8 @@ export class Travel implements OnInit {
                 amount: 2000
               }
             }
-          ]
+          ],
+          accommodation: null // No accommodation events on middle days - just returning to hotel
         },
         {
           day: 5,
@@ -896,7 +929,8 @@ export class Travel implements OnInit {
                 amount: 1500
               }
             }
-          ]
+          ],
+          accommodation: null // No accommodation events on middle days - just returning to hotel
         },
         {
           day: 6,
@@ -969,25 +1003,28 @@ export class Travel implements OnInit {
                 currency: 'INR',
                 amount: 500
               }
-            },
-            {
-              id: '22',
-              type: 'accommodation',
-              title: 'Hotel Check-out',
-              description: 'Check-out from Candolim Beach Resort',
-              location: 'Candolim Beach Resort',
-              startTime: '11:00',
-              endTime: '11:30',
-              duration: 30,
-              status: 'planned',
-              priority: 'high',
-              tags: ['checkout', 'hotel'],
-              cost: {
-                currency: 'INR',
-                amount: 0
-              }
             }
-          ]
+          ],
+          accommodation: {
+            id: '1',
+            name: 'Candolim Beach Resort & Spa',
+            type: 'resort',
+            address: 'Candolim Beach Road, North Goa',
+            checkIn: null, // Already checked in from previous day
+            checkOut: '11:00', // Checkout on last day
+            roomType: 'Deluxe Sea View Room',
+            confirmationNumber: 'CBR241215',
+            cost: {
+              currency: 'INR',
+              amount: 8500
+            },
+            amenities: ['Beachfront', 'Swimming Pool', 'Kids Play Area', 'Spa', 'Restaurant'],
+            images: [
+              'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2064&q=80',
+              'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+              'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
+            ]
+          }
         }
       ],
       travelers: [
@@ -1025,52 +1062,42 @@ export class Travel implements OnInit {
   }
 
   onEditTrip(): void {
-    console.log('Edit trip clicked');
     // TODO: Implement trip editing
   }
 
   onShareTrip(): void {
-    console.log('Share trip clicked');
     // TODO: Implement trip sharing
   }
 
   onExportTrip(): void {
-    console.log('Export trip clicked');
     // TODO: Implement trip export
   }
 
   onAddActivity(): void {
-    console.log('Add activity clicked');
     // TODO: Implement activity addition
   }
 
   onEditActivity(activity: Activity): void {
-    console.log('Edit activity clicked', activity);
     // TODO: Implement activity editing
   }
 
   onViewActivity(activity: Activity): void {
-    console.log('View activity clicked', activity);
     // TODO: Implement activity viewing
   }
 
   onBookActivity(activity: Activity): void {
-    console.log('Book activity clicked', activity);
     // TODO: Implement activity booking
   }
 
   onEditDay(day: ItineraryDay): void {
-    console.log('Edit day clicked', day);
     // TODO: Implement day editing
   }
 
   onAddActivityToDay(day: ItineraryDay): void {
-    console.log('Add activity to day clicked', day);
     // TODO: Implement adding activity to specific day
   }
 
   onExportItinerary(): void {
-    console.log('Export itinerary clicked');
     // TODO: Implement itinerary export
   }
 
@@ -1094,12 +1121,29 @@ export class Travel implements OnInit {
   getDayAccommodationItems(day: ItineraryDay): any[] {
     if (!day.accommodation) return [];
     
-    return [{
-      type: 'accommodation',
-      data: day.accommodation,
-      trackId: `accommodation-${day.accommodation.id}`,
-      time: day.accommodation.checkIn || '00:00'
-    }];
+    const items: any[] = [];
+    
+    // Add check-in event if present
+    if (day.accommodation.checkIn) {
+      items.push({
+        type: 'accommodation',
+        data: { ...day.accommodation, eventType: 'check-in' },
+        trackId: `accommodation-checkin-${day.accommodation.id}`,
+        time: day.accommodation.checkIn
+      });
+    }
+    
+    // Add check-out event if present
+    if (day.accommodation.checkOut) {
+      items.push({
+        type: 'accommodation',
+        data: { ...day.accommodation, eventType: 'check-out' },
+        trackId: `accommodation-checkout-${day.accommodation.id}`,
+        time: day.accommodation.checkOut
+      });
+    }
+    
+    return items;
   }
 
   getDayActivityItems(day: ItineraryDay): any[] {
